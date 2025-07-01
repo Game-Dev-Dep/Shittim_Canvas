@@ -1,0 +1,24 @@
+{
+    "name": "BasicServices",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6fba9bdde7969224c8ccd6b370c6e7ec",
+        "GUID:72d1fea872bd7a449bf3818f2b0a6708",
+        "GUID:68765d262e2128e4ab49c983f3411946",
+        "GUID:d081815e631c29f46ab6f2ac745854df",
+        "GUID:f06555f75b070af458a003d92f9efb00",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:df380645f10b7bc4b97d4f5eb6303d95",
+        "GUID:15fc0a57446b3144c949da3e2b9737a9",
+        "GUID:b4517ec124862cb4bb3b8b27d72843a6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

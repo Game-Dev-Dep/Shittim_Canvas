@@ -1,0 +1,29 @@
+# 忽略 Unity 默认文件夹
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+
+# 忽略 Unity 项目文件
+*.unityproj
+
+# 忽略 Shittim Canvs 自定义文件夹
+RecordVideos/
+Screenshots/
+
+# 忽略 Visual Studio 配置文件夹
+.vs/
+
+# 忽略 Visual Studio 项目文件
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.vsconfig
+
+# 保留资产 .meta 文件
+!*/**/*.meta

@@ -1,0 +1,32 @@
+{
+    "name": "ShittimCanvas",
+    "rootNamespace": "",
+    "references": [
+        "BasicServices",
+        "BlueArchive",
+        "spine-csharp",
+        "spine-unity",
+        "spine-timeline",
+        "Unity.Timeline",
+        "Unity.Recorder",
+        "Unity.Recorder.Base",
+        "Unity.Recorder.Editor",
+        "Unity.TextMeshPro",
+        "Unity.RenderPipelines.Core.Editor",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Core.ShaderLibrary",
+        "Unity.RenderPipelines.Universal.Editor",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.RenderPipelines.Universal.Shaders",
+        "Unity.RenderPipeline.Universal.ShaderLibrary"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
