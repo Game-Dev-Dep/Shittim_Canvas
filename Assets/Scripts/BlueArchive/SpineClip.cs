@@ -57,6 +57,7 @@ public class SpineClip : AnimationReferenceAsset
     public SoundKey[] SoundKeys;
     private SpineClip nextClip;
     public SpineClip NextClip => nextClip;
+    private Spine.Animation animation;
     public Spine.Animation Clip {
         get => animation;
         set => animation = value;

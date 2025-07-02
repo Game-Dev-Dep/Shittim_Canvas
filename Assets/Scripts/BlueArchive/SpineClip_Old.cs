@@ -102,8 +102,6 @@ public class SpineClip_Old : AnimationReferenceAsset
                 FieldInfo animationField = baseType.GetField("animation", BindingFlags.NonPublic | BindingFlags.Instance);
                 animationField?.SetValue(this, Clip);
 
-                base.animation = Clip;
-
                 clipDuration = Clip.Duration;
                 //IsInitialized = clipDuration + OutroStartOffset;
             }
