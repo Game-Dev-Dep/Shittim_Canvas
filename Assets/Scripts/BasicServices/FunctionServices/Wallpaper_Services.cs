@@ -128,8 +128,44 @@ public class Wallpaper_Services : MonoBehaviour
     {
         Console_Log("触发进入壁纸模式");
 
-        Console_Log($"设置窗口父子关系: Unity窗口 {Window_Services.Unity_Handle} -> WorkerW {Window_Services.WorkerW_Handle}");
-        Win32Wrapper.SetParent(Window_Services.Unity_Handle, Window_Services.WorkerW_Handle);
+        // 1. 重新获取Unity窗口句柄
+        IntPtr unityHandle = Win32Wrapper.FindUnityWindow();
+        if (unityHandle == IntPtr.Zero)
+        {
+            Console_Log("未能获取Unity窗口句柄", Debug_Services.LogLevel.Debug, LogType.Error);
+            return;
+        }
+        Window_Services.Unity_Handle = unityHandle;
+
+        // 2. 如果窗口被最小化，先还原
+        Win32Wrapper.ShowWindow(unityHandle, Win32Wrapper.SW_RESTORE);
+
+        // 3. 先置顶再沉底
+        Win32Wrapper.SetWindowPos(
+            unityHandle,
+            Win32Wrapper.HWND_TOPMOST,
+            0, 0, 0, 0,
+            Win32Wrapper.SetWindowPosFlags.NoMove |
+            Win32Wrapper.SetWindowPosFlags.NoSize |
+            Win32Wrapper.SetWindowPosFlags.NoActivate |
+            Win32Wrapper.SetWindowPosFlags.ShowWindow
+        );
+        Win32Wrapper.SetWindowPos(
+            unityHandle,
+            Win32Wrapper.HWND_BOTTOM,
+            0, 0, 0, 0,
+            Win32Wrapper.SetWindowPosFlags.NoMove |
+            Win32Wrapper.SetWindowPosFlags.NoSize |
+            Win32Wrapper.SetWindowPosFlags.NoActivate |
+            Win32Wrapper.SetWindowPosFlags.ShowWindow
+        );
+
+        // 4. 设置父窗口
+        Console_Log($"设置窗口父子关系: Unity窗口 {unityHandle} -> WorkerW {Window_Services.WorkerW_Handle}");
+        Win32Wrapper.SetParent(unityHandle, Window_Services.WorkerW_Handle);
+
+        // 5. 再次强制显示
+        Win32Wrapper.ShowWindow(unityHandle, Win32Wrapper.SW_SHOW);
 
         Console_Log($"设置壁纸模式分辨率: {Window_Services.Instance.Device_Screen_Width}x{Window_Services.Instance.Device_Screen_Height}");
         Screen.SetResolution(Window_Services.Instance.Device_Screen_Width, Window_Services.Instance.Device_Screen_Height, FullScreenMode.FullScreenWindow);
@@ -148,6 +184,9 @@ public class Wallpaper_Services : MonoBehaviour
 
         Console_Log($"重置窗口父子关系: Unity窗口 {Window_Services.Unity_Handle} -> 桌面");
         Win32Wrapper.SetParent(Window_Services.Unity_Handle, IntPtr.Zero);
+
+        // 兼容桌面美化软件：强制显示
+        Win32Wrapper.ShowWindow(Window_Services.Unity_Handle, Win32Wrapper.SW_SHOW);
 
         Console_Log($"设置编辑模式分辨率: {Window_Services.Instance.Edit_Mode_Width}x{Window_Services.Instance.Edit_Mode_Height}");
         Screen.SetResolution(Window_Services.Instance.Edit_Mode_Width, Window_Services.Instance.Edit_Mode_Height, FullScreenMode.Windowed);
@@ -177,7 +216,7 @@ public class Wallpaper_Services : MonoBehaviour
 #if UNITY_EDITOR
         bool isEditor = is_Wallpaper_Mode_Editor;
 #else
-        bool isEditor = false;
+        bool isEditor = is_Wallpaper_Mode;
 #endif
         Wallpaper_Area.SetActive(!isEditor);
         Function_Area.SetActive(!isEditor);
