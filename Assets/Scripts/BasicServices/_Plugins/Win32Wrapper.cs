@@ -692,4 +692,13 @@ public class Win32Wrapper
     public const int SW_SHOWNORMAL = 1;
     public const int SW_SHOWMINIMIZED = 2;
     public const int SW_SHOWMAXIMIZED = 3;
+
+    [DllImport("user32.dll")]
+    public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    public static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
+    public const int SW_SHOW = 5;
+
+    public const int SW_RESTORE = 9;
+    public static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
 }
