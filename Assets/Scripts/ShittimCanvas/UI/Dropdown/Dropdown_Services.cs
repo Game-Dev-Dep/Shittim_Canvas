@@ -37,7 +37,7 @@ public class Dropdown_Services : MonoBehaviour
     public string folderPath = "";
     public Texture2D defaultIcon;
     public int maxVisibleOptions = 5;
-    public float optionHeight = 40f;
+    public float optionHeight = 123f; //唉，写死的，改大点。
 
     private List<string> folderNames = new List<string>();
     private bool isDropdownOpen = false;
@@ -62,6 +62,68 @@ public class Dropdown_Services : MonoBehaviour
         scrollRect.viewport = viewport;
         scrollRect.content = content;
         scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHideAndExpandViewport;
+
+        // 从模板获取选项高度
+        InitializeOptionHeight();
+
+        // 设置默认角色的缩略图
+        SetDefaultCharacterThumbnail();
+    }
+
+    //写个获取选项高度
+    void InitializeOptionHeight()
+    {
+        if (optionTemplate != null)
+        {
+            RectTransform templateRect = optionTemplate.GetComponent<RectTransform>();
+            if (templateRect != null)
+            {
+                optionHeight = templateRect.sizeDelta.y;
+                Debug.Log($"[Dropdown_Services] 从模板获取选项高度: {optionHeight}");
+            }
+        }
+    }
+
+    void SetDefaultCharacterThumbnail()
+    {
+        if (mainButtonIcon == null) return;
+
+        // 获取默认角色名称
+        string defaultCharacterName = Config_Services.Instance.MemoryLobby_Camera_Config.Defalut_Character_Name;
+        
+        // 设置默认标签文本
+        if (mainButtonLabel != null)
+        {
+            mainButtonLabel.text = defaultCharacterName;
+        }
+
+        // 加载默认角色的缩略图
+        if (defaultCharacterName != "Textures" && Texture_Services.Lobbyillust.ContainsKey(defaultCharacterName))
+        {
+            string thumbnailPath = Path.Combine(File_Services.Student_Lists_Folder_Path, Texture_Services.Lobbyillust[defaultCharacterName] + ".png");
+            Texture2D thumbnail = Texture_Services.Get_Texture_By_Path(thumbnailPath);
+            if (thumbnail != null)
+            {
+                mainButtonIcon.texture = thumbnail;
+                Debug.Log($"[Dropdown_Services] 成功加载默认角色缩略图: {defaultCharacterName}");
+                return;
+            }
+            else
+            {
+                Debug.LogWarning($"[Dropdown_Services] 无法加载默认角色缩略图: {thumbnailPath}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"[Dropdown_Services] 默认角色 {defaultCharacterName} 在 Lobbyillust 中未找到");
+        }
+
+        // 如果加载失败，使用默认图标
+        if (defaultIcon != null)
+        {
+            mainButtonIcon.texture = defaultIcon;
+            Debug.Log("[Dropdown_Services] 使用默认图标");
+        }
     }
 
     void LoadFolderNames()
@@ -123,25 +185,33 @@ public class Dropdown_Services : MonoBehaviour
 
             if (folderNames[i] != "Textures")
             {
-                //StartCoroutine(Texture_Services.Get_Texture_By_Path_Async(Path.Combine(File_Services.Student_Lists_Folder_Path, Process_Handler.Instance.Lobbyillust[folderNames[i]] + ".png"), local_texture2d =>
-                //{
-                //    if (local_texture2d != null)
-                //    {
-                //        icon.texture = local_texture2d;
-                //    }
-                //}));
-
-                icon.texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.Student_Lists_Folder_Path, Texture_Services.Lobbyillust[folderNames[i]] + ".png"));
+                if (Texture_Services.Lobbyillust.ContainsKey(folderNames[i]))
+                {
+                    string thumbnailPath = Path.Combine(File_Services.Student_Lists_Folder_Path, Texture_Services.Lobbyillust[folderNames[i]] + ".png");
+                    Texture2D thumbnail = Texture_Services.Get_Texture_By_Path(thumbnailPath);
+                    if (thumbnail != null)
+                    {
+                        icon.texture = thumbnail;
+                    }
+                    else
+                    {
+                        // 如果加载失败，使用默认图标
+                        icon.texture = defaultIcon;
+                        Debug.LogWarning($"[Dropdown_Services] 无法加载选项缩略图: {thumbnailPath}");
+                    }
+                }
+                else
+                {
+                    icon.texture = defaultIcon;
+                    Debug.LogWarning($"[Dropdown_Services] 角色 {folderNames[i]} 在 Lobbyillust 中未找到");
+                }
             }
-            else icon.texture = defaultIcon;
-
-
+            else 
+            {
+                icon.texture = defaultIcon;
+            }
 
             if (label != null) label.text = folderNames[i];
-
-            // 设置选项高度
-            RectTransform rt = option.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(rt.sizeDelta.x, optionHeight);
 
             Button btn = option.GetComponent<Button>();
             int index = i;
@@ -222,17 +292,43 @@ public class Dropdown_Services : MonoBehaviour
     {
         if (index < 0 || index >= folderNames.Count) return;
 
-        mainButtonLabel.text = folderNames[index];
+        string selectedCharacter = folderNames[index];
+        Debug.Log($"[Dropdown_Services] 选择角色: {selectedCharacter}");
 
-        //StartCoroutine(Texture_Services.Get_Texture_By_Path_Async(Path.Combine(File_Services.Student_Lists_Folder_Path, Process_Handler.Instance.Lobbyillust[folderNames[index]] + ".png"), local_texture2d =>
-        //{
-        //    if (local_texture2d != null)
-        //    {
-        //        mainButtonIcon.texture = local_texture2d;
-        //    }
-        //}));
+        mainButtonLabel.text = selectedCharacter;
 
-        Character_Services.Instance.Switch_Character(folderNames[index]);
+        // 加载并显示学生缩略图
+        if (selectedCharacter != "Textures")
+        {
+            if (Texture_Services.Lobbyillust.ContainsKey(selectedCharacter))
+            {
+                string thumbnailPath = Path.Combine(File_Services.Student_Lists_Folder_Path, Texture_Services.Lobbyillust[selectedCharacter] + ".png");
+                Texture2D thumbnail = Texture_Services.Get_Texture_By_Path(thumbnailPath);
+                if (thumbnail != null)
+                {
+                    mainButtonIcon.texture = thumbnail;
+                    Debug.Log($"[Dropdown_Services] 成功加载角色缩略图: {selectedCharacter}");
+                }
+                else
+                {
+                    // 如果加载失败，使用默认图标
+                    mainButtonIcon.texture = defaultIcon;
+                    Debug.LogWarning($"[Dropdown_Services] 无法加载角色缩略图: {thumbnailPath}");
+                }
+            }
+            else
+            {
+                mainButtonIcon.texture = defaultIcon;
+                Debug.LogWarning($"[Dropdown_Services] 角色 {selectedCharacter} 在 Lobbyillust 中未找到");
+            }
+        }
+        else
+        {
+            mainButtonIcon.texture = defaultIcon;
+            Debug.Log("[Dropdown_Services] 选择 Textures 文件夹，使用默认图标");
+        }
+
+        Character_Services.Instance.Switch_Character(selectedCharacter);
 
         dropdownPanel.SetActive(false);
         isDropdownOpen = false;
