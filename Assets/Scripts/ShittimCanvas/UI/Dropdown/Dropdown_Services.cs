@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 public class Dropdown_Services : MonoBehaviour
 {
@@ -43,34 +44,37 @@ public class Dropdown_Services : MonoBehaviour
     private bool isDropdownOpen = false;
     private VerticalLayoutGroup contentLayoutGroup;
 
-    bool is_First_Get = true;
+    public TMP_InputField searchInputField;
+    private string searchKeyword = "";
+    private List<string> filteredFolderNames = new List<string>();
+
+    private List<GameObject> optionPool = new List<GameObject>();
+    private List<GameObject> activeOptions = new List<GameObject>();
+
+    private float debounceTime = 0.15f; // 150ms防抖
+    private Coroutine debounceCoroutine;
+    private Coroutine populateCoroutine;
+
     void Start()
     {
         Wallpaper_Mode_Toggle_Button.onClick.AddListener(Destroy_Options);
-
         mainButton.onClick.AddListener(ToggleDropdown);
         folderPath = File_Services.Student_Files_Folder_Path;
         LoadFolderNames();
-
         optionTemplate.SetActive(false);
         dropdownPanel.SetActive(false);
-
-        // 获取关键组件
         contentLayoutGroup = content.GetComponent<VerticalLayoutGroup>();
-
-        // 确保滚动视图配置正确
         scrollRect.viewport = viewport;
         scrollRect.content = content;
         scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHideAndExpandViewport;
-
-        // 从模板获取选项高度
         InitializeOptionHeight();
-
-        // 设置默认角色的缩略图
         SetDefaultCharacterThumbnail();
+        if (searchInputField != null)
+            searchInputField.onValueChanged.AddListener(OnSearchValueChanged);
+        FilterOptions();
+        InitializeOptionPool();
     }
 
-    //写个获取选项高度
     void InitializeOptionHeight()
     {
         if (optionTemplate != null)
@@ -136,6 +140,8 @@ public class Dropdown_Services : MonoBehaviour
             {
                 folderNames.Add(subDir.Name);
             }
+            folderNames.Sort();
+            Debug.Log($"[Dropdown_Services] 加载了 {folderNames.Count} 个文件夹，已排序");
         }
         else
         {
@@ -150,15 +156,12 @@ public class Dropdown_Services : MonoBehaviour
 
         if (isDropdownOpen)
         {
-            if (is_First_Get)
-            {
-                is_First_Get = false;
-                StartCoroutine(PopulateOptionsAfterFrame());
-            }
-            else
-            {
-                dropdownPanel.SetActive(true);
-            }
+            //重置搜索
+            searchKeyword = "";
+            if (searchInputField != null)
+                searchInputField.text = "";
+            FilterOptions();
+            UpdateOptionsDisplay();
         }
         else
         {
@@ -166,171 +169,251 @@ public class Dropdown_Services : MonoBehaviour
         }
     }
 
-    IEnumerator PopulateOptionsAfterFrame()
+    void InitializeOptionPool()
     {
-        yield return null; // 等待UI布局计算完成
-        PopulateOptions();
-    }
-
-    void PopulateOptions()
-    {
-        // 动态生成选项
-        for (int i = 0; i < folderNames.Count; i++)
+        //预创建对象
+        int poolSize = Mathf.Min(folderNames.Count, 20); //先创20个
+        for (int i = 0; i < poolSize; i++)
         {
             GameObject option = Instantiate(optionTemplate, content);
-            option.SetActive(true);
+            option.SetActive(false);
+            optionPool.Add(option);
+        }
+    }
 
-            RawImage icon = option.transform.Find("Icon")?.GetComponent<RawImage>();
-            TMP_Text label = option.transform.Find("Label")?.GetComponent<TMP_Text>();
-
-            if (folderNames[i] != "Textures")
-            {
-                if (Texture_Services.Lobbyillust.ContainsKey(folderNames[i]))
-                {
-                    string thumbnailPath = Path.Combine(File_Services.Student_Lists_Folder_Path, Texture_Services.Lobbyillust[folderNames[i]] + ".png");
-                    Texture2D thumbnail = Texture_Services.Get_Texture_By_Path(thumbnailPath);
-                    if (thumbnail != null)
-                    {
-                        icon.texture = thumbnail;
-                    }
-                    else
-                    {
-                        // 如果加载失败，使用默认图标
-                        icon.texture = defaultIcon;
-                        Debug.LogWarning($"[Dropdown_Services] 无法加载选项缩略图: {thumbnailPath}");
-                    }
-                }
-                else
-                {
-                    icon.texture = defaultIcon;
-                    Debug.LogWarning($"[Dropdown_Services] 角色 {folderNames[i]} 在 Lobbyillust 中未找到");
-                }
-            }
-            else 
-            {
-                icon.texture = defaultIcon;
-            }
-
-            if (label != null) label.text = folderNames[i];
-
-            Button btn = option.GetComponent<Button>();
-            int index = i;
-            btn.onClick.AddListener(() => OnOptionSelected(index));
+    GameObject GetOptionFromPool()
+    {
+        GameObject option;
+        if (optionPool.Count > 0)
+        {
+            //保证排序不乱
+            option = optionPool[0];
+            optionPool.RemoveAt(0);
+        }
+        else
+        {
+            option = Instantiate(optionTemplate, content);
         }
 
-        // 更新滚动系统
+        option.SetActive(true);
+
+        return option;
+    }
+
+    void ReturnOptionToPool(GameObject option)
+    {
+        option.SetActive(false);
+        optionPool.Add(option);
+    }
+
+    void OnSearchValueChanged(string keyword)
+    {
+        searchKeyword = keyword.ToLower();
+        if (debounceCoroutine != null)
+            StopCoroutine(debounceCoroutine);
+        debounceCoroutine = StartCoroutine(DebounceSearch());
+    }
+
+    IEnumerator DebounceSearch()
+    {
+        yield return new WaitForSeconds(debounceTime);
+        FilterOptions();
+        UpdateOptionsDisplay();
+    }
+
+    void UpdateOptionsDisplay()
+    {
+        //回收当前显示的选项
+        foreach (var option in activeOptions)
+        {
+            ReturnOptionToPool(option);
+        }
+        activeOptions.Clear();
+
+        if (populateCoroutine != null)
+            StopCoroutine(populateCoroutine);
+        populateCoroutine = StartCoroutine(PopulateOptionsBatch());
+    }
+
+    IEnumerator PopulateOptionsBatch()
+    {
+        int batchSize = 5; //分批生成选项
+        for (int i = 0; i < filteredFolderNames.Count; i++)
+        {
+            GameObject option = GetOptionFromPool();
+            SetupOption(option, filteredFolderNames[i]);
+            activeOptions.Add(option);
+            if ((i + 1) % batchSize == 0)
+            {
+                yield return null;
+            }
+        }
         UpdateScrollSystem();
     }
 
-    public void Destroy_Options()
+    void SetupOption(GameObject option, string optionName)
     {
-        foreach (Transform child in content.transform)
+        RawImage icon = option.transform.Find("Icon")?.GetComponent<RawImage>();
+        TMP_Text label = option.transform.Find("Label")?.GetComponent<TMP_Text>();
+
+        if (optionName != "Textures")
         {
-            GameObject childObject = child.gameObject;
-            if (childObject != optionTemplate)
+            if (Texture_Services.Lobbyillust.ContainsKey(optionName))
             {
-                Destroy(childObject);
+                string thumbnailPath = Path.Combine(File_Services.Student_Lists_Folder_Path, Texture_Services.Lobbyillust[optionName] + ".png");
+                Texture2D thumbnail = Texture_Services.Get_Texture_By_Path(thumbnailPath);
+                icon.texture = thumbnail != null ? thumbnail : defaultIcon;
+            }
+            else
+            {
+                icon.texture = defaultIcon;
             }
         }
-        is_First_Get = true;
-    }
+        else
+        {
+            icon.texture = defaultIcon;
+        }
 
+        if (label != null) label.text = optionName;
+
+        Button btn = option.GetComponent<Button>();
+        btn.onClick.RemoveAllListeners();
+        string capturedName = optionName;
+        btn.onClick.AddListener(() => OnOptionSelectedByName(capturedName));
+
+        // 设置选项文本，以及一个Debug Log
+        TMP_Text optionText = option.GetComponentInChildren<TMP_Text>();
+        if (optionText != null)
+        {
+            optionText.text = optionName;
+        }
+        else
+        {
+            Debug.LogError($"[Dropdown_Services] 选项 {optionName} 没有找到TMP_Text组件");
+        }
+    }
 
     void UpdateScrollSystem()
     {
-        // 计算总内容高度
-        float totalContentHeight = CalculateTotalContentHeight();
+        // 强制设置VerticalLayoutGroup为顶部对齐，防止Content Anchor脑抽
+        if (contentLayoutGroup != null)
+        {
+            contentLayoutGroup.childAlignment = TextAnchor.UpperCenter;
+            contentLayoutGroup.childControlHeight = true;
+            contentLayoutGroup.childControlWidth = true;
+            contentLayoutGroup.childForceExpandHeight = false;
+            contentLayoutGroup.childForceExpandWidth = false;
+        }
 
-        // 设置内容区域尺寸
+        float totalContentHeight = CalculateTotalContentHeight();
         content.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, totalContentHeight);
 
-        // 计算最大可见高度
         float maxVisibleHeight = maxVisibleOptions * optionHeight
             + contentLayoutGroup.padding.top
             + contentLayoutGroup.padding.bottom
             + Mathf.Max(0, maxVisibleOptions - 1) * contentLayoutGroup.spacing;
 
-        // 设置视口高度
         viewport.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, maxVisibleHeight);
 
-        // 启用/禁用滚动
         bool needsScroll = totalContentHeight > maxVisibleHeight;
         scrollRect.vertical = needsScroll;
         scrollRect.verticalScrollbar.gameObject.SetActive(needsScroll);
 
-        // 重置滚动位置
         content.anchoredPosition = Vector2.zero;
     }
 
     float CalculateTotalContentHeight()
     {
-        if (contentLayoutGroup == null) return 0;
-
-        float height = contentLayoutGroup.padding.top + contentLayoutGroup.padding.bottom;
-
-        int activeChildCount = 0;
-        foreach (Transform child in content)
+        if (activeOptions.Count == 0)
         {
-            if (child.gameObject.activeSelf && child != optionTemplate.transform)
-            {
-                height += child.GetComponent<RectTransform>().rect.height;
-                
-                activeChildCount++;
-            }
+            return 0;
         }
 
-        // 添加间距
-        if (activeChildCount > 0)
-        {
-            height += (activeChildCount - 1) * contentLayoutGroup.spacing;
-        }
+        float totalHeight = contentLayoutGroup.padding.top
+            + contentLayoutGroup.padding.bottom
+            + activeOptions.Count * optionHeight
+            + Mathf.Max(0, activeOptions.Count - 1) * contentLayoutGroup.spacing;
 
-        return height;
+        return totalHeight;
     }
 
-    void OnOptionSelected(int index)
+    void OnOptionSelectedByName(string selectedCharacter)
     {
-        if (index < 0 || index >= folderNames.Count) return;
-
-        string selectedCharacter = folderNames[index];
-        Debug.Log($"[Dropdown_Services] 选择角色: {selectedCharacter}");
-
         mainButtonLabel.text = selectedCharacter;
-
-        // 加载并显示学生缩略图
         if (selectedCharacter != "Textures")
         {
             if (Texture_Services.Lobbyillust.ContainsKey(selectedCharacter))
             {
                 string thumbnailPath = Path.Combine(File_Services.Student_Lists_Folder_Path, Texture_Services.Lobbyillust[selectedCharacter] + ".png");
                 Texture2D thumbnail = Texture_Services.Get_Texture_By_Path(thumbnailPath);
-                if (thumbnail != null)
-                {
-                    mainButtonIcon.texture = thumbnail;
-                    Debug.Log($"[Dropdown_Services] 成功加载角色缩略图: {selectedCharacter}");
-                }
-                else
-                {
-                    // 如果加载失败，使用默认图标
-                    mainButtonIcon.texture = defaultIcon;
-                    Debug.LogWarning($"[Dropdown_Services] 无法加载角色缩略图: {thumbnailPath}");
-                }
+                mainButtonIcon.texture = thumbnail != null ? thumbnail : defaultIcon;
             }
             else
             {
                 mainButtonIcon.texture = defaultIcon;
-                Debug.LogWarning($"[Dropdown_Services] 角色 {selectedCharacter} 在 Lobbyillust 中未找到");
             }
         }
         else
         {
             mainButtonIcon.texture = defaultIcon;
-            Debug.Log("[Dropdown_Services] 选择 Textures 文件夹，使用默认图标");
         }
-
         Character_Services.Instance.Switch_Character(selectedCharacter);
-
         dropdownPanel.SetActive(false);
         isDropdownOpen = false;
+    }
+
+    void FilterOptions()
+    {
+        if (string.IsNullOrEmpty(searchKeyword))
+        {
+            filteredFolderNames = new List<string>(folderNames);
+        }
+        else
+        {
+            // Filter逻辑，分三个，一个精准，一个前缀和一个模糊
+            filteredFolderNames = new List<string>();
+            
+            //精确
+            var exactMatch = folderNames.FirstOrDefault(name => name.ToLower() == searchKeyword);
+            if (exactMatch != null)
+            {
+                filteredFolderNames.Add(exactMatch);
+            }
+            else
+            {
+                //前缀
+                var startsWithMatches = folderNames.Where(name => name.ToLower().StartsWith(searchKeyword)).ToList();
+                filteredFolderNames.AddRange(startsWithMatches);
+                
+                //模糊
+                if (filteredFolderNames.Count == 0)
+                {
+                    var containsMatches = folderNames.Where(name => name.ToLower().Contains(searchKeyword)).ToList();
+                    filteredFolderNames.AddRange(containsMatches);
+                }
+            }
+        }
+        
+        //再Sort一遍
+        filteredFolderNames.Sort();
+    }
+
+    public void Destroy_Options()
+    {
+        foreach (var option in activeOptions)
+        {
+            ReturnOptionToPool(option);
+        }
+        activeOptions.Clear();
+    }
+
+    IEnumerator ForceLayoutUpdateNextFrame()
+    {
+        yield return null; // 等一帧
+        if (contentLayoutGroup != null)
+        {
+            contentLayoutGroup.childAlignment = TextAnchor.UpperCenter;
+            Canvas.ForceUpdateCanvases();
+        }
     }
 }
