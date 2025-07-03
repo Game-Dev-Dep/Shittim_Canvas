@@ -214,13 +214,14 @@ public class Wallpaper_Services : MonoBehaviour
     public void Clear_HUD()
     {
 #if UNITY_EDITOR
-        bool isEditor = is_Wallpaper_Mode_Editor;
+        Wallpaper_Area.SetActive(!is_Wallpaper_Mode_Editor);
+        Function_Area.SetActive(!is_Wallpaper_Mode_Editor);
+        Status_Area.SetActive(!is_Wallpaper_Mode_Editor);
 #else
-        bool isEditor = is_Wallpaper_Mode;
+        Wallpaper_Area.SetActive(!is_Wallpaper_Mode);
+        Function_Area.SetActive(!is_Wallpaper_Mode);
+        Status_Area.SetActive(!is_Wallpaper_Mode);
 #endif
-        Wallpaper_Area.SetActive(!isEditor);
-        Function_Area.SetActive(!isEditor);
-        Status_Area.SetActive(!isEditor);
     }
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Wallpaper_Services", message, loglevel, logtype); }
 }
