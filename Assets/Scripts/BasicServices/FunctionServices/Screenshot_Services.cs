@@ -11,7 +11,7 @@ public class Screenshot_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Screenshot Services µ¥Àı´´½¨Íê³É");
+            Debug.Log("[Awake] Screenshot Services å•ä¾‹åˆ›å»ºå®Œæˆ");
         }
         else
         {
@@ -30,7 +30,7 @@ public class Screenshot_Services : MonoBehaviour
         if (!File.Exists(file_path))
         {
             ScreenCapture.CaptureScreenshot(file_path);
-            Console_Log($"½ØÍ¼ÒÑ±£´æ: {file_path}");
+            Console_Log($"æˆªå›¾å·²ä¿å­˜: {file_path}");
         }
     }
 

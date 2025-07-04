@@ -30,7 +30,7 @@ public class SpineCharacterBodyTouch : MonoBehaviour
 
     private void OnClick()
     {
-        //Debug.Log($"{gameObject.name} OnClick ´¥·¢");
+        //Debug.Log($"{gameObject.name} OnClick è§¦å‘");
 
         if (!Spine_Services.Instance.is_Talk_On) return;
         if (!Index_Services.Instance.is_Idle_Mode) return;
@@ -45,10 +45,10 @@ public class SpineCharacterBodyTouch : MonoBehaviour
         {
             is_Talking = true;
             Index_Services.Instance.is_Talking = true;
-            Console_Log($"Talk_0{Cur_Talk_Index} ¿ªÊ¼");
+            Console_Log($"Talk_0{Cur_Talk_Index} å¼€å§‹");
             StartCoroutine(Spine_Services.Instance.Play_Talk_Clips(Cur_Talk_Index, SpineCharacter.SkeletonAnimation, () =>
             {
-                Console_Log($"Talk_0{Cur_Talk_Index} ½áÊø");
+                Console_Log($"Talk_0{Cur_Talk_Index} ç»“æŸ");
                 is_Talking = false;
                 Index_Services.Instance.is_Talking = false;
                 if (Cur_Talk_Index + 1 > Index_Services.Instance.Talk_Animaiton_Num) Cur_Talk_Index = 1;

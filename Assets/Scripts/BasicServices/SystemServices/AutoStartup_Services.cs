@@ -12,7 +12,7 @@ public class AutoStartup_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            UnityEngine.Debug.Log("[Awake] AutoStartup Services µ¥Àı´´½¨Íê³É");
+            UnityEngine.Debug.Log("[Awake] AutoStartup Services å•ä¾‹åˆ›å»ºå®Œæˆ");
         }
         else
         {
@@ -45,12 +45,12 @@ public class AutoStartup_Services : MonoBehaviour
 
     void Start()
     {
-        Console_Log("¿ªÊ¼³õÊ¼»¯ AutoStartup Services");
+        Console_Log("å¼€å§‹åˆå§‹åŒ– AutoStartup Services");
 
         Get_Config();
         AutoStartup_Toggle_Button.onClick.AddListener(Toggle_AutoStartup);
 
-        Console_Log("½áÊø³õÊ¼»¯ AutoStartup Services");
+        Console_Log("ç»“æŸåˆå§‹åŒ– AutoStartup Services");
     }
 
     private void Toggle_AutoStartup()
@@ -64,20 +64,20 @@ public class AutoStartup_Services : MonoBehaviour
                     string appPath = Process.GetCurrentProcess().MainModule.FileName;
                     key.SetValue(APP_NAME, "\"" + appPath + "\"");
                     is_AutoStartup_On = true;
-                    Console_Log("ÒÑÆôÓÃ×¢²á±í×ÔÆô¶¯");
+                    Console_Log("å·²å¯ç”¨æ³¨å†Œè¡¨è‡ªå¯åŠ¨");
                 }
                 else
                 {
                     key.DeleteValue(APP_NAME, false);
                     is_AutoStartup_On = false;
-                    Console_Log("ÒÑ½ûÓÃ×¢²á±í×ÔÆô¶¯");
+                    Console_Log("å·²ç¦ç”¨æ³¨å†Œè¡¨è‡ªå¯åŠ¨");
                 }
             }
         }
         catch (Exception e)
         {
             is_AutoStartup_On = false;
-            Console_Log("×¢²á±í²Ù×÷Ê§°Ü: " + e.Message);
+            Console_Log("æ³¨å†Œè¡¨æ“ä½œå¤±è´¥: " + e.Message);
         }
 
         Update_AutoStartup_Button_UI();

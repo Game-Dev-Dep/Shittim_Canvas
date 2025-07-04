@@ -13,15 +13,15 @@ public class Texture_Services : MonoBehaviour
 
     public static Dictionary<string, string> Lobbyillust = new Dictionary<string, string>();
     /// <summary>
-    /// ¼ÓÔØËùÓĞµÄ´óÌü²å»­
+    /// åŠ è½½æ‰€æœ‰çš„å¤§å…æ’ç”»
     /// </summary>
     public static void Load_Lobbyillust()
     {
-        Debug.Log("¿ªÊ¼¼ÓÔØËùÓĞ Lobbyillust ĞÅÏ¢");
+        Debug.Log("å¼€å§‹åŠ è½½æ‰€æœ‰ Lobbyillust ä¿¡æ¯");
 
         Lobbyillust = File_Services.Load_Specific_Type_From_File<Dictionary<string, string>>(Path.Combine(File_Services.Student_Lists_Folder_Path, "Lobbyillust.json"));
 
-        Debug.Log("½áÊø¼ÓÔØËùÓĞ Lobbyillust ĞÅÏ¢");
+        Debug.Log("ç»“æŸåŠ è½½æ‰€æœ‰ Lobbyillust ä¿¡æ¯");
     }
 
     public static Texture2D Get_Texture_By_Path(string path)
@@ -29,33 +29,33 @@ public class Texture_Services : MonoBehaviour
         if (File.Exists(path))
         {
             byte[] texture_bytes = File.ReadAllBytes(path);
-            Texture2D texture2d = new Texture2D(2, 2); // ÁÙÊ±³ß´ç
-            if (texture2d.LoadImage(texture_bytes)) // ×Ô¶¯Ê¶±ğPNG/JPGµÈ¸ñÊ½
+            Texture2D texture2d = new Texture2D(2, 2); // ä¸´æ—¶å°ºå¯¸
+            if (texture2d.LoadImage(texture_bytes)) // è‡ªåŠ¨è¯†åˆ«PNG/JPGç­‰æ ¼å¼
             {
-                Console_Log("ÎÆÀí¼ÓÔØ³É¹¦: " + path, Debug_Services.LogLevel.Ignore);
+                Console_Log("çº¹ç†åŠ è½½æˆåŠŸ: " + path, Debug_Services.LogLevel.Ignore);
                 return texture2d;
             }
         }
-        Console_Log($"ÎÄ¼ş²»´æÔÚ»ò²»ÊÇÓĞĞ§Í¼Æ¬: {path}", Debug_Services.LogLevel.Debug, LogType.Error);
+        Console_Log($"æ–‡ä»¶ä¸å­˜åœ¨æˆ–ä¸æ˜¯æœ‰æ•ˆå›¾ç‰‡: {path}", Debug_Services.LogLevel.Debug, LogType.Error);
         return null;
     }
     public static IEnumerator Get_Texture_By_Path_Async(string texture_file_path, System.Action<Texture2D> onLoaded)
     {
         string fullPath = Path.Combine("file:///", texture_file_path);
         string local_texture2d_name = Path.GetFileName(texture_file_path);
-        Console_Log($"±¾µØ Texture {local_texture2d_name} ¼ÓÔØÂ·¾¶: {fullPath}");
+        Console_Log($"æœ¬åœ° Texture {local_texture2d_name} åŠ è½½è·¯å¾„: {fullPath}");
         using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(fullPath))
         {
             yield return request.SendWebRequest();
             if (request.result == UnityWebRequest.Result.Success)
             {
                 Texture2D texture2d = DownloadHandlerTexture.GetContent(request);
-                Console_Log($"±¾µØ Texture {local_texture2d_name} ¼ÓÔØ³É¹¦");
+                Console_Log($"æœ¬åœ° Texture {local_texture2d_name} åŠ è½½æˆåŠŸ");
                 onLoaded?.Invoke(texture2d);
             }
             else
             {
-                Console_Log($"±¾µØTexture {local_texture2d_name} ¼ÓÔØÊ§°Ü: {request.error}", Debug_Services.LogLevel.Debug, LogType.Error);
+                Console_Log($"æœ¬åœ°Texture {local_texture2d_name} åŠ è½½å¤±è´¥: {request.error}", Debug_Services.LogLevel.Debug, LogType.Error);
                 onLoaded?.Invoke(null);
             }
         }

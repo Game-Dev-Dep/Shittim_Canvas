@@ -9,32 +9,32 @@ public class ShittimCanvasSettings
     [SerializeField] public Texture2D ShittimCanvasTexture;
 
     [Header("Fallback Options")]
-    [SerializeField] private string textureResourcePath = ""; // ResourcesÂ·¾¶
-    [SerializeField] private string textureGUID = ""; // ÎÆÀíµÄGUID£¬ÓÃÓÚ±à¼­Æ÷
+    [SerializeField] private string textureResourcePath = ""; // Resourcesè·¯å¾„
+    [SerializeField] private string textureGUID = ""; // çº¹ç†çš„GUIDï¼Œç”¨äºç¼–è¾‘å™¨
 
-    // ÔËĞĞÊ±ÎÆÀí¼ÓÔØ
+    // è¿è¡Œæ—¶çº¹ç†åŠ è½½
     public Texture2D GetTexture()
     {
-        // Ê×ÏÈ³¢ÊÔÖ±½ÓÒıÓÃ
+        // é¦–å…ˆå°è¯•ç›´æ¥å¼•ç”¨
         if (ShittimCanvasTexture != null)
         {
             return ShittimCanvasTexture;
         }
 
-        // ³¢ÊÔ´ÓResources¼ÓÔØ
+        // å°è¯•ä»ResourcesåŠ è½½
         if (!string.IsNullOrEmpty(textureResourcePath))
         {
             Texture2D resourceTexture = Resources.Load<Texture2D>(textureResourcePath);
             if (resourceTexture != null)
             {
-                //Debug.Log($"[ShittimCanvas] ´ÓResources¼ÓÔØÎÆÀí: {textureResourcePath}");
+                //Debug.Log($"[ShittimCanvas] ä»ResourcesåŠ è½½çº¹ç†: {textureResourcePath}");
                 ShittimCanvasTexture = resourceTexture;
                 return resourceTexture;
             }
         }
 
 #if UNITY_EDITOR
-        // ±à¼­Æ÷ÖĞ³¢ÊÔÍ¨¹ıGUID¼ÓÔØ
+        // ç¼–è¾‘å™¨ä¸­å°è¯•é€šè¿‡GUIDåŠ è½½
         if (!string.IsNullOrEmpty(textureGUID))
         {
             string assetPath = UnityEditor.AssetDatabase.GUIDToAssetPath(textureGUID);
@@ -43,7 +43,7 @@ public class ShittimCanvasSettings
                 Texture2D guidTexture = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
                 if (guidTexture != null)
                 {
-                    //Debug.Log($"[ShittimCanvas] Í¨¹ıGUID¼ÓÔØÎÆÀí: {assetPath}");
+                    //Debug.Log($"[ShittimCanvas] é€šè¿‡GUIDåŠ è½½çº¹ç†: {assetPath}");
                     ShittimCanvasTexture = guidTexture;
                     return guidTexture;
                 }
@@ -51,18 +51,18 @@ public class ShittimCanvasSettings
         }
 #endif
 
-        // ´´½¨Ä¬ÈÏÎÆÀí
+        // åˆ›å»ºé»˜è®¤çº¹ç†
         return CreateDefaultTexture();
     }
 
     private Texture2D CreateDefaultTexture()
     {
-        //Debug.LogWarning("[ShittimCanvas] ´´½¨Ä¬ÈÏË®Ó¡ÎÆÀí");
+        //Debug.LogWarning("[ShittimCanvas] åˆ›å»ºé»˜è®¤æ°´å°çº¹ç†");
 
         Texture2D defaultTexture = new Texture2D(256, 256, TextureFormat.RGBA32, false);
         Color[] pixels = new Color[256 * 256];
 
-        // ´´½¨Ò»¸ö¼òµ¥µÄÄ¬ÈÏË®Ó¡Í¼°¸
+        // åˆ›å»ºä¸€ä¸ªç®€å•çš„é»˜è®¤æ°´å°å›¾æ¡ˆ
         for (int y = 0; y < 256; y++)
         {
             for (int x = 0; x < 256; x++)
@@ -81,7 +81,7 @@ public class ShittimCanvasSettings
     }
 
 #if UNITY_EDITOR
-    // ±à¼­Æ÷ÖĞ×Ô¶¯¼ÇÂ¼ÎÆÀíĞÅÏ¢
+    // ç¼–è¾‘å™¨ä¸­è‡ªåŠ¨è®°å½•çº¹ç†ä¿¡æ¯
     public void RecordTextureInfo()
     {
         if (ShittimCanvasTexture != null)
@@ -89,19 +89,19 @@ public class ShittimCanvasSettings
             string assetPath = UnityEditor.AssetDatabase.GetAssetPath(ShittimCanvasTexture);
             textureGUID = UnityEditor.AssetDatabase.AssetPathToGUID(assetPath);
 
-            // ¼ì²éÊÇ·ñÔÚResourcesÎÄ¼ş¼ĞÖĞ
+            // æ£€æŸ¥æ˜¯å¦åœ¨Resourcesæ–‡ä»¶å¤¹ä¸­
             if (assetPath.Contains("/Resources/"))
             {
                 int resourcesIndex = assetPath.LastIndexOf("/Resources/") + "/Resources/".Length;
                 string resourcePath = assetPath.Substring(resourcesIndex);
-                // ÒÆ³ıÎÄ¼şÀ©Õ¹Ãû
+                // ç§»é™¤æ–‡ä»¶æ‰©å±•å
                 int dotIndex = resourcePath.LastIndexOf('.');
                 if (dotIndex > 0)
                 {
                     resourcePath = resourcePath.Substring(0, dotIndex);
                 }
                 textureResourcePath = resourcePath;
-                //Debug.Log($"[ShittimCanvas] ¼ÇÂ¼ResourcesÂ·¾¶: {textureResourcePath}");
+                //Debug.Log($"[ShittimCanvas] è®°å½•Resourcesè·¯å¾„: {textureResourcePath}");
             }
         }
     }
@@ -161,20 +161,20 @@ public class EnhancedShittimCanvasRendererFeature : ScriptableRendererFeature
 
     private EnhancedShittimCanvasRenderPass ShittimCanvasPass;
     private Material ShittimCanvasMaterial;
-    private Texture2D cachedTexture; // »º´æÎÆÀíÒıÓÃ
+    private Texture2D cachedTexture; // ç¼“å­˜çº¹ç†å¼•ç”¨
 
-    // »º´æµÄShaderÃû³Æ£¬±ÜÃâÔËĞĞÊ±²éÕÒ
+    // ç¼“å­˜çš„Shaderåç§°ï¼Œé¿å…è¿è¡Œæ—¶æŸ¥æ‰¾
     private const string SHADER_NAME = "UI/ShittimCanvas";
 
     public override void Create()
     {
         //Debug.Log("[ShittimCanvas] Create method called");
 
-        // È·±£ÔÚCreate½×¶Î´´½¨²ÄÖÊºÍPass
+        // ç¡®ä¿åœ¨Createé˜¶æ®µåˆ›å»ºæè´¨å’ŒPass
         InitializeMaterial();
         InitializeRenderPass();
 
-        // Ô¤¼ÓÔØÎÆÀí
+        // é¢„åŠ è½½çº¹ç†
         PreloadTexture();
     }
 
@@ -183,30 +183,30 @@ public class EnhancedShittimCanvasRendererFeature : ScriptableRendererFeature
         cachedTexture = settings.GetTexture();
         if (cachedTexture != null)
         {
-            //Debug.Log($"[ShittimCanvas] Ô¤¼ÓÔØÎÆÀí³É¹¦: {cachedTexture.name}");
+            //Debug.Log($"[ShittimCanvas] é¢„åŠ è½½çº¹ç†æˆåŠŸ: {cachedTexture.name}");
         }
         else
         {
-            //Debug.LogWarning("[ShittimCanvas] Ô¤¼ÓÔØÎÆÀíÊ§°Ü");
+            //Debug.LogWarning("[ShittimCanvas] é¢„åŠ è½½çº¹ç†å¤±è´¥");
         }
     }
 
     private void InitializeMaterial()
     {
-        // ÓÅÏÈÊ¹ÓÃÖ¸¶¨µÄShaderÒıÓÃ
+        // ä¼˜å…ˆä½¿ç”¨æŒ‡å®šçš„Shaderå¼•ç”¨
         if (ShittimCanvasShader == null)
         {
             ShittimCanvasShader = Shader.Find(SHADER_NAME);
         }
 
-        // Èç¹ûÕÒ²»µ½Shader£¬Ê¹ÓÃ±¸ÓÃShader
+        // å¦‚æœæ‰¾ä¸åˆ°Shaderï¼Œä½¿ç”¨å¤‡ç”¨Shader
         if (ShittimCanvasShader == null)
         {
-            //Debug.LogWarning($"[ShittimCanvas] ÎŞ·¨ÕÒµ½Shader '{SHADER_NAME}'£¬Ê¹ÓÃÄ¬ÈÏSprite Shader");
+            //Debug.LogWarning($"[ShittimCanvas] æ— æ³•æ‰¾åˆ°Shader '{SHADER_NAME}'ï¼Œä½¿ç”¨é»˜è®¤Sprite Shader");
             ShittimCanvasShader = Shader.Find("Sprites/Default");
         }
 
-        // ´´½¨²ÄÖÊ
+        // åˆ›å»ºæè´¨
         if (ShittimCanvasShader != null)
         {
             if (ShittimCanvasMaterial != null)
@@ -227,42 +227,42 @@ public class EnhancedShittimCanvasRendererFeature : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        // ÔËĞĞÊ±ÑéÖ¤ºÍÖØ½¨
+        // è¿è¡Œæ—¶éªŒè¯å’Œé‡å»º
         if (!ValidateAndRebuildIfNeeded())
         {
             return;
         }
 
-        // ÑéÖ¤ÎÆÀí£¨Ê¹ÓÃGetTexture·½·¨£©
+        // éªŒè¯çº¹ç†ï¼ˆä½¿ç”¨GetTextureæ–¹æ³•ï¼‰
         Texture2D currentTexture = settings.GetTexture();
         if (currentTexture == null)
         {
-            //Debug.LogWarning("[ShittimCanvas] ÎŞ·¨»ñÈ¡Ë®Ó¡ÎÆÀí£¬Ìø¹ıäÖÈ¾");
+            //Debug.LogWarning("[ShittimCanvas] æ— æ³•è·å–æ°´å°çº¹ç†ï¼Œè·³è¿‡æ¸²æŸ“");
             return;
         }
 
-        // ¸üĞÂ»º´æµÄÎÆÀí
+        // æ›´æ–°ç¼“å­˜çš„çº¹ç†
         if (cachedTexture != currentTexture)
         {
             cachedTexture = currentTexture;
-            //Debug.Log($"[ShittimCanvas] ¸üĞÂÎÆÀí»º´æ: {cachedTexture.name}");
+            //Debug.Log($"[ShittimCanvas] æ›´æ–°çº¹ç†ç¼“å­˜: {cachedTexture.name}");
         }
 
-        // Ö»ÔÚGameºÍSceneViewÏà»úÖĞäÖÈ¾
+        // åªåœ¨Gameå’ŒSceneViewç›¸æœºä¸­æ¸²æŸ“
         if (renderingData.cameraData.cameraType != CameraType.Game &&
             renderingData.cameraData.cameraType != CameraType.SceneView)
         {
             return;
         }
 
-        //Debug.Log("[ShittimCanvas] Ìí¼ÓäÖÈ¾Pass");
+        //Debug.Log("[ShittimCanvas] æ·»åŠ æ¸²æŸ“Pass");
 
-        // ÅäÖÃäÖÈ¾Pass
+        // é…ç½®æ¸²æŸ“Pass
         RenderPassEvent targetEvent = GetRenderPassEvent(settings.renderEvent);
         ShittimCanvasPass.renderPassEvent = targetEvent;
         ShittimCanvasPass.ConfigureInput(ScriptableRenderPassInput.Color);
 
-        // ÉèÖÃPass²¢¼ÓÈëäÖÈ¾¶ÓÁĞ
+        // è®¾ç½®Passå¹¶åŠ å…¥æ¸²æŸ“é˜Ÿåˆ—
         ShittimCanvasPass.Setup(renderer.cameraColorTarget, renderingData.cameraData.renderer);
         renderer.EnqueuePass(ShittimCanvasPass);
     }
@@ -271,52 +271,52 @@ public class EnhancedShittimCanvasRendererFeature : ScriptableRendererFeature
     {
         bool needsRebuild = false;
 
-        // ¼ì²éShader
+        // æ£€æŸ¥Shader
         if (ShittimCanvasShader == null)
         {
-            //Debug.LogWarning("[ShittimCanvas] Shader¶ªÊ§£¬³¢ÊÔÖØĞÂ²éÕÒ");
+            //Debug.LogWarning("[ShittimCanvas] Shaderä¸¢å¤±ï¼Œå°è¯•é‡æ–°æŸ¥æ‰¾");
             ShittimCanvasShader = Shader.Find(SHADER_NAME);
             needsRebuild = true;
         }
 
-        // ¼ì²éMaterial
+        // æ£€æŸ¥Material
         if (ShittimCanvasMaterial == null && ShittimCanvasShader != null)
         {
-            //Debug.LogWarning("[ShittimCanvas] Material¶ªÊ§£¬ÖØĞÂ´´½¨");
+            //Debug.LogWarning("[ShittimCanvas] Materialä¸¢å¤±ï¼Œé‡æ–°åˆ›å»º");
             ShittimCanvasMaterial = CoreUtils.CreateEngineMaterial(ShittimCanvasShader);
             needsRebuild = true;
         }
 
-        // ¼ì²éRenderPass
+        // æ£€æŸ¥RenderPass
         if (ShittimCanvasPass == null && ShittimCanvasMaterial != null)
         {
-            //Debug.LogWarning("[ShittimCanvas] RenderPass¶ªÊ§£¬ÖØĞÂ´´½¨");
+            //Debug.LogWarning("[ShittimCanvas] RenderPassä¸¢å¤±ï¼Œé‡æ–°åˆ›å»º");
             ShittimCanvasPass = new EnhancedShittimCanvasRenderPass(ShittimCanvasMaterial, settings);
             needsRebuild = true;
         }
 
-        // ×îÖÕÑéÖ¤
+        // æœ€ç»ˆéªŒè¯
         if (ShittimCanvasShader == null)
         {
-            //Debug.LogError("[ShittimCanvas] ÎŞ·¨´´½¨Shader");
+            //Debug.LogError("[ShittimCanvas] æ— æ³•åˆ›å»ºShader");
             return false;
         }
 
         if (ShittimCanvasMaterial == null)
         {
-            //Debug.LogError("[ShittimCanvas] ÎŞ·¨´´½¨Material");
+            //Debug.LogError("[ShittimCanvas] æ— æ³•åˆ›å»ºMaterial");
             return false;
         }
 
         if (ShittimCanvasPass == null)
         {
-            //Debug.LogError("[ShittimCanvas] ÎŞ·¨´´½¨RenderPass");
+            //Debug.LogError("[ShittimCanvas] æ— æ³•åˆ›å»ºRenderPass");
             return false;
         }
 
         if (needsRebuild)
         {
-            //Debug.Log("[ShittimCanvas] ×é¼şÖØ½¨Íê³É");
+            //Debug.Log("[ShittimCanvas] ç»„ä»¶é‡å»ºå®Œæˆ");
         }
 
         return true;
@@ -353,7 +353,7 @@ public class EnhancedShittimCanvasRendererFeature : ScriptableRendererFeature
         }
     }
 
-    // ÔÚ±à¼­Æ÷ÖĞÖ§³ÖÈÈÖØÔØ
+    // åœ¨ç¼–è¾‘å™¨ä¸­æ”¯æŒçƒ­é‡è½½
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -378,11 +378,11 @@ public class EnhancedShittimCanvasRenderPass : ScriptableRenderPass
     private RenderTargetIdentifier colorTarget;
     private ScriptableRenderer renderer;
 
-    // Ê¹ÓÃRTHandleÌæ´úRenderTargetHandle (URP 12+ÍÆ¼ö)
+    // ä½¿ç”¨RTHandleæ›¿ä»£RenderTargetHandle (URP 12+æ¨è)
     private RTHandle tempColorTexture;
     private bool isRTHandleSupported;
 
-    // ShaderÊôĞÔID»º´æ
+    // Shaderå±æ€§IDç¼“å­˜
     private static readonly int ShittimCanvasTexId = Shader.PropertyToID("_ShittimCanvasTex");
     private static readonly int OpacityId = Shader.PropertyToID("_Opacity");
     private static readonly int PositionId = Shader.PropertyToID("_Position");
@@ -391,7 +391,7 @@ public class EnhancedShittimCanvasRenderPass : ScriptableRenderPass
     private static readonly int TilingId = Shader.PropertyToID("_Tiling");
     private static readonly int TilingCountId = Shader.PropertyToID("_TilingCount");
 
-    // ÁÙÊ±RTÃû³Æ
+    // ä¸´æ—¶RTåç§°
     private const string TEMP_RT_NAME = "_TempShittimCanvasRT";
 
     public EnhancedShittimCanvasRenderPass(Material material, ShittimCanvasSettings settings)
@@ -400,7 +400,7 @@ public class EnhancedShittimCanvasRenderPass : ScriptableRenderPass
         this.settings = settings;
         this.renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
 
-        // ¼ì²éRTHandleÖ§³Ö
+        // æ£€æŸ¥RTHandleæ”¯æŒ
 #if UNITY_2022_1_OR_NEWER
         isRTHandleSupported = true;
 #else
@@ -421,7 +421,7 @@ public class EnhancedShittimCanvasRenderPass : ScriptableRenderPass
 
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
     {
-        // ÔËĞĞÊ±ÑéÖ¤
+        // è¿è¡Œæ—¶éªŒè¯
         if (!ValidateExecution())
         {
             return;
@@ -431,18 +431,18 @@ public class EnhancedShittimCanvasRenderPass : ScriptableRenderPass
 
         try
         {
-            // ¸üĞÂ²ÄÖÊÊôĞÔ
+            // æ›´æ–°æè´¨å±æ€§
             UpdateMaterialProperties();
 
-            // »ñÈ¡äÖÈ¾ÃèÊö·û
+            // è·å–æ¸²æŸ“æè¿°ç¬¦
             RenderTextureDescriptor desc = GetRenderTextureDescriptor(renderingData);
 
-            // Ö´ĞĞäÖÈ¾
+            // æ‰§è¡Œæ¸²æŸ“
             ExecuteRendering(cmd, desc);
         }
         catch (System.Exception e)
         {
-            //Debug.LogError($"[ShittimCanvas] äÖÈ¾¹ı³ÌÖĞ·¢Éú´íÎó: {e.Message}");
+            //Debug.LogError($"[ShittimCanvas] æ¸²æŸ“è¿‡ç¨‹ä¸­å‘ç”Ÿé”™è¯¯: {e.Message}");
         }
         finally
         {
@@ -455,15 +455,15 @@ public class EnhancedShittimCanvasRenderPass : ScriptableRenderPass
     {
         if (material == null)
         {
-            //Debug.LogError("[ShittimCanvas] MaterialÎª¿Õ£¬ÎŞ·¨Ö´ĞĞäÖÈ¾");
+            //Debug.LogError("[ShittimCanvas] Materialä¸ºç©ºï¼Œæ— æ³•æ‰§è¡Œæ¸²æŸ“");
             return false;
         }
 
-        // Ê¹ÓÃGetTexture·½·¨»ñÈ¡ÎÆÀí
+        // ä½¿ç”¨GetTextureæ–¹æ³•è·å–çº¹ç†
         Texture2D texture = settings?.GetTexture();
         if (texture == null)
         {
-            //Debug.LogWarning("[ShittimCanvas] ÎŞ·¨»ñÈ¡Ë®Ó¡ÎÆÀí£¬Ìø¹ıäÖÈ¾");
+            //Debug.LogWarning("[ShittimCanvas] æ— æ³•è·å–æ°´å°çº¹ç†ï¼Œè·³è¿‡æ¸²æŸ“");
             return false;
         }
 
@@ -474,7 +474,7 @@ public class EnhancedShittimCanvasRenderPass : ScriptableRenderPass
     {
         RenderTextureDescriptor desc = renderingData.cameraData.cameraTargetDescriptor;
         desc.depthBufferBits = 0;
-        desc.msaaSamples = 1; // ½ûÓÃMSAA±ÜÃâ¼æÈİĞÔÎÊÌâ
+        desc.msaaSamples = 1; // ç¦ç”¨MSAAé¿å…å…¼å®¹æ€§é—®é¢˜
         desc.useMipMap = false;
         desc.autoGenerateMips = false;
 
@@ -497,7 +497,7 @@ public class EnhancedShittimCanvasRenderPass : ScriptableRenderPass
 
     private void ExecuteRendering(CommandBuffer cmd, RenderTextureDescriptor desc)
     {
-        // ¸ù¾İäÖÈ¾Ê±»úÑ¡ÔñäÖÈ¾²ßÂÔ
+        // æ ¹æ®æ¸²æŸ“æ—¶æœºé€‰æ‹©æ¸²æŸ“ç­–ç•¥
         switch (settings.renderEvent)
         {
             case ShittimCanvasRenderEvent.BeforePostProcessing:
@@ -510,21 +510,21 @@ public class EnhancedShittimCanvasRenderPass : ScriptableRenderPass
 
     private void RenderWithBlit(CommandBuffer cmd, RenderTextureDescriptor desc)
     {
-        // »ñÈ¡ÁÙÊ±äÖÈ¾ÎÆÀí
+        // è·å–ä¸´æ—¶æ¸²æŸ“çº¹ç†
         int tempRTId = Shader.PropertyToID(TEMP_RT_NAME);
         cmd.GetTemporaryRT(tempRTId, desc, FilterMode.Bilinear);
 
         try
         {
-            // ¸´ÖÆµ±Ç°ÑÕÉ«»º³åÇøµ½ÁÙÊ±ÎÆÀí
+            // å¤åˆ¶å½“å‰é¢œè‰²ç¼“å†²åŒºåˆ°ä¸´æ—¶çº¹ç†
             cmd.Blit(colorTarget, tempRTId);
 
-            // Ê¹ÓÃË®Ó¡²ÄÖÊäÖÈ¾µ½ÑÕÉ«»º³åÇø
+            // ä½¿ç”¨æ°´å°æè´¨æ¸²æŸ“åˆ°é¢œè‰²ç¼“å†²åŒº
             cmd.Blit(tempRTId, colorTarget, material, 0);
         }
         finally
         {
-            // ÊÍ·ÅÁÙÊ±ÎÆÀí
+            // é‡Šæ”¾ä¸´æ—¶çº¹ç†
             cmd.ReleaseTemporaryRT(tempRTId);
         }
     }

@@ -8,7 +8,7 @@ public class Wallpaper_Mode_Handler : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Wallpaper Mode Handler µ¥Àı´´½¨Íê³É");
+            Debug.Log("[Awake] Wallpaper Mode Handler å•ä¾‹åˆ›å»ºå®Œæˆ");
         }
         else
         {
@@ -33,7 +33,7 @@ public class Wallpaper_Mode_Handler : MonoBehaviour
         {
             if (Window_Services.Instance.is_Switching)
             {
-                Console_Log($"¼ì²âµ½·¢´°¿ÚÇĞ»»", Debug_Services.LogLevel.Ignore);
+                Console_Log($"æ£€æµ‹åˆ°å‘çª—å£åˆ‡æ¢", Debug_Services.LogLevel.Ignore);
                 is_Pressed = false;
                 is_Pressing = false;
                 is_Draging = false;
@@ -49,7 +49,7 @@ public class Wallpaper_Mode_Handler : MonoBehaviour
             {
                 if (!is_Pressing)
                 {
-                    Console_Log("°´ÏÂ");
+                    Console_Log("æŒ‰ä¸‹");
 
                     is_Pressed = true;
                     is_Pressing = true;
@@ -57,12 +57,12 @@ public class Wallpaper_Mode_Handler : MonoBehaviour
                 }
                 else
                 {
-                    //Console_Log("°´×¡");
+                    //Console_Log("æŒ‰ä½");
                     if (Cur_Cursor_Postion != Last_Cursor_Postion)
                     {
                         if (!is_Draging)
                         {
-                            Console_Log("¿ªÊ¼ÍÏ×§");
+                            Console_Log("å¼€å§‹æ‹–æ‹½");
                             is_Draging = true;
                         }
                         Drag_Delta = Cur_Cursor_Postion - Last_Cursor_Postion;
@@ -71,7 +71,7 @@ public class Wallpaper_Mode_Handler : MonoBehaviour
                     {
                         if (is_Draging)
                         {
-                            Console_Log("Í£Ö¹ÍÏ×§");
+                            Console_Log("åœæ­¢æ‹–æ‹½");
                             is_Draging = false;
                         }
                     }
@@ -81,7 +81,7 @@ public class Wallpaper_Mode_Handler : MonoBehaviour
 
             if (!Cur_is_Pressed && Last_is_Pressed)
             {
-                Console_Log("ËÉ¿ª");
+                Console_Log("æ¾å¼€");
 
                 is_Pressed = false;
                 is_Pressing = false;

@@ -13,7 +13,7 @@ public class Debug_Services : MonoBehaviour
         {
             Instance = this;
             Debug_Area.SetActive(is_Debug);
-            Debug.Log("[Awake] Debug Services 单例创建完成");
+            Debug.Log("[Awake] Debug Services 鍗曚緥鍒涘缓瀹屾垚");
         }
         else
         {

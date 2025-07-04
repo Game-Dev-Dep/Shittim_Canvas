@@ -4,11 +4,11 @@ public class SpineCharacterGyro : MonoBehaviour
 {
     public enum InputSourceType
     {
-        RealGyro,      // ÕæÊµÍÓÂİÒÇ
-        KeyboardSim,   // ¼üÅÌÄ£Äâ
+        RealGyro,      // çœŸå®é™€èºä»ª
+        KeyboardSim,   // é”®ç›˜æ¨¡æ‹Ÿ
     }
 
-    // »ù´¡ÅäÖÃ
+    // åŸºç¡€é…ç½®
     public InputSourceType inputSource = InputSourceType.RealGyro;
     public Transform Bone;
     public Vector3 OrigLocalPos;
@@ -17,10 +17,10 @@ public class SpineCharacterGyro : MonoBehaviour
     [Range(0, 1)] public float GyroFollowPower01 = 0.5f;
     public float GyroSensitivity = 1.0f;
 
-    // ÎïÌåĞı×ªÄ£Ê½×¨ÓÃ
-    public Transform rotationSource; // ÍÏÈë×÷ÎªĞı×ª²Î¿¼µÄÁ¢·½Ìå
+    // ç‰©ä½“æ—‹è½¬æ¨¡å¼ä¸“ç”¨
+    public Transform rotationSource; // æ‹–å…¥ä½œä¸ºæ—‹è½¬å‚è€ƒçš„ç«‹æ–¹ä½“
 
-    // ¼üÅÌÄ£Äâ²ÎÊı
+    // é”®ç›˜æ¨¡æ‹Ÿå‚æ•°
     public float keyboardSpeed = 0.5f;
     public KeyCode resetKey = KeyCode.R;
 
@@ -28,7 +28,7 @@ public class SpineCharacterGyro : MonoBehaviour
     public Vector3 gyroOffset;
     public bool refreshStartRotation;
     public Quaternion gyroStartRotation;
-    public Quaternion refObjectStartRot; // ²Î¿¼ÎïÌå³õÊ¼Ğı×ª
+    public Quaternion refObjectStartRot; // å‚è€ƒç‰©ä½“åˆå§‹æ—‹è½¬
 
     private void OnEnable()
     {
@@ -77,7 +77,7 @@ public class SpineCharacterGyro : MonoBehaviour
         }
     }
 
-    // ºËĞÄÔË¶¯Âß¼­±£³Ö²»±ä
+    // æ ¸å¿ƒè¿åŠ¨é€»è¾‘ä¿æŒä¸å˜
     private void ApplyMovement()
     {
         Vector3 targetWorldPos = origWorldPos + gyroOffset * GyroSensitivity;
@@ -91,7 +91,7 @@ public class SpineCharacterGyro : MonoBehaviour
         );
     }
 
-    // ÕæÊµÍÓÂİÒÇÂß¼­
+    // çœŸå®é™€èºä»ªé€»è¾‘
     private void UpdateGyroOffsetByAttitude()
     {
         if (Input.gyro == null) return;
@@ -102,7 +102,7 @@ public class SpineCharacterGyro : MonoBehaviour
         gyroOffset = new Vector3(-direction.x, -direction.y, 0);
     }
 
-    // ¼üÅÌÄ£ÄâÂß¼­
+    // é”®ç›˜æ¨¡æ‹Ÿé€»è¾‘
     private void UpdateKeyboardSimulation()
     {
         Vector3 input = new Vector3(
@@ -119,7 +119,7 @@ public class SpineCharacterGyro : MonoBehaviour
         }
     }
 
-    // ËÄÔªÊıÁãÖµ¼ì²â
+    // å››å…ƒæ•°é›¶å€¼æ£€æµ‹
     private static bool IsQuaternionZero(Quaternion q)
     {
         return Mathf.Abs(q.x) < 0.0001f &&
@@ -128,7 +128,7 @@ public class SpineCharacterGyro : MonoBehaviour
                 Mathf.Abs(q.w) < 0.0001f;
     }
 
-    // ÈıÎ¬ÏòÁ¿·¶Î§ÏŞÖÆ
+    // ä¸‰ç»´å‘é‡èŒƒå›´é™åˆ¶
     private Vector3 ClampVector3(Vector3 value, Vector3 min, Vector3 max)
     {
         return new Vector3(

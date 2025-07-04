@@ -27,10 +27,10 @@ public class SpineDragIK : MonoBehaviour
     public PortraitSpineCharacter portraitSpineCharacter;
     public Camera mCachedCamera;
 
-    [Header("Æ½»¬ÉèÖÃ")]
-    public float smoothTime = 0.15f;          // ĞÂÔö£ºÆ½»¬Ê±¼ä
-    public float maxSpeed = Mathf.Infinity;   // ĞÂÔö£º×î´óËÙ¶È
-    private Vector3 currentVelocity;          // ĞÂÔö£ºµ±Ç°ËÙ¶È
+    [Header("å¹³æ»‘è®¾ç½®")]
+    public float smoothTime = 0.15f;          // æ–°å¢ï¼šå¹³æ»‘æ—¶é—´
+    public float maxSpeed = Mathf.Infinity;   // æ–°å¢ï¼šæœ€å¤§é€Ÿåº¦
+    private Vector3 currentVelocity;          // æ–°å¢ï¼šå½“å‰é€Ÿåº¦
 
     private Camera CachedCamera
     {
@@ -78,7 +78,7 @@ public class SpineDragIK : MonoBehaviour
             {
                 if (coroutine != null)
                 {
-                    Console_Log("Ğ­³Ì²»Îª¿Õ£¬ÊÍ·ÅÒ»´Î");
+                    Console_Log("åç¨‹ä¸ä¸ºç©ºï¼Œé‡Šæ”¾ä¸€æ¬¡");
                     force_trigger_OnPress = true;
                     OnPress(false);
                     Wallpaper_Mode_Handler.Instance.is_Released = false;
@@ -132,7 +132,7 @@ public class SpineDragIK : MonoBehaviour
     private bool force_trigger_OnPress = false;
     public void OnPress(bool state)
     {
-        //Console_Log($"{gameObject.name} OnPress ´¥·¢");
+        //Console_Log($"{gameObject.name} OnPress è§¦å‘");
 
         if (!force_trigger_OnPress)
         {
@@ -150,7 +150,7 @@ public class SpineDragIK : MonoBehaviour
         else force_trigger_OnPress = false;
 
 
-        Console_Log($"{gameObject.name} OnPress ºÏ·¨");
+        Console_Log($"{gameObject.name} OnPress åˆæ³•");
 
 
         if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
@@ -163,7 +163,7 @@ public class SpineDragIK : MonoBehaviour
 
         if (state)
         {
-            Console_Log($"{gameObject.name} OnPress °´ÏÂ");
+            Console_Log($"{gameObject.name} OnPress æŒ‰ä¸‹");
 
             if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
             {
@@ -192,18 +192,18 @@ public class SpineDragIK : MonoBehaviour
         }
         else
         {
-            Console_Log($"{gameObject.name} OnPress ËÉ¿ª");
+            Console_Log($"{gameObject.name} OnPress æ¾å¼€");
 
             SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(1, 0.5f);
             SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(2, 0.5f);
 
             SpineController.SkeletonAnimation.AnimationState.SetAnimation(1, EndClip.ClipName, false);
-            Console_Log($"{gameObject.name} ²¥·Å½áÊø¶¯»­ 01: {EndClip.ClipName}");
+            Console_Log($"{gameObject.name} æ’­æ”¾ç»“æŸåŠ¨ç”» 01: {EndClip.ClipName}");
 
             if (EndClip.SyncPlayClipObjects.Count() != 0 && EndClip.SyncPlayClipObjects.First() != null)
             {
                 SpineClip sync_clip = EndClip.SyncPlayClipObjects[0] as SpineClip;
-                Console_Log($"{gameObject.name} ²¥·Å½áÊø¶¯»­ 02: {sync_clip.ClipName}");
+                Console_Log($"{gameObject.name} æ’­æ”¾ç»“æŸåŠ¨ç”» 02: {sync_clip.ClipName}");
                 SpineController.SkeletonAnimation.AnimationState.SetAnimation(2, sync_clip.ClipName, false);
             }
 
@@ -218,7 +218,7 @@ public class SpineDragIK : MonoBehaviour
 
     public void OnDrag()
     {
-        //Console_Log($"{gameObject.name} OnDrag ´¥·¢");
+        //Console_Log($"{gameObject.name} OnDrag è§¦å‘");
 
         if (SpineController.SkeletonAnimation.AnimationState.GetCurrent(0)?.Animation.Name != "Idle_01") return;
         if (Index_Services.Instance.is_Talking) return;
@@ -231,7 +231,7 @@ public class SpineDragIK : MonoBehaviour
             if (!Wallpaper_Mode_Handler.Instance.is_Draging) return;
         }
 
-        //Console_Log($"{gameObject.name} OnDrag ºÏ·¨");
+        //Console_Log($"{gameObject.name} OnDrag åˆæ³•");
 
         if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
         {
@@ -248,7 +248,7 @@ public class SpineDragIK : MonoBehaviour
 
     private void UpdateDestLocalPos()
     {
-        //Console_Log($"{gameObject.name} ×ø±ê¸üĞÂ ´¥·¢");
+        //Console_Log($"{gameObject.name} åæ ‡æ›´æ–° è§¦å‘");
 
         if (!isUpdating) return;
         if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
@@ -256,20 +256,20 @@ public class SpineDragIK : MonoBehaviour
             if (Index_Services.Instance.Cur_Responsing_Object != gameObject) return;
         }
 
-        //Console_Log($"{gameObject.name} ×ø±ê¸üĞÂ ºÏ·¨");
+        //Console_Log($"{gameObject.name} åæ ‡æ›´æ–° åˆæ³•");
 
-        // ×ø±ê×ª»»Á÷³Ì±£³Ö²»±ä
+        // åæ ‡è½¬æ¢æµç¨‹ä¿æŒä¸å˜
         Vector3 worldPos = CachedCamera.ScreenToWorldPoint(screenPos);
         Transform parent = Bone.parent;
         Vector3 localPos = parent.InverseTransformPoint(worldPos);
 
-        // ĞŞÕı»ù×¼µãÆ«ÒÆ¼ÆËã
+        // ä¿®æ­£åŸºå‡†ç‚¹åç§»è®¡ç®—
         Vector3 baseOffset = parent.InverseTransformPoint(Bone.parent.TransformPoint(OrigLocalPos));
 
         destLocalPos = new Vector3(
             Mathf.Clamp(localPos.x + BoneCenterOffset.x - baseOffset.x, MinLocalPos.x, MaxLocalPos.x),
             Mathf.Clamp(localPos.y + BoneCenterOffset.y - baseOffset.y, MinLocalPos.y, MaxLocalPos.y),
-            OrigLocalPos.z  // ±£³ÖÔ­Ê¼ZÖµ
+            OrigLocalPos.z  // ä¿æŒåŸå§‹Zå€¼
         );
     }
 
@@ -284,11 +284,11 @@ public class SpineDragIK : MonoBehaviour
             if (IngClip.Loop)
             {
                 SpineController.SkeletonAnimation.AnimationState.SetAnimation(1, IngClip.ClipName, true);
-                Console_Log($"{gameObject.name} ²¥·Å½øĞĞ¶¯»­ 01: {IngClip.ClipName}");
+                Console_Log($"{gameObject.name} æ’­æ”¾è¿›è¡ŒåŠ¨ç”» 01: {IngClip.ClipName}");
                 if (IngClip.SyncPlayClipObjects.Count() != 0 && IngClip.SyncPlayClipObjects.First() != null)
                 {
                     SpineClip sync_clip = IngClip.SyncPlayClipObjects[0] as SpineClip;
-                    Console_Log($"{gameObject.name} ²¥·Å½øĞĞ¶¯»­ 02: {sync_clip.ClipName}");
+                    Console_Log($"{gameObject.name} æ’­æ”¾è¿›è¡ŒåŠ¨ç”» 02: {sync_clip.ClipName}");
                     SpineController.SkeletonAnimation.AnimationState.SetAnimation(2, sync_clip.ClipName, true);
                 }
             }
@@ -296,11 +296,11 @@ public class SpineDragIK : MonoBehaviour
             {
                 TrackEntry track_entry = SpineController.SkeletonAnimation.AnimationState.SetAnimation(1, IngClip.ClipName, false);
                 track_entry.Complete += OnClipComplete;
-                Console_Log($"{gameObject.name} ²¥·ÅÆğÊ¼¶¯»­ 01: {IngClip.ClipName}");
+                Console_Log($"{gameObject.name} æ’­æ”¾èµ·å§‹åŠ¨ç”» 01: {IngClip.ClipName}");
                 if (IngClip.SyncPlayClipObjects.Count() != 0 && IngClip.SyncPlayClipObjects.First() != null)
                 {
                     SpineClip sync_clip = IngClip.SyncPlayClipObjects[0] as SpineClip;
-                    Console_Log($"{gameObject.name} ²¥·ÅÆğÊ¼¶¯»­ 02: {sync_clip.ClipName}");
+                    Console_Log($"{gameObject.name} æ’­æ”¾èµ·å§‹åŠ¨ç”» 02: {sync_clip.ClipName}");
                     SpineController.SkeletonAnimation.AnimationState.SetAnimation(2, sync_clip.ClipName, true);
                 }
             }
@@ -311,7 +311,7 @@ public class SpineDragIK : MonoBehaviour
     private void OnClipComplete(Spine.TrackEntry trackEntry)
     {
         //if (trackEntry.TrackIndex != 1) return;
-        Console_Log($"{gameObject.name} ´¥·¢½áÊø");
+        Console_Log($"{gameObject.name} è§¦å‘ç»“æŸ");
 
         trackEntry.Complete -= OnClipComplete;
 
@@ -319,11 +319,11 @@ public class SpineDragIK : MonoBehaviour
         {
             IngClip = IngClip.NextClip;
             SpineController.SkeletonAnimation.AnimationState.SetAnimation(1, IngClip.ClipName, true);
-            Console_Log($"{gameObject.name} ²¥·ÅºóĞøÑ­»·¶¯»­ 01: {IngClip.ClipName}");
+            Console_Log($"{gameObject.name} æ’­æ”¾åç»­å¾ªç¯åŠ¨ç”» 01: {IngClip.ClipName}");
             if (IngClip.SyncPlayClipObjects.Count() != 0 && IngClip.SyncPlayClipObjects.First() != null)
             {
                 SpineClip sync_clip = IngClip.SyncPlayClipObjects[0] as SpineClip;
-                Console_Log($"{gameObject.name} ²¥·ÅºóĞøÑ­»·¶¯»­ 02: {sync_clip.ClipName}");
+                Console_Log($"{gameObject.name} æ’­æ”¾åç»­å¾ªç¯åŠ¨ç”» 02: {sync_clip.ClipName}");
                 SpineController.SkeletonAnimation.AnimationState.SetAnimation(2, sync_clip.ClipName, true);
             }
         }
@@ -331,10 +331,10 @@ public class SpineDragIK : MonoBehaviour
 
     private IEnumerator CoMoveBone()
     {
-        Console_Log($"{gameObject.name} Ğ­³Ì CoMoveBone Æô¶¯");
+        Console_Log($"{gameObject.name} åç¨‹ CoMoveBone å¯åŠ¨");
 
         isUpdating = true;
-        //Console_Log($"{gameObject.name} µÄ isUpdating ±»ÖÃÎª {isUpdating}");
+        //Console_Log($"{gameObject.name} çš„ isUpdating è¢«ç½®ä¸º {isUpdating}");
 
         while (true)
         {
@@ -366,8 +366,8 @@ public class SpineDragIK : MonoBehaviour
             {
                 Bone.localPosition = OrigLocalPos;
                 isUpdating = false;
-                //Console_Log($"{gameObject.name} µÄ isUpdating ±»ÖÃÎª {isUpdating}");
-                Console_Log($"{gameObject.name} Ğ­³Ì CoMoveBone ÖÕÖ¹ {isUpdating}");
+                //Console_Log($"{gameObject.name} çš„ isUpdating è¢«ç½®ä¸º {isUpdating}");
+                Console_Log($"{gameObject.name} åç¨‹ CoMoveBone ç»ˆæ­¢ {isUpdating}");
                 yield break;
             }
 

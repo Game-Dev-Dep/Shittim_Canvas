@@ -12,7 +12,7 @@ public class Volume_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Volume Services 单例创建完成");
+            Debug.Log("[Awake] Volume Services 鍗曚緥鍒涘缓瀹屾垚");
         }
         else
         {

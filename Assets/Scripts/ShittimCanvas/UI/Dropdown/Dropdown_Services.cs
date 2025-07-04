@@ -14,7 +14,7 @@ public class Dropdown_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Dropdown Services µ¥Àı´´½¨Íê³É");
+            Debug.Log("[Awake] Dropdown Services å•ä¾‹åˆ›å»ºå®Œæˆ");
         }
         else
         {
@@ -38,7 +38,7 @@ public class Dropdown_Services : MonoBehaviour
     public string folderPath = "";
     public Texture2D defaultIcon;
     public int maxVisibleOptions = 5;
-    public float optionHeight = 123f; //°¦£¬Ğ´ËÀµÄ£¬¸Ä´óµã¡£
+    public float optionHeight = 123f; //å”‰ï¼Œå†™æ­»çš„ï¼Œæ”¹å¤§ç‚¹ã€‚
 
     private List<string> folderNames = new List<string>();
     private bool isDropdownOpen = false;
@@ -51,7 +51,7 @@ public class Dropdown_Services : MonoBehaviour
     private List<GameObject> optionPool = new List<GameObject>();
     private List<GameObject> activeOptions = new List<GameObject>();
 
-    private float debounceTime = 0.15f; // 150ms·À¶¶
+    private float debounceTime = 0.15f; // 150msé˜²æŠ–
     private Coroutine debounceCoroutine;
     private Coroutine populateCoroutine;
 
@@ -73,7 +73,7 @@ public class Dropdown_Services : MonoBehaviour
         FilterOptions();
         InitializeOptionPool();
 
-        //¼ÓÔØÉÏ´ÎÑ¡ÔñµÄÑ§Éú
+        //åŠ è½½ä¸Šæ¬¡é€‰æ‹©çš„å­¦ç”Ÿ
         string lastSelected = PlayerPrefs.GetString("Dropdown_SelectedCharacter", "");
         if (!string.IsNullOrEmpty(lastSelected))
         {
@@ -84,7 +84,7 @@ public class Dropdown_Services : MonoBehaviour
             SetDefaultCharacterThumbnail();
         }
 
-        // °óµ½Ïà»ú±£´æ°´Å¥£¬ÊèÓ°µÄ¹ø¡£
+        // ç»‘åˆ°ç›¸æœºä¿å­˜æŒ‰é’®ï¼Œç–å½±çš„é”…ã€‚
         var cameraServices = Camera_Services.Instance;
         if (cameraServices != null && cameraServices.Save_Camera_Settings_Button != null)
         {
@@ -100,7 +100,7 @@ public class Dropdown_Services : MonoBehaviour
             if (templateRect != null)
             {
                 optionHeight = templateRect.sizeDelta.y;
-                Debug.Log($"[Dropdown_Services] ´ÓÄ£°å»ñÈ¡Ñ¡Ïî¸ß¶È: {optionHeight}");
+                Debug.Log($"[Dropdown_Services] ä»æ¨¡æ¿è·å–é€‰é¡¹é«˜åº¦: {optionHeight}");
             }
         }
     }
@@ -109,16 +109,16 @@ public class Dropdown_Services : MonoBehaviour
     {
         if (mainButtonIcon == null) return;
 
-        // »ñÈ¡Ä¬ÈÏ½ÇÉ«Ãû³Æ
+        // è·å–é»˜è®¤è§’è‰²åç§°
         string defaultCharacterName = Config_Services.Instance.MemoryLobby_Camera_Config.Defalut_Character_Name;
         
-        // ÉèÖÃÄ¬ÈÏ±êÇ©ÎÄ±¾
+        // è®¾ç½®é»˜è®¤æ ‡ç­¾æ–‡æœ¬
         if (mainButtonLabel != null)
         {
             mainButtonLabel.text = defaultCharacterName;
         }
 
-        // ¼ÓÔØÄ¬ÈÏ½ÇÉ«µÄËõÂÔÍ¼
+        // åŠ è½½é»˜è®¤è§’è‰²çš„ç¼©ç•¥å›¾
         if (defaultCharacterName != "Textures" && Texture_Services.Lobbyillust.ContainsKey(defaultCharacterName))
         {
             string thumbnailPath = Path.Combine(File_Services.Student_Lists_Folder_Path, Texture_Services.Lobbyillust[defaultCharacterName] + ".png");
@@ -126,24 +126,24 @@ public class Dropdown_Services : MonoBehaviour
             if (thumbnail != null)
             {
                 mainButtonIcon.texture = thumbnail;
-                Debug.Log($"[Dropdown_Services] ³É¹¦¼ÓÔØÄ¬ÈÏ½ÇÉ«ËõÂÔÍ¼: {defaultCharacterName}");
+                Debug.Log($"[Dropdown_Services] æˆåŠŸåŠ è½½é»˜è®¤è§’è‰²ç¼©ç•¥å›¾: {defaultCharacterName}");
                 return;
             }
             else
             {
-                Debug.LogWarning($"[Dropdown_Services] ÎŞ·¨¼ÓÔØÄ¬ÈÏ½ÇÉ«ËõÂÔÍ¼: {thumbnailPath}");
+                Debug.LogWarning($"[Dropdown_Services] æ— æ³•åŠ è½½é»˜è®¤è§’è‰²ç¼©ç•¥å›¾: {thumbnailPath}");
             }
         }
         else
         {
-            Debug.LogWarning($"[Dropdown_Services] Ä¬ÈÏ½ÇÉ« {defaultCharacterName} ÔÚ Lobbyillust ÖĞÎ´ÕÒµ½");
+            Debug.LogWarning($"[Dropdown_Services] é»˜è®¤è§’è‰² {defaultCharacterName} åœ¨ Lobbyillust ä¸­æœªæ‰¾åˆ°");
         }
 
-        // Èç¹û¼ÓÔØÊ§°Ü£¬Ê¹ÓÃÄ¬ÈÏÍ¼±ê
+        // å¦‚æœåŠ è½½å¤±è´¥ï¼Œä½¿ç”¨é»˜è®¤å›¾æ ‡
         if (defaultIcon != null)
         {
             mainButtonIcon.texture = defaultIcon;
-            Debug.Log("[Dropdown_Services] Ê¹ÓÃÄ¬ÈÏÍ¼±ê");
+            Debug.Log("[Dropdown_Services] ä½¿ç”¨é»˜è®¤å›¾æ ‡");
         }
     }
 
@@ -158,7 +158,7 @@ public class Dropdown_Services : MonoBehaviour
                 folderNames.Add(subDir.Name);
             }
             folderNames.Sort();
-            Debug.Log($"[Dropdown_Services] ¼ÓÔØÁË {folderNames.Count} ¸öÎÄ¼ş¼Ğ£¬ÒÑÅÅĞò");
+            Debug.Log($"[Dropdown_Services] åŠ è½½äº† {folderNames.Count} ä¸ªæ–‡ä»¶å¤¹ï¼Œå·²æ’åº");
         }
         else
         {
@@ -173,7 +173,7 @@ public class Dropdown_Services : MonoBehaviour
 
         if (isDropdownOpen)
         {
-            //ÖØÖÃËÑË÷
+            //é‡ç½®æœç´¢
             searchKeyword = "";
             if (searchInputField != null)
                 searchInputField.text = "";
@@ -188,8 +188,8 @@ public class Dropdown_Services : MonoBehaviour
 
     void InitializeOptionPool()
     {
-        //Ô¤´´½¨¶ÔÏó
-        int poolSize = Mathf.Min(folderNames.Count, 20); //ÏÈ´´20¸ö
+        //é¢„åˆ›å»ºå¯¹è±¡
+        int poolSize = Mathf.Min(folderNames.Count, 20); //å…ˆåˆ›20ä¸ª
         for (int i = 0; i < poolSize; i++)
         {
             GameObject option = Instantiate(optionTemplate, content);
@@ -203,7 +203,7 @@ public class Dropdown_Services : MonoBehaviour
         GameObject option;
         if (optionPool.Count > 0)
         {
-            //±£Ö¤ÅÅĞò²»ÂÒ
+            //ä¿è¯æ’åºä¸ä¹±
             option = optionPool[0];
             optionPool.RemoveAt(0);
         }
@@ -240,7 +240,7 @@ public class Dropdown_Services : MonoBehaviour
 
     void UpdateOptionsDisplay()
     {
-        //»ØÊÕµ±Ç°ÏÔÊ¾µÄÑ¡Ïî
+        //å›æ”¶å½“å‰æ˜¾ç¤ºçš„é€‰é¡¹
         foreach (var option in activeOptions)
         {
             ReturnOptionToPool(option);
@@ -254,7 +254,7 @@ public class Dropdown_Services : MonoBehaviour
 
     IEnumerator PopulateOptionsBatch()
     {
-        int batchSize = 5; //·ÖÅúÉú³ÉÑ¡Ïî
+        int batchSize = 5; //åˆ†æ‰¹ç”Ÿæˆé€‰é¡¹
         for (int i = 0; i < filteredFolderNames.Count; i++)
         {
             GameObject option = GetOptionFromPool();
@@ -298,7 +298,7 @@ public class Dropdown_Services : MonoBehaviour
         string capturedName = optionName;
         btn.onClick.AddListener(() => OnOptionSelectedByName(capturedName));
 
-        // ÉèÖÃÑ¡ÏîÎÄ±¾£¬ÒÔ¼°Ò»¸öDebug Log
+        // è®¾ç½®é€‰é¡¹æ–‡æœ¬ï¼Œä»¥åŠä¸€ä¸ªDebug Log
         TMP_Text optionText = option.GetComponentInChildren<TMP_Text>();
         if (optionText != null)
         {
@@ -306,13 +306,13 @@ public class Dropdown_Services : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"[Dropdown_Services] Ñ¡Ïî {optionName} Ã»ÓĞÕÒµ½TMP_Text×é¼ş");
+            Debug.LogError($"[Dropdown_Services] é€‰é¡¹ {optionName} æ²¡æœ‰æ‰¾åˆ°TMP_Textç»„ä»¶");
         }
     }
 
     void UpdateScrollSystem()
     {
-        // Ç¿ÖÆÉèÖÃVerticalLayoutGroupÎª¶¥²¿¶ÔÆë£¬·ÀÖ¹Content AnchorÄÔ³é
+        // å¼ºåˆ¶è®¾ç½®VerticalLayoutGroupä¸ºé¡¶éƒ¨å¯¹é½ï¼Œé˜²æ­¢Content Anchorè„‘æŠ½
         if (contentLayoutGroup != null)
         {
             contentLayoutGroup.childAlignment = TextAnchor.UpperCenter;
@@ -387,10 +387,10 @@ public class Dropdown_Services : MonoBehaviour
         }
         else
         {
-            // FilterÂß¼­£¬·ÖÈı¸ö£¬Ò»¸ö¾«×¼£¬Ò»¸öÇ°×ººÍÒ»¸öÄ£ºı
+            // Filteré€»è¾‘ï¼Œåˆ†ä¸‰ä¸ªï¼Œä¸€ä¸ªç²¾å‡†ï¼Œä¸€ä¸ªå‰ç¼€å’Œä¸€ä¸ªæ¨¡ç³Š
             filteredFolderNames = new List<string>();
             
-            //¾«È·
+            //ç²¾ç¡®
             var exactMatch = folderNames.FirstOrDefault(name => name.ToLower() == searchKeyword);
             if (exactMatch != null)
             {
@@ -398,11 +398,11 @@ public class Dropdown_Services : MonoBehaviour
             }
             else
             {
-                //Ç°×º
+                //å‰ç¼€
                 var startsWithMatches = folderNames.Where(name => name.ToLower().StartsWith(searchKeyword)).ToList();
                 filteredFolderNames.AddRange(startsWithMatches);
                 
-                //Ä£ºı
+                //æ¨¡ç³Š
                 if (filteredFolderNames.Count == 0)
                 {
                     var containsMatches = folderNames.Where(name => name.ToLower().Contains(searchKeyword)).ToList();
@@ -411,7 +411,7 @@ public class Dropdown_Services : MonoBehaviour
             }
         }
         
-        //ÔÙSortÒ»±é
+        //å†Sortä¸€é
         filteredFolderNames.Sort();
     }
 
@@ -426,7 +426,7 @@ public class Dropdown_Services : MonoBehaviour
 
     IEnumerator ForceLayoutUpdateNextFrame()
     {
-        yield return null; // µÈÒ»Ö¡
+        yield return null; // ç­‰ä¸€å¸§
         if (contentLayoutGroup != null)
         {
             contentLayoutGroup.childAlignment = TextAnchor.UpperCenter;
@@ -436,33 +436,33 @@ public class Dropdown_Services : MonoBehaviour
 
     IEnumerator DelaySetPreview(string lastSelected)
     {
-        yield return null; //»¹ÊÇµÈÒ»Ö¡£¬Í»È»¼ÓÔØÃ²ËÆÑ¡ÔñµÄËõÂÔÍ¼²»»á¼ÓÔØ
-        //DebugÏà¹Ø¾ÍÁôÔÚÕâÁË£¬³öÎÊÌâ¿´logÄÜ²é
+        yield return null; //è¿˜æ˜¯ç­‰ä¸€å¸§ï¼Œçªç„¶åŠ è½½è²Œä¼¼é€‰æ‹©çš„ç¼©ç•¥å›¾ä¸ä¼šåŠ è½½
+        //Debugç›¸å…³å°±ç•™åœ¨è¿™äº†ï¼Œå‡ºé—®é¢˜çœ‹logèƒ½æŸ¥
 
         mainButtonLabel.text = lastSelected;
         if (lastSelected != "Textures" && Texture_Services.Lobbyillust.ContainsKey(lastSelected))
         {
             string thumbnailPath = Path.Combine(File_Services.Student_Lists_Folder_Path, Texture_Services.Lobbyillust[lastSelected] + ".png");
             Texture2D thumbnail = Texture_Services.Get_Texture_By_Path(thumbnailPath);
-            Debug.Log($"[Dropdown_Services] ³¢ÊÔ¼ÓÔØËõÂÔÍ¼: {thumbnailPath}");
+            Debug.Log($"[Dropdown_Services] å°è¯•åŠ è½½ç¼©ç•¥å›¾: {thumbnailPath}");
             if (thumbnail != null)
             {
                 mainButtonIcon.texture = thumbnail;
             }
             else
             {
-                Debug.LogWarning("[Dropdown_Services] ¼ÓÔØËõÂÔÍ¼Ê§°Ü£¬Ê¹ÓÃÄ¬ÈÏÍ¼±ê");
+                Debug.LogWarning("[Dropdown_Services] åŠ è½½ç¼©ç•¥å›¾å¤±è´¥ï¼Œä½¿ç”¨é»˜è®¤å›¾æ ‡");
                 mainButtonIcon.texture = defaultIcon;
             }
         }
         else
         {
-            Debug.LogWarning($"[Dropdown_Services] Lobbyillust ²»°üº¬ key: {lastSelected}£¬Ê¹ÓÃÄ¬ÈÏÍ¼±ê");
+            Debug.LogWarning($"[Dropdown_Services] Lobbyillust ä¸åŒ…å« key: {lastSelected}ï¼Œä½¿ç”¨é»˜è®¤å›¾æ ‡");
             mainButtonIcon.texture = defaultIcon;
         }
     }
 
-    //±£´æµ±Ç°ÏÂÀ­²Ëµ¥Ñ¡Ôñ£¬ÍùÉÏ¿´¿ÉÒÔÕÒµ½°ó×ÅÏà»ú±£´æ°´Å¥µÄcode
+    //ä¿å­˜å½“å‰ä¸‹æ‹‰èœå•é€‰æ‹©ï¼Œå¾€ä¸Šçœ‹å¯ä»¥æ‰¾åˆ°ç»‘ç€ç›¸æœºä¿å­˜æŒ‰é’®çš„code
     public void SaveDropdownSelection()
     {
         if (mainButtonLabel != null)

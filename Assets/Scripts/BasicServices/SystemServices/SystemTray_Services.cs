@@ -11,24 +11,24 @@ public class SystemTray_Services : MonoBehaviour
     void Awake()
     {
 #if !UNITY_EDITOR
-        Debug.Log($"¿ªÊ¼³õÊ¼»¯ÏµÍ³ÍĞÅÌ");
+        Debug.Log($"å¼€å§‹åˆå§‹åŒ–ç³»ç»Ÿæ‰˜ç›˜");
 
         List<(string, Action)> SystemTray_Menu = new List<(string, Action)>()
         {
-            ("½øÈë±ÚÖ½Ä£Ê½", Enter_Wallpaper_Mode),
-            ("·µ»ØÕı³£Ä£Ê½", Quit_Wallpaper_Mode),
+            ("è¿›å…¥å£çº¸æ¨¡å¼", Enter_Wallpaper_Mode),
+            ("è¿”å›æ­£å¸¸æ¨¡å¼", Quit_Wallpaper_Mode),
             (TrayIcon.SEPARATOR, null),
-            ("ÍË³ö", Quit_Program)
+            ("é€€å‡º", Quit_Program)
         };
 
         TrayIcon.Init("ShittimCanvas", "Shittim Canvas", SystemTray_Icon, SystemTray_Menu);
 
-        Debug.Log($"½áÊø³õÊ¼»¯ÏµÍ³ÍĞÅÌ");
+        Debug.Log($"ç»“æŸåˆå§‹åŒ–ç³»ç»Ÿæ‰˜ç›˜");
 #endif
     }
     private void Enter_Wallpaper_Mode()
     {
-        Debug.Log($"ÏµÍ³ÍĞÅÌ´¥·¢: ½øÈë±ÚÖ½Ä£Ê½");
+        Debug.Log($"ç³»ç»Ÿæ‰˜ç›˜è§¦å‘: è¿›å…¥å£çº¸æ¨¡å¼");
 
         if (!Wallpaper_Services.Instance.is_Wallpaper_Mode)
         {
@@ -38,7 +38,7 @@ public class SystemTray_Services : MonoBehaviour
     }
     private void Quit_Wallpaper_Mode()
     {
-        Debug.Log($"ÏµÍ³ÍĞÅÌ´¥·¢: ·µ»ØÕı³£Ä£Ê½");
+        Debug.Log($"ç³»ç»Ÿæ‰˜ç›˜è§¦å‘: è¿”å›æ­£å¸¸æ¨¡å¼");
         if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
         {
             Wallpaper_Services.Instance.Toggle_Wallpaper_Mode();
@@ -47,7 +47,7 @@ public class SystemTray_Services : MonoBehaviour
     }
     private void Quit_Program()
     {
-        Debug.Log("ÏµÍ³ÍĞÅÌ´¥·¢: ÍË³ö");
+        Debug.Log("ç³»ç»Ÿæ‰˜ç›˜è§¦å‘: é€€å‡º");
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

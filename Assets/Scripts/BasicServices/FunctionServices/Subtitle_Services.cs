@@ -12,7 +12,7 @@ public class Subtitle_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Subtitle Services ³õÊ¼»¯");
+            Debug.Log("[Awake] Subtitle Services åˆå§‹åŒ–");
         }
         else
         {
@@ -78,7 +78,7 @@ public class Subtitle_Services : MonoBehaviour
 
     public void Start()
     {
-        Console_Log("¿ªÊ¼³õÊ¼»¯ Subtitle Services");
+        Console_Log("å¼€å§‹åˆå§‹åŒ– Subtitle Services");
 
         Get_Config();
 
@@ -93,12 +93,12 @@ public class Subtitle_Services : MonoBehaviour
         Update_JP_Button_UI();
         Update_Custom_Button_UI();
 
-        Console_Log("³õÊ¼»¯ Subtitle Services");
+        Console_Log("åˆå§‹åŒ– Subtitle Services");
     }
 
     public void Update()
     {
-        // ÏÔÊ¾JP×ÖÄ»
+        // æ˜¾ç¤ºJPå­—å¹•
         if (Subtitle_JP_Request_Queue.Count > 0)
         {
             if (show_subtitle_coroutine == null)
@@ -107,7 +107,7 @@ public class Subtitle_Services : MonoBehaviour
             }
         }
 
-        // ÏÔÊ¾×Ô¶¨Òå×ÖÄ» - Èç¹ûJP×ÖÄ»ÒÑ¾­ÏÔÊ¾Íê±Ï£¬ÔòÏÔÊ¾×Ô¶¨Òå×ÖÄ»
+        // æ˜¾ç¤ºè‡ªå®šä¹‰å­—å¹• - å¦‚æœJPå­—å¹•å·²ç»æ˜¾ç¤ºå®Œæ¯•ï¼Œåˆ™æ˜¾ç¤ºè‡ªå®šä¹‰å­—å¹•
         if (Subtitle_JP_Request_Queue.Count == 0 && Subtitle_Custom_Request_Queue.Count > 0)
         {
             if (show_subtitle_coroutine == null)
@@ -147,13 +147,13 @@ public class Subtitle_Services : MonoBehaviour
 
     public void Show_Subtitle(Subtitle_Request subtitle_request)
     {
-        Console_Log($"ÏÔÊ¾×ÖÄ»: {subtitle_request.Text_JP} ×Ô¶¨Òå×ÖÄ»: {subtitle_request.Text_Custom} ³ÖĞøÊ±¼ä: {subtitle_request.Text_Duration}s");
+        Console_Log($"æ˜¾ç¤ºå­—å¹•: {subtitle_request.Text_JP} è‡ªå®šä¹‰å­—å¹•: {subtitle_request.Text_Custom} æŒç»­æ—¶é—´: {subtitle_request.Text_Duration}s");
         
-        // Èç¹ûÕıÔÚÏÔÊ¾×ÖÄ»£¬ÔòÍ£Ö¹ÏÔÊ¾
+        // å¦‚æœæ­£åœ¨æ˜¾ç¤ºå­—å¹•ï¼Œåˆ™åœæ­¢æ˜¾ç¤º
         if (show_subtitle_coroutine != null)
         {
             is_Stopping_Display = true;
-            // µÈ´ıÒ»Ö¡ºóÖØÖÃÍ£Ö¹±êÖ¾
+            // ç­‰å¾…ä¸€å¸§åé‡ç½®åœæ­¢æ ‡å¿—
             StartCoroutine(ResetStoppingFlagAfterFrame());
         }
         
@@ -162,15 +162,15 @@ public class Subtitle_Services : MonoBehaviour
 
     private IEnumerator ResetStoppingFlagAfterFrame()
     {
-        yield return null; // µÈ´ıÒ»Ö¡
+        yield return null; // ç­‰å¾…ä¸€å¸§
         is_Stopping_Display = false;
     }
 
     public IEnumerator Show_Subtitle_Coroutine(Subtitle_Request subtitle_request)
     {
-        Console_Log("Show_Subtitle_Coroutine ¿ªÊ¼", Debug_Services.LogLevel.Ignore);
+        Console_Log("Show_Subtitle_Coroutine å¼€å§‹", Debug_Services.LogLevel.Ignore);
 
-        // Èç¹ûÕıÔÚÏÔÊ¾×ÖÄ»£¬ÔòÍ£Ö¹ÏÔÊ¾
+        // å¦‚æœæ­£åœ¨æ˜¾ç¤ºå­—å¹•ï¼Œåˆ™åœæ­¢æ˜¾ç¤º
         is_Stopping_Display = false;
 
         if (Subtitle_JP_Text.alpha != 0) StartCoroutine(Text_Fade_Out(Subtitle_JP_Text, Text_Fade_Duration));
@@ -183,10 +183,10 @@ public class Subtitle_Services : MonoBehaviour
         if (is_Subtitle_Custom_On) StartCoroutine(Text_Fade_In(Subtitle_Custom_Text, Text_Fade_Duration));
         yield return new WaitForSeconds(Text_Fade_Duration);
 
-        // Èç¹ûÕıÔÚÍ£Ö¹ÏÔÊ¾£¬ÔòÍ£Ö¹ÏÔÊ¾
+        // å¦‚æœæ­£åœ¨åœæ­¢æ˜¾ç¤ºï¼Œåˆ™åœæ­¢æ˜¾ç¤º
         if (is_Stopping_Display)
         {
-            Console_Log("×ÖÄ»Í£Ö¹ÏÔÊ¾", Debug_Services.LogLevel.Ignore);
+            Console_Log("å­—å¹•åœæ­¢æ˜¾ç¤º", Debug_Services.LogLevel.Ignore);
             show_subtitle_coroutine = null;
             yield break;
         }
@@ -199,19 +199,19 @@ public class Subtitle_Services : MonoBehaviour
 
         if (is_Stopping_Display) is_Stopping_Display = false;
         show_subtitle_coroutine = null;
-        Console_Log("Show_Subtitle_Coroutine Íê³É", Debug_Services.LogLevel.Ignore);
+        Console_Log("Show_Subtitle_Coroutine å®Œæˆ", Debug_Services.LogLevel.Ignore);
     }
 
     private IEnumerator Subtitle_Display(float text_display_duration)
     {
-        Console_Log("¿ªÊ¼ÏÔÊ¾×ÖÄ»", Debug_Services.LogLevel.Ignore);
+        Console_Log("å¼€å§‹æ˜¾ç¤ºå­—å¹•", Debug_Services.LogLevel.Ignore);
 
         float elapsed = 0f;
         while (elapsed < text_display_duration)
         {
             if (is_Stopping_Display)
             {
-                Console_Log("×ÖÄ»Í£Ö¹ÏÔÊ¾");
+                Console_Log("å­—å¹•åœæ­¢æ˜¾ç¤º");
                 yield break;
             }
 
@@ -219,14 +219,14 @@ public class Subtitle_Services : MonoBehaviour
             yield return null;
         }
 
-        Console_Log("×ÖÄ»ÏÔÊ¾Íê³É", Debug_Services.LogLevel.Ignore);
+        Console_Log("å­—å¹•æ˜¾ç¤ºå®Œæˆ", Debug_Services.LogLevel.Ignore);
     }
 
     private IEnumerator Text_Fade_In(TextMeshProUGUI text, float text_fade_duration)
     {
         if (text.alpha == 1) yield break;
 
-        Console_Log("¿ªÊ¼µ­Èë×ÖÄ»", Debug_Services.LogLevel.Ignore);
+        Console_Log("å¼€å§‹æ·¡å…¥å­—å¹•", Debug_Services.LogLevel.Ignore);
 
         float elapsed_time = 0f;
         float text_start_alpha = text.alpha;
@@ -241,14 +241,14 @@ public class Subtitle_Services : MonoBehaviour
 
         text.alpha = 1;
 
-        Console_Log("µ­Èë×ÖÄ»Íê³É", Debug_Services.LogLevel.Ignore);
+        Console_Log("æ·¡å…¥å­—å¹•å®Œæˆ", Debug_Services.LogLevel.Ignore);
     }
 
     private IEnumerator Text_Fade_Out(TextMeshProUGUI text, float text_fade_duration)
     {
         if (text.alpha == 0) yield break;
 
-        Console_Log("¿ªÊ¼µ­³ö×ÖÄ»", Debug_Services.LogLevel.Ignore);
+        Console_Log("å¼€å§‹æ·¡å‡ºå­—å¹•", Debug_Services.LogLevel.Ignore);
 
         float elapsed_time = 0f;
         float text_start_alpha = text.alpha;
@@ -263,7 +263,7 @@ public class Subtitle_Services : MonoBehaviour
 
         text.alpha = 0;
 
-        Console_Log("µ­³ö×ÖÄ»Íê³É", Debug_Services.LogLevel.Ignore);
+        Console_Log("æ·¡å‡ºå­—å¹•å®Œæˆ", Debug_Services.LogLevel.Ignore);
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Subtitle Services", message, loglevel, logtype); }

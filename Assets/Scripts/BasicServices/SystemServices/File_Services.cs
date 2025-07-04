@@ -39,38 +39,38 @@ public class File_Services : MonoBehaviour
     
     private void Start()
     {
-        Console_Log($"¿ªÊ¼³õÊ¼»¯ÎÄ¼şÏµÍ³");
+        Console_Log($"å¼€å§‹åˆå§‹åŒ–æ–‡ä»¶ç³»ç»Ÿ");
 
         Create_Default_Directories();
         Create_Default_Files();
 
         Check_Student_Files_Folder();
 
-        Console_Log($"½áÊø³õÊ¼»¯ÎÄ¼şÏµÍ³");
+        Console_Log($"ç»“æŸåˆå§‹åŒ–æ–‡ä»¶ç³»ç»Ÿ");
     }
 
     /// <summary>
-    /// Ğ£Ñé Student Files ÎÄ¼ş¼Ğ½á¹¹
+    /// æ ¡éªŒ Student Files æ–‡ä»¶å¤¹ç»“æ„
     /// </summary>
     private static void Check_Student_Files_Folder()
     {
-        Console_Log($"¿ªÊ¼Ğ£Ñé Student Files ÎÄ¼ş¼Ğ½á¹¹");
+        Console_Log($"å¼€å§‹æ ¡éªŒ Student Files æ–‡ä»¶å¤¹ç»“æ„");
 
         string Bundle_Files_Structure_File_Path = Path.Combine(Student_Files_Folder_Path, "Bundle Files Structure.json");
         string Bundle_Files_Structure_File_JSON = File.ReadAllText(Bundle_Files_Structure_File_Path);
         List<string> Bundle_Files_Structure_List = JsonConvert.DeserializeObject<List<string>>(Bundle_Files_Structure_File_JSON);
         List<string> bundle_file_paths = Directory.GetFiles(Student_Files_Folder_Path, "*.bundle", SearchOption.AllDirectories).ToList();
 
-        Console_Log($"±ê×¼½á¹¹Ó¦¸ÃÓĞ {Bundle_Files_Structure_List.Count} ¸ö Bundle ÎÄ¼ş£¬±¾µØÓĞ {bundle_file_paths.Count} ¸ö Bundle ÎÄ¼ş");
+        Console_Log($"æ ‡å‡†ç»“æ„åº”è¯¥æœ‰ {Bundle_Files_Structure_List.Count} ä¸ª Bundle æ–‡ä»¶ï¼Œæœ¬åœ°æœ‰ {bundle_file_paths.Count} ä¸ª Bundle æ–‡ä»¶");
 
         foreach (string bundle_file_path in bundle_file_paths)
         {
             string bundle_file_path_temp = bundle_file_path.Replace(Student_Files_Folder_Path, "");
             if (!Bundle_Files_Structure_List.Contains(bundle_file_path_temp))
             {
-                Console_Log($"ÎÄ¼ş {Path.GetFileName(bundle_file_path)} ¶àÓà", Debug_Services.LogLevel.Info, LogType.Warning);
+                Console_Log($"æ–‡ä»¶ {Path.GetFileName(bundle_file_path)} å¤šä½™", Debug_Services.LogLevel.Info, LogType.Warning);
                 File.Delete(bundle_file_path);
-                if(!File.Exists(bundle_file_path)) Console_Log($"ÎÄ¼ş {Path.GetFileName(bundle_file_path)} ÒÑÉ¾³ı");
+                if(!File.Exists(bundle_file_path)) Console_Log($"æ–‡ä»¶ {Path.GetFileName(bundle_file_path)} å·²åˆ é™¤");
             }
         }
         foreach (string standard_bundle_file_path in Bundle_Files_Structure_List)
@@ -78,19 +78,19 @@ public class File_Services : MonoBehaviour
             string standard_bundle_file_path_temp = Student_Files_Folder_Path + standard_bundle_file_path;
             if (!bundle_file_paths.Contains(standard_bundle_file_path_temp))
             {
-                Console_Log($"ÎÄ¼ş {Path.GetFileName(standard_bundle_file_path)} È±Ê§", Debug_Services.LogLevel.Info, LogType.Warning);
+                Console_Log($"æ–‡ä»¶ {Path.GetFileName(standard_bundle_file_path)} ç¼ºå¤±", Debug_Services.LogLevel.Info, LogType.Warning);
             }
         }
 
-        Console_Log($"½áÊøĞ£Ñé Student Files ÎÄ¼ş¼Ğ½á¹¹"); 
+        Console_Log($"ç»“æŸæ ¡éªŒ Student Files æ–‡ä»¶å¤¹ç»“æ„"); 
     }
 
     /// <summary>
-    /// ´´½¨Ä¬ÈÏÄ¿Â¼
+    /// åˆ›å»ºé»˜è®¤ç›®å½•
     /// </summary>
     private static void Create_Default_Directories()
     {
-        Console_Log($"¿ªÊ¼´´½¨Ä¬ÈÏÄ¿Â¼");
+        Console_Log($"å¼€å§‹åˆ›å»ºé»˜è®¤ç›®å½•");
 
         Create_Directory(Config_Files_Folder_Path);
         Create_Directory(MX_Files_Folder_Path);
@@ -102,28 +102,28 @@ public class File_Services : MonoBehaviour
         Create_Directory(Student_Textures_Folder_Path);
         Create_Directory(Student_Lists_Folder_Path);
 
-        Console_Log($"½áÊø´´½¨Ä¬ÈÏÄ¿Â¼");
+        Console_Log($"ç»“æŸåˆ›å»ºé»˜è®¤ç›®å½•");
     }
 
     /// <summary>
-    /// ´´½¨ÍêÕûµÄÖ¸¶¨Â·¾¶
+    /// åˆ›å»ºå®Œæ•´çš„æŒ‡å®šè·¯å¾„
     /// </summary>
-    /// <param name="path">Â·¾¶</param>
+    /// <param name="path">è·¯å¾„</param>
     private static void Create_Directory(string path)
     {
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);
-            Console_Log($"´´½¨Ä¿Â¼: {path}");
+            Console_Log($"åˆ›å»ºç›®å½•: {path}");
         }
     }
 
     /// <summary>
-    /// ´´½¨Ä¬ÈÏÎÄ¼ş
+    /// åˆ›å»ºé»˜è®¤æ–‡ä»¶
     /// </summary>
     private static void Create_Default_Files()
     {
-        Console_Log($"¿ªÊ¼´´½¨Ä¬ÈÏÎÄ¼ş");
+        Console_Log($"å¼€å§‹åˆ›å»ºé»˜è®¤æ–‡ä»¶");
 
         if (!File.Exists(Path.Combine(Config_Files_Folder_Path, "Function Config.json")))
         {
@@ -140,14 +140,14 @@ public class File_Services : MonoBehaviour
             Save_Default_Type_To_File<WindowFilter_Config>(Path.Combine(Config_Files_Folder_Path, "WindowFilter Config.json"));
         }
 
-        Console_Log($"½áÊø´´½¨Ä¬ÈÏÎÄ¼ş");
+        Console_Log($"ç»“æŸåˆ›å»ºé»˜è®¤æ–‡ä»¶");
     }
 
     public static T Load_Specific_Type_From_File<T>(string file_path)
     {
         if (!File.Exists(file_path))
         {
-            Console_Log($"{typeof(T).Name} ÀàĞÍµÄÎÄ¼ş: {file_path} ²»´æÔÚ", Debug_Services.LogLevel.Debug, LogType.Error);
+            Console_Log($"{typeof(T).Name} ç±»å‹çš„æ–‡ä»¶: {file_path} ä¸å­˜åœ¨", Debug_Services.LogLevel.Debug, LogType.Error);
             return default;
         }
         string json = File.ReadAllText(file_path);
@@ -160,7 +160,7 @@ public class File_Services : MonoBehaviour
         string json = JsonConvert.SerializeObject(config, Formatting.Indented);
         File.WriteAllText(file_path, json);
 
-        Debug.Log($"ÒÑ´´½¨ {typeof(T).Name} ÀàĞÍµÄÄ¬ÈÏÎÄ¼ş: {file_path}");
+        Debug.Log($"å·²åˆ›å»º {typeof(T).Name} ç±»å‹çš„é»˜è®¤æ–‡ä»¶: {file_path}");
     }
 
     public static void Save_Specific_Type_To_File<T>(T config, string file_path)
@@ -168,7 +168,7 @@ public class File_Services : MonoBehaviour
         string json = JsonConvert.SerializeObject(config, Formatting.Indented);
         File.WriteAllText(file_path, json);
 
-        Debug.Log($"ÒÑĞ´Èë {typeof(T).Name} ÀàĞÍµÄÎÄ¼ş: {file_path}");
+        Debug.Log($"å·²å†™å…¥ {typeof(T).Name} ç±»å‹çš„æ–‡ä»¶: {file_path}");
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("File_Services", message, loglevel, logtype); }

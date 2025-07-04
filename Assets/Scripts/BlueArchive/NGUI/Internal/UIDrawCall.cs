@@ -1,6 +1,6 @@
 //-------------------------------------------------
 //			  NGUI: Next-Gen UI kit
-// Copyright © 2011-2023 Tasharen Entertainment Inc
+// Copyright ├é┬® 2011-2023 Tasharen Entertainment Inc
 //-------------------------------------------------
 
 //#define SHOW_HIDDEN_OBJECTS

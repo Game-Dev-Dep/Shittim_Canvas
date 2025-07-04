@@ -16,7 +16,7 @@ public class Recorder_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Recorder Services 单例创建完成");
+            Debug.Log("[Awake] Recorder Services 鍗曚緥鍒涘缓瀹屾垚");
         }
         else
         {
@@ -112,7 +112,7 @@ public class Recorder_Services : MonoBehaviour
         yield return new WaitForSeconds(Talk_Record_End_Delay);
 
         recorder_controller.StopRecording();
-        Console_Log("停止录制");
+        Console_Log("鍋滄褰曞埗");
     }
 
     public static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Recorder_Services", message, loglevel, logtype); }

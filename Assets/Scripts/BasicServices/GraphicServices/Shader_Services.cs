@@ -13,7 +13,7 @@ public class Shader_Services : MonoBehaviour
     {
         if (Instance == null)
         {
-            Debug.Log("[Awake] Shader Services µ¥Àı´´½¨Íê³É");
+            Debug.Log("[Awake] Shader Services å•ä¾‹åˆ›å»ºå®Œæˆ");
             Instance = this;
         }
         else
@@ -23,21 +23,21 @@ public class Shader_Services : MonoBehaviour
     }
 
     /// <summary>
-    /// Ìæ»»ËùÓĞAB°üµÄ²ÄÖÊÎª±¾µØÒÑÓĞ²ÄÖÊ
+    /// æ›¿æ¢æ‰€æœ‰ABåŒ…çš„æè´¨ä¸ºæœ¬åœ°å·²æœ‰æè´¨
     /// </summary>
     //public void Replace_All_Shader()
     //{
     //    Material[] materials = Resources.FindObjectsOfTypeAll<Material>();
-    //    Console_Log($"¿ªÊ¼Ìæ»» {materials.Length} ¸ö²ÄÖÊ");
+    //    Console_Log($"å¼€å§‹æ›¿æ¢ {materials.Length} ä¸ªæè´¨");
 
     //    foreach (Material material in materials)
     //    {
-    //        Console_Log($"AB°üÖĞ´æÔÚ Material£º{material.name}");
+    //        Console_Log($"ABåŒ…ä¸­å­˜åœ¨ Materialï¼š{material.name}");
 
     //        Shader local_shader = Shader.Find(material.shader.name);
     //        if (local_shader != null && material.shader != local_shader)
     //        {
-    //            Console_Log($"©¸±¾µØ´æÔÚ Shader£º{material.shader.name}");
+    //            Console_Log($"â””æœ¬åœ°å­˜åœ¨ Shaderï¼š{material.shader.name}");
     //            int renderqueue = material.renderQueue;
     //            material.shader = local_shader;
 
@@ -120,7 +120,7 @@ public class Shader_Services : MonoBehaviour
     //                    if (material.GetTexture(key_word) != null)
     //                    {
     //                        string ab_texture2d_name = material.GetTexture(key_word).name;
-    //                        Console_Log($" ©¸AB°üÖĞµÄ Material {material.name} ´æÔÚ¹Ø¼ü×Ö¶ÎÎª {key_word} µÄ Texture: {ab_texture2d_name}");
+    //                        Console_Log($" â””ABåŒ…ä¸­çš„ Material {material.name} å­˜åœ¨å…³é”®å­—æ®µä¸º {key_word} çš„ Texture: {ab_texture2d_name}");
     //                        //StartCoroutine(Get_Texture_By_Path(Path.Combine(is_spine_texture ? File_Services.Student_Textures_Folder_Path : File_Services.MX_Files_Textures_Folder_Path, ab_texture2d_name + ".png"), local_texture2d =>
     //                        //{
     //                        //    if (local_texture2d != null)
@@ -131,7 +131,7 @@ public class Shader_Services : MonoBehaviour
     //                    }
     //                    else
     //                    {
-    //                        Console_Log($" ©¸AB°üÖĞµÄ Material {material.name} ²»´æÔÚ¹Ø¼ü×Ö¶ÎÎª {key_word} µÄ Texture");
+    //                        Console_Log($" â””ABåŒ…ä¸­çš„ Material {material.name} ä¸å­˜åœ¨å…³é”®å­—æ®µä¸º {key_word} çš„ Texture");
     //                    }
     //                }
     //            }
@@ -142,10 +142,10 @@ public class Shader_Services : MonoBehaviour
     //        }
     //        else
     //        {
-    //            Console_Log($"©¸±¾µØ²»´æÔÚ Shader£º{material.shader.name}");
+    //            Console_Log($"â””æœ¬åœ°ä¸å­˜åœ¨ Shaderï¼š{material.shader.name}");
     //        }
     //    }
-    //    Console_Log($"½áÊøÌæ»» {materials.Length} ¸ö²ÄÖÊ");
+    //    Console_Log($"ç»“æŸæ›¿æ¢ {materials.Length} ä¸ªæè´¨");
     //}
 
     public void Replace_All_Spine_Shader()
@@ -170,7 +170,7 @@ public class Shader_Services : MonoBehaviour
                     if (material.GetTexture("_MainTex") != null)
                     {
                         string ab_texture2d_name = material.GetTexture("_MainTex").name;
-                        Console_Log($"AB°üÖĞµÄ Material {material.name} ´æÔÚ¹Ø¼ü×Ö¶ÎÎª _MainTex µÄ Texture: {ab_texture2d_name}");
+                        Console_Log($"ABåŒ…ä¸­çš„ Material {material.name} å­˜åœ¨å…³é”®å­—æ®µä¸º _MainTex çš„ Texture: {ab_texture2d_name}");
                         material.SetTexture("_MainTex", Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.Student_Textures_Folder_Path, ab_texture2d_name + ".png")));
                     }
                 }
@@ -187,16 +187,16 @@ public class Shader_Services : MonoBehaviour
         Renderer[] renderers = gameobject.GetComponentsInChildren<Renderer>(true);
         foreach (Renderer renderer in renderers)
         {
-            Console_Log($"GameObject: {renderer.gameObject.name} ÏÂº¬ÓĞ Renderer ×é¼ş", Debug_Services.LogLevel.Core);
+            Console_Log($"GameObject: {renderer.gameObject.name} ä¸‹å«æœ‰ Renderer ç»„ä»¶", Debug_Services.LogLevel.Core);
             if (renderer.sharedMaterials != null)
             {
                 if (renderer.GetType() == typeof(SpriteRenderer))
                 {
-                    Console_Log($" ©¸¸Ã Renderer ×é¼şÎª SpriteRenderer£¬º¬ÓĞ {renderer.sharedMaterials.Length} ¸ö Material ×é¼ş", Debug_Services.LogLevel.Core);
+                    Console_Log($" â””è¯¥ Renderer ç»„ä»¶ä¸º SpriteRendererï¼Œå«æœ‰ {renderer.sharedMaterials.Length} ä¸ª Material ç»„ä»¶", Debug_Services.LogLevel.Core);
                     Sprite ab_sprite = renderer.gameObject.GetComponent<SpriteRenderer>().sprite;
                     Material ab_material = renderer.gameObject.GetComponent<SpriteRenderer>().material;
                     Shader ab_shader = renderer.gameObject.GetComponent<SpriteRenderer>().material.shader;
-                    Console_Log($"  ©¸Sprite: {ab_sprite.name} Material: {ab_material.name} Shader: {ab_shader.name}", Debug_Services.LogLevel.Core);
+                    Console_Log($"  â””Sprite: {ab_sprite.name} Material: {ab_material.name} Shader: {ab_shader.name}", Debug_Services.LogLevel.Core);
                     if (ab_sprite != null)
                     {
                         Sprite local_sprite = Resources.Load<Sprite>($"Sprites/My_{ab_sprite.name}");
@@ -208,7 +208,7 @@ public class Shader_Services : MonoBehaviour
                     continue;
                 }
 
-                Console_Log($" ©¸Renderer ×é¼şÏÂº¬ÓĞ {renderer.sharedMaterials.Length} ¸ö Material ×é¼ş", Debug_Services.LogLevel.Core);
+                Console_Log($" â””Renderer ç»„ä»¶ä¸‹å«æœ‰ {renderer.sharedMaterials.Length} ä¸ª Material ç»„ä»¶", Debug_Services.LogLevel.Core);
 
                 for (int i = 0; i < renderer.sharedMaterials.Length; i++)
                 {
@@ -219,8 +219,8 @@ public class Shader_Services : MonoBehaviour
                         if (local_shader != null && local_shader != ab_material.shader)
                         {
                             int shader_property_count = ab_material.shader.GetPropertyCount();
-                            Console_Log($"  ©¸Material: {ab_material.name} µÄ Shader: {ab_material.shader.name} ´æÔÚ±¾µØÌæ»»ÎÄ¼ş£¬ÓĞ {shader_property_count} ¸ö×Ö¶Î", Debug_Services.LogLevel.Core);
-                            Console_Log($"  ©¸ABShader: {ab_material.shader.name} Ìæ»»Îª±¾µØShader: {local_shader.name}", Debug_Services.LogLevel.Core);
+                            Console_Log($"  â””Material: {ab_material.name} çš„ Shader: {ab_material.shader.name} å­˜åœ¨æœ¬åœ°æ›¿æ¢æ–‡ä»¶ï¼Œæœ‰ {shader_property_count} ä¸ªå­—æ®µ", Debug_Services.LogLevel.Core);
+                            Console_Log($"  â””ABShader: {ab_material.shader.name} æ›¿æ¢ä¸ºæœ¬åœ°Shader: {local_shader.name}", Debug_Services.LogLevel.Core);
 
                             int ab_render_queue = ab_material.renderQueue;
                             ab_material.shader = local_shader;
@@ -236,7 +236,7 @@ public class Shader_Services : MonoBehaviour
                                     string ab_texture2d_name = ab_material.GetTexture(shader_property_name).name;
                                     TextureWrapMode ab_texture_wrapmode = ab_material.GetTexture(shader_property_name).wrapMode;
 
-                                    Console_Log($"   ©¸×Ö¶Î {shader_property_name} Îª {ab_texture_wrapmode} Ä£Ê½µÄ Texture: {ab_texture2d_name} ", Debug_Services.LogLevel.Core);
+                                    Console_Log($"   â””å­—æ®µ {shader_property_name} ä¸º {ab_texture_wrapmode} æ¨¡å¼çš„ Texture: {ab_texture2d_name} ", Debug_Services.LogLevel.Core);
                                     bool is_spine_texture = (
                                                              ab_material.shader.name == "Spine/Skeleton MX Standard" ||
                                                              ab_material.shader.name == "Spine/Skeleton" ||
@@ -251,7 +251,7 @@ public class Shader_Services : MonoBehaviour
                         }
                         else
                         {
-                            Console_Log($"  ©¸Material {ab_material.name} µÄ Shader {ab_material.shader.name} ²»´æÔÚ±¾µØÌæ»»ÎÄ¼ş", Debug_Services.LogLevel.Core);
+                            Console_Log($"  â””Material {ab_material.name} çš„ Shader {ab_material.shader.name} ä¸å­˜åœ¨æœ¬åœ°æ›¿æ¢æ–‡ä»¶", Debug_Services.LogLevel.Core);
                         }
                     }
                 }

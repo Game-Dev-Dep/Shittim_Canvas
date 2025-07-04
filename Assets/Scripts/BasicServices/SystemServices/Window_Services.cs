@@ -16,7 +16,7 @@ public class Window_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Window Services µ¥Àı´´½¨Íê³É");
+            Debug.Log("[Awake] Window Services å•ä¾‹åˆ›å»ºå®Œæˆ");
         }
         else
         {
@@ -50,7 +50,7 @@ public class Window_Services : MonoBehaviour
     public static IntPtr WorkerW_Handle = IntPtr.Zero;
     public static IntPtr Unity_Handle = IntPtr.Zero;
 
-    // ===== ´°¿Ú¸²¸ÇÏà¹Ø =====
+    // ===== çª—å£è¦†ç›–ç›¸å…³ =====
 
     [System.Serializable]
     public class Window_Info
@@ -63,40 +63,40 @@ public class Window_Services : MonoBehaviour
         public RECT rect;
     }
 
-    // ÏµÍ³´°¿ÚÀàÃû¹ıÂËÁĞ±í
+    // ç³»ç»Ÿçª—å£ç±»åè¿‡æ»¤åˆ—è¡¨
     private readonly HashSet<string> systemWindowClasses = new HashSet<string>
     {
-        "Shell_TrayWnd",        // ÈÎÎñÀ¸
-        "DV2ControlHost",       // ÏµÍ³¿ØÖÆ
-        "MsgrIMEWindowClass",   // ÊäÈë·¨
-        "IME",                  // ÊäÈë·¨Ïà¹Ø
-        "MSCTFIME UI",          // ÊäÈë·¨UI
-        "Windows.UI.Core.CoreWindow", // UWPÏµÍ³´°¿Ú
-        "ApplicationFrameWindow",     // UWPÓ¦ÓÃ¿ò¼Ü
-        "Progman",              // ×ÀÃæ³ÌĞò¹ÜÀíÆ÷
-        "WorkerW",              // ×ÀÃæ¹¤×÷Çø
-        "Button",               // ÏµÍ³°´Å¥
-        "Static",               // ¾²Ì¬¿Ø¼ş
-        "#32770",               // ¶Ô»°¿ò
-        "tooltips_class32",     // ¹¤¾ßÌáÊ¾
-        "MSTaskSwWClass",       // ÈÎÎñÇĞ»»
-        "EdgeUiInputTopWndClass", // Edge UIÊäÈë
-        "NativeHWNDHost",       // Ô­Éú´°¿ÚËŞÖ÷
-        "ApplicationManager_DesktopShellWindow", // Ó¦ÓÃ¹ÜÀíÆ÷
-        "MultitaskingViewFrame", // ¶àÈÎÎñÊÓÍ¼
-        "ForegroundStaging",     // Ç°Ì¨Ôİ´æ
-        //"Chrome_WidgetWin_0",    // ChromeÄÚ²¿´°¿Ú£¨Ä³Ğ©Çé¿ö£©
-        //"Chrome_WidgetWin_1"     // ChromeÄÚ²¿´°¿Ú£¨Ä³Ğ©Çé¿ö£©
+        "Shell_TrayWnd",        // ä»»åŠ¡æ 
+        "DV2ControlHost",       // ç³»ç»Ÿæ§åˆ¶
+        "MsgrIMEWindowClass",   // è¾“å…¥æ³•
+        "IME",                  // è¾“å…¥æ³•ç›¸å…³
+        "MSCTFIME UI",          // è¾“å…¥æ³•UI
+        "Windows.UI.Core.CoreWindow", // UWPç³»ç»Ÿçª—å£
+        "ApplicationFrameWindow",     // UWPåº”ç”¨æ¡†æ¶
+        "Progman",              // æ¡Œé¢ç¨‹åºç®¡ç†å™¨
+        "WorkerW",              // æ¡Œé¢å·¥ä½œåŒº
+        "Button",               // ç³»ç»ŸæŒ‰é’®
+        "Static",               // é™æ€æ§ä»¶
+        "#32770",               // å¯¹è¯æ¡†
+        "tooltips_class32",     // å·¥å…·æç¤º
+        "MSTaskSwWClass",       // ä»»åŠ¡åˆ‡æ¢
+        "EdgeUiInputTopWndClass", // Edge UIè¾“å…¥
+        "NativeHWNDHost",       // åŸç”Ÿçª—å£å®¿ä¸»
+        "ApplicationManager_DesktopShellWindow", // åº”ç”¨ç®¡ç†å™¨
+        "MultitaskingViewFrame", // å¤šä»»åŠ¡è§†å›¾
+        "ForegroundStaging",     // å‰å°æš‚å­˜
+        //"Chrome_WidgetWin_0",    // Chromeå†…éƒ¨çª—å£ï¼ˆæŸäº›æƒ…å†µï¼‰
+        //"Chrome_WidgetWin_1"     // Chromeå†…éƒ¨çª—å£ï¼ˆæŸäº›æƒ…å†µï¼‰
     };
 
-    // ÏµÍ³´°¿Ú±êÌâ¹ıÂËÁĞ±í
+    // ç³»ç»Ÿçª—å£æ ‡é¢˜è¿‡æ»¤åˆ—è¡¨
     private readonly HashSet<string> systemWindowTitles = new HashSet<string>
     {
-        "",                     // ¿Õ±êÌâ
-        "Default IME",          // Ä¬ÈÏÊäÈë·¨
-        "MSCTFIME UI",          // ÊäÈë·¨UI
-        "Program Manager",      // ³ÌĞò¹ÜÀíÆ÷
-        "Desktop"               // ×ÀÃæ
+        "",                     // ç©ºæ ‡é¢˜
+        "Default IME",          // é»˜è®¤è¾“å…¥æ³•
+        "MSCTFIME UI",          // è¾“å…¥æ³•UI
+        "Program Manager",      // ç¨‹åºç®¡ç†å™¨
+        "Desktop"               // æ¡Œé¢
     };
 
     public enum Cover_Window_Type
@@ -117,7 +117,7 @@ public class Window_Services : MonoBehaviour
     
     private void Start()
     {
-        Console_Log("¿ªÊ¼³õÊ¼»¯ Window Services");
+        Console_Log("å¼€å§‹åˆå§‹åŒ– Window Services");
 
         Fullscreen_Mode_Toggle_Button.onClick.AddListener(Toggle_Fullscreen_Mode);
 
@@ -127,11 +127,11 @@ public class Window_Services : MonoBehaviour
         Edit_Mode_Width = Device_Screen_Width - 50;
         Edit_Mode_Height = Device_Screen_Height - 200;
 
-        Console_Log($"µ±Ç°ÆÁÄ»·Ö±æÂÊ: {Device_Screen_Width} ¡Á {Device_Screen_Height}");
-        Console_Log($"±à¼­Ä£Ê½·Ö±æÂÊ: {Edit_Mode_Width} ¡Á {Edit_Mode_Height}");
+        Console_Log($"å½“å‰å±å¹•åˆ†è¾¨ç‡: {Device_Screen_Width} Ã— {Device_Screen_Height}");
+        Console_Log($"ç¼–è¾‘æ¨¡å¼åˆ†è¾¨ç‡: {Edit_Mode_Width} Ã— {Edit_Mode_Height}");
 
         Screen.SetResolution(Edit_Mode_Width, Edit_Mode_Height, FullScreenMode.Windowed);
-        Console_Log($"µ±Ç°ÆÁÄ»Ä£Ê½: {Screen.fullScreenMode}");
+        Console_Log($"å½“å‰å±å¹•æ¨¡å¼: {Screen.fullScreenMode}");
 
         Update_Button_UI();
 
@@ -153,22 +153,22 @@ public class Window_Services : MonoBehaviour
 
         StartCoroutine(Get_Cover_Window_Coroutine());
 
-        Console_Log("½áÊø³õÊ¼»¯ Window Services");
+        Console_Log("ç»“æŸåˆå§‹åŒ– Window Services");
     }
 
     public void Toggle_Fullscreen_Mode()
     {
-        Console_Log("´¥·¢ÇĞ»»È«ÆÁÄ£Ê½");
+        Console_Log("è§¦å‘åˆ‡æ¢å…¨å±æ¨¡å¼");
 
         is_Fullscreen_Mode = !is_Fullscreen_Mode;
         if (is_Fullscreen_Mode)
         {
-            Console_Log("ÇĞ»»ÎªÈ«ÆÁÄ£Ê½"); 
+            Console_Log("åˆ‡æ¢ä¸ºå…¨å±æ¨¡å¼"); 
             Screen.SetResolution(Device_Screen_Width, Device_Screen_Height, FullScreenMode.FullScreenWindow);
         }
         else
         {
-            Console_Log("ÇĞ»»Îª´°¿ÚÄ£Ê½");
+            Console_Log("åˆ‡æ¢ä¸ºçª—å£æ¨¡å¼");
             Screen.SetResolution(Edit_Mode_Width, Edit_Mode_Height, FullScreenMode.Windowed);
         }
 
@@ -183,55 +183,55 @@ public class Window_Services : MonoBehaviour
 
     public bool Get_Program_Manager_Handle()
     {
-        Console_Log("¿ªÊ¼²éÕÒ Progman ´°¿Ú¾ä±ú");
+        Console_Log("å¼€å§‹æŸ¥æ‰¾ Progman çª—å£å¥æŸ„");
         Program_Manager_Handle = Win32Wrapper.FindWindow("Progman", null);
 
         if (Program_Manager_Handle != IntPtr.Zero)
         {
-            Console_Log($"ÕÒµ½ÁË Progman ´°¿Ú¾ä±ú: {Program_Manager_Handle}");
+            Console_Log($"æ‰¾åˆ°äº† Progman çª—å£å¥æŸ„: {Program_Manager_Handle}");
 
-            Console_Log($"¿ªÊ¼·¢ËÍÏûÏ¢µ½ Progman ´°¿Ú");
+            Console_Log($"å¼€å§‹å‘é€æ¶ˆæ¯åˆ° Progman çª—å£");
             IntPtr result = IntPtr.Zero;
             Win32Wrapper.SendMessageTimeout(Program_Manager_Handle, 0x052C, new IntPtr(0), IntPtr.Zero, Win32Wrapper.SendMessageTimeoutFlags.SMTO_NORMAL, 1000, out result);
-            Console_Log($"½áÊø·¢ËÍÏûÏ¢µ½ Progman ´°¿Ú");
+            Console_Log($"ç»“æŸå‘é€æ¶ˆæ¯åˆ° Progman çª—å£");
         }
         else
         {
-            Console_Log("Î´ÕÒµ½ Progman ´°¿Ú¾ä±ú£¡", Debug_Services.LogLevel.Debug, LogType.Error);
+            Console_Log("æœªæ‰¾åˆ° Progman çª—å£å¥æŸ„ï¼", Debug_Services.LogLevel.Debug, LogType.Error);
         }
 
-        Console_Log("½áÊø²éÕÒ Progman ´°¿Ú¾ä±ú");
+        Console_Log("ç»“æŸæŸ¥æ‰¾ Progman çª—å£å¥æŸ„");
         return Program_Manager_Handle != IntPtr.Zero ? true : false;
     }
 
     public bool Get_WorkW_Handle()
     {
-        Console_Log("¿ªÊ¼²éÕÒ WorkerW ´°¿Ú¾ä±ú");
+        Console_Log("å¼€å§‹æŸ¥æ‰¾ WorkerW çª—å£å¥æŸ„");
 
-        Console_Log("¿ªÊ¼Ñ°ÕÒÓë SHELLDLL_DefView Í¬¼¶µÄ WorkerW ´°¿Ú");
+        Console_Log("å¼€å§‹å¯»æ‰¾ä¸ SHELLDLL_DefView åŒçº§çš„ WorkerW çª—å£");
         Win32Wrapper.EnumWindows(new Win32Wrapper.EnumWindowsProc((tophandle, topparamhandle) =>
         {
             IntPtr SHELLDLL_DefView_Handle = Win32Wrapper.FindWindowEx(
-                                                tophandle,             // ´Ó¸Ã¶¥¼¶´°¿Ú¿ªÊ¼²éÕÒ
-                                                IntPtr.Zero,           // ´ÓµÚÒ»¸ö×Ó´°¿Ú¿ªÊ¼
-                                                "SHELLDLL_DefView",    // ÀàÃû
-                                                IntPtr.Zero            // ÎŞ±êÌâÏŞÖÆ
+                                                tophandle,             // ä»è¯¥é¡¶çº§çª—å£å¼€å§‹æŸ¥æ‰¾
+                                                IntPtr.Zero,           // ä»ç¬¬ä¸€ä¸ªå­çª—å£å¼€å§‹
+                                                "SHELLDLL_DefView",    // ç±»å
+                                                IntPtr.Zero            // æ— æ ‡é¢˜é™åˆ¶
                                               );
 
             if (SHELLDLL_DefView_Handle != IntPtr.Zero)
             {
-                Console_Log($"ÕÒµ½ÁË SHELLDLL_DefView ´°¿Ú¾ä±ú: {SHELLDLL_DefView_Handle}");
+                Console_Log($"æ‰¾åˆ°äº† SHELLDLL_DefView çª—å£å¥æŸ„: {SHELLDLL_DefView_Handle}");
 
                 WorkerW_Handle = Win32Wrapper.FindWindowEx(
-                                    IntPtr.Zero,    // ÔÚËùÓĞ¶¥¼¶´°¿ÚÖĞ²éÕÒ
-                                    tophandle,      // ´Óµ±Ç°¶¥¼¶´°¿Ú(tophandle)Ö®ºó¿ªÊ¼Ã¶¾Ù
-                                    "WorkerW",      // ÀàÃû
-                                    IntPtr.Zero     // ÎŞ±êÌâÏŞÖÆ
+                                    IntPtr.Zero,    // åœ¨æ‰€æœ‰é¡¶çº§çª—å£ä¸­æŸ¥æ‰¾
+                                    tophandle,      // ä»å½“å‰é¡¶çº§çª—å£(tophandle)ä¹‹åå¼€å§‹æšä¸¾
+                                    "WorkerW",      // ç±»å
+                                    IntPtr.Zero     // æ— æ ‡é¢˜é™åˆ¶
                                   );
 
                 if (WorkerW_Handle != IntPtr.Zero)
                 {
-                    Console_Log($"ÕÒµ½ÁËÓë SHELLDLL_DefView Í¬¼¶µÄ WorkerW ´°¿Ú¾ä±ú: {WorkerW_Handle}");
+                    Console_Log($"æ‰¾åˆ°äº†ä¸ SHELLDLL_DefView åŒçº§çš„ WorkerW çª—å£å¥æŸ„: {WorkerW_Handle}");
                     return false;
                 }
             }
@@ -240,58 +240,58 @@ public class Window_Services : MonoBehaviour
 
         if (WorkerW_Handle == IntPtr.Zero)
         {
-            Console_Log("Î´ÕÒµ½Óë SHELLDLL_DefView Í¬¼¶µÄ WorkerW ´°¿Ú£¡", Debug_Services.LogLevel.Debug, LogType.Warning);
+            Console_Log("æœªæ‰¾åˆ°ä¸ SHELLDLL_DefView åŒçº§çš„ WorkerW çª—å£ï¼", Debug_Services.LogLevel.Debug, LogType.Warning);
 
-            Console_Log("¿ªÊ¼²éÕÒÔÚ Progman ÏÂµÄ WorkerW ´°¿Ú");
+            Console_Log("å¼€å§‹æŸ¥æ‰¾åœ¨ Progman ä¸‹çš„ WorkerW çª—å£");
             WorkerW_Handle = Win32Wrapper.FindWindowEx(
-                                Program_Manager_Handle,    // ´Ó Progman ´°¿Ú¿ªÊ¼²éÕÒ
-                                IntPtr.Zero,               // ´ÓµÚÒ»¸ö×Ó´°¿Ú¿ªÊ¼
-                                "WorkerW",                 // ÀàÃû
-                                IntPtr.Zero                // ÎŞ±êÌâÏŞÖÆ
+                                Program_Manager_Handle,    // ä» Progman çª—å£å¼€å§‹æŸ¥æ‰¾
+                                IntPtr.Zero,               // ä»ç¬¬ä¸€ä¸ªå­çª—å£å¼€å§‹
+                                "WorkerW",                 // ç±»å
+                                IntPtr.Zero                // æ— æ ‡é¢˜é™åˆ¶
                               );
 
             if (WorkerW_Handle != IntPtr.Zero)
             {
-                Console_Log($"ÕÒµ½ÁËÔÚ Progman ÏÂµÄ WorkerW ´°¿Ú¾ä±ú: {WorkerW_Handle}");
+                Console_Log($"æ‰¾åˆ°äº†åœ¨ Progman ä¸‹çš„ WorkerW çª—å£å¥æŸ„: {WorkerW_Handle}");
             }
             else
             {
-                Console_Log("Î´ÕÒµ½ÔÚ Progman ÏÂµÄ WorkerW ´°¿Ú¾ä±ú£¡", Debug_Services.LogLevel.Debug, LogType.Error);
+                Console_Log("æœªæ‰¾åˆ°åœ¨ Progman ä¸‹çš„ WorkerW çª—å£å¥æŸ„ï¼", Debug_Services.LogLevel.Debug, LogType.Error);
             }
         }
 
-        Console_Log("½áÊø²éÕÒ WorkerW ´°¿Ú¾ä±ú");
+        Console_Log("ç»“æŸæŸ¥æ‰¾ WorkerW çª—å£å¥æŸ„");
         return WorkerW_Handle != IntPtr.Zero ? true : false;
     }
 
     public bool Get_Unity_Handle()
     {
-        Console_Log("¿ªÊ¼²éÕÒ Unity ´°¿Ú¾ä±ú");
+        Console_Log("å¼€å§‹æŸ¥æ‰¾ Unity çª—å£å¥æŸ„");
 
         Unity_Handle = Win32Wrapper.FindUnityWindow();
 
         if (Unity_Handle != IntPtr.Zero)
         {
-            Console_Log($"ÕÒµ½ÁË Unity ´°¿Ú¾ä±ú: {Unity_Handle}");
+            Console_Log($"æ‰¾åˆ°äº† Unity çª—å£å¥æŸ„: {Unity_Handle}");
         }
         else
         {
-            Console_Log($"Î´ÕÒµ½ Unity ´°¿Ú¾ä±ú", Debug_Services.LogLevel.Debug, LogType.Error);
+            Console_Log($"æœªæ‰¾åˆ° Unity çª—å£å¥æŸ„", Debug_Services.LogLevel.Debug, LogType.Error);
         }
 
-        Console_Log("½áÊø²éÕÒ Unity ´°¿Ú¾ä±ú");
+        Console_Log("ç»“æŸæŸ¥æ‰¾ Unity çª—å£å¥æŸ„");
         return Unity_Handle != IntPtr.Zero ? true : false;
     }
 
     
     /// <summary>
-    /// Ö÷Òª¼ì²âº¯Êı
+    /// ä¸»è¦æ£€æµ‹å‡½æ•°
     /// </summary>
     public Detection_Result Get_Cover_Window()
     {
         Detection_Result detection_result = new Detection_Result();
 
-        // 1. ÏÈ¼ì²éÊÇ·ñÓĞ×î´ó»¯´°¿Ú
+        // 1. å…ˆæ£€æŸ¥æ˜¯å¦æœ‰æœ€å¤§åŒ–çª—å£
         Window_Info window_info = Get_Top_Maximized_Window_Info();
         if (window_info != null)
         {
@@ -300,7 +300,7 @@ public class Window_Services : MonoBehaviour
             return detection_result;
         }
 
-        // 2. ¼ì²éWorkerWÊÇ·ñ±»ÕÚµ²
+        // 2. æ£€æŸ¥WorkerWæ˜¯å¦è¢«é®æŒ¡
         window_info = Get_WorkerW_Cover_Window_Info();
         if (window_info != null)
         {
@@ -331,11 +331,11 @@ public class Window_Services : MonoBehaviour
 
                 Cur_Cover_Window_Type = cur_detection_result.cover_window_type;
 
-                Console_Log($"µ±Ç°´°¿Ú¸²¸Ç×´Ì¬: {Cur_Cover_Window_Type} ÉÏÒ»´°¿Ú¸²¸Ç×´Ì¬: {last_detection_result.cover_window_type} ÇĞ»»Ö¸Ê¾Æ÷: {is_Switching}", Debug_Services.LogLevel.Ignore);
+                Console_Log($"å½“å‰çª—å£è¦†ç›–çŠ¶æ€: {Cur_Cover_Window_Type} ä¸Šä¸€çª—å£è¦†ç›–çŠ¶æ€: {last_detection_result.cover_window_type} åˆ‡æ¢æŒ‡ç¤ºå™¨: {is_Switching}", Debug_Services.LogLevel.Ignore);
 
                 if (cur_detection_result.cover_window_type != last_detection_result.cover_window_type)
                 {
-                    //Console_Log($"´¥·¢´°¿ÚÇĞ»»", Debug_Services.LogLevel.Ignore);
+                    //Console_Log($"è§¦å‘çª—å£åˆ‡æ¢", Debug_Services.LogLevel.Ignore);
 
                     is_Switching  = true;
 
@@ -356,7 +356,7 @@ public class Window_Services : MonoBehaviour
                             
                             Cover_Status_Image.color = new Color32(208, 64, 56, 255);
                             Cover_Status_Text.SetText($"{cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")} {cur_detection_result.top_window_info.className}");
-                            Console_Log($"WorkerW ±»¸²¸Ç£¬¸²¸Ç´°¿ÚÊÇ×î´ó»¯´°¿Ú: {cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")}  {cur_detection_result.top_window_info.className}", Debug_Services.LogLevel.Ignore);
+                            Console_Log($"WorkerW è¢«è¦†ç›–ï¼Œè¦†ç›–çª—å£æ˜¯æœ€å¤§åŒ–çª—å£: {cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")}  {cur_detection_result.top_window_info.className}", Debug_Services.LogLevel.Ignore);
                             break;
 
                         case Cover_Window_Type.Normal_Window:
@@ -383,7 +383,7 @@ public class Window_Services : MonoBehaviour
 
                             Cover_Status_Image.color = new Color32(245, 168, 62, 255);
                             Cover_Status_Text.SetText($"{cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")} {cur_detection_result.top_window_info.className}");
-                            Console_Log($"WorkerW ±»¸²¸Ç£¬¸²¸Ç´°¿ÚÊÇÆÕÍ¨´°¿Ú: {cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")} {cur_detection_result.top_window_info.className}", Debug_Services.LogLevel.Ignore);
+                            Console_Log($"WorkerW è¢«è¦†ç›–ï¼Œè¦†ç›–çª—å£æ˜¯æ™®é€šçª—å£: {cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")} {cur_detection_result.top_window_info.className}", Debug_Services.LogLevel.Ignore);
                             break;
 
                         case Cover_Window_Type.No_Window:
@@ -409,7 +409,7 @@ public class Window_Services : MonoBehaviour
 
                             Cover_Status_Image.color = new Color32(80, 153, 63, 255);
                             Cover_Status_Text.SetText("");
-                            Console_Log($"WorkerW ÎŞ¸²¸Ç", Debug_Services.LogLevel.Ignore);
+                            Console_Log($"WorkerW æ— è¦†ç›–", Debug_Services.LogLevel.Ignore);
                             break;
                     }
                 }
@@ -439,20 +439,20 @@ public class Window_Services : MonoBehaviour
     }
 
     /// <summary>
-    /// ²éÕÒ×î¶¥²ãµÄ×î´ó»¯´°¿Ú
+    /// æŸ¥æ‰¾æœ€é¡¶å±‚çš„æœ€å¤§åŒ–çª—å£
     /// </summary>
     private Window_Info Get_Top_Maximized_Window_Info()
     {
         List<Window_Info> all_window_info = Get_All_Window_Info();
 
-        //Console_Log($"ÕÒµ½´°¿Ú {all_window_info.Count} ¸ö");
+        //Console_Log($"æ‰¾åˆ°çª—å£ {all_window_info.Count} ä¸ª");
 
         foreach (Window_Info window_info in all_window_info)
         {
             //Console_Log($"{window_info.title} {window_info.isVisible} {window_info.isMaximized} {Is_System_Window(window_info)}");
             if (window_info.isVisible && window_info.isMaximized && !Is_System_Window(window_info))
             {
-                //Console_Log($"ÕÒµ½×î´ó»¯´°¿Ú: {window_info}");
+                //Console_Log($"æ‰¾åˆ°æœ€å¤§åŒ–çª—å£: {window_info}");
                 return window_info;
             }
         }
@@ -461,11 +461,11 @@ public class Window_Services : MonoBehaviour
     }
 
     /// <summary>
-    /// ¼ì²éWorkerWÊÇ·ñ±»ÕÚµ²
+    /// æ£€æŸ¥WorkerWæ˜¯å¦è¢«é®æŒ¡
     /// </summary>
     private Window_Info Get_WorkerW_Cover_Window_Info()
     {
-        // »ñÈ¡ËùÓĞ¿É¼û´°¿Ú
+        // è·å–æ‰€æœ‰å¯è§çª—å£
         List<Window_Info> all_window_info = Get_All_Window_Info();
 
         foreach (Window_Info window_info in all_window_info)
@@ -474,7 +474,7 @@ public class Window_Services : MonoBehaviour
             {
                 if (Is_Window_Above_WorkerW(window_info.handle))
                 {
-                    //Console_Log($"·¢ÏÖ WorkerW ÉÏ·½µÄ´°¿Ú: {window_info.title}");
+                    //Console_Log($"å‘ç° WorkerW ä¸Šæ–¹çš„çª—å£: {window_info.title}");
                     return window_info;
                 }
             }
@@ -484,7 +484,7 @@ public class Window_Services : MonoBehaviour
     }
 
     /// <summary>
-    /// ¼ì²é´°¿ÚÊÇ·ñÔÚWorkerWÖ®ÉÏ
+    /// æ£€æŸ¥çª—å£æ˜¯å¦åœ¨WorkerWä¹‹ä¸Š
     /// </summary>
     private bool Is_Window_Above_WorkerW(IntPtr window_handle)
     {
@@ -494,13 +494,13 @@ public class Window_Services : MonoBehaviour
         {
             if (cur_window_handle == window_handle)
             {
-                // ÕÒµ½ÁËÄ¿±ê´°¿Ú£¬¼ì²éËüÊÇ·ñÔÚWorkerWÖ®Ç°³öÏÖ
+                // æ‰¾åˆ°äº†ç›®æ ‡çª—å£ï¼Œæ£€æŸ¥å®ƒæ˜¯å¦åœ¨WorkerWä¹‹å‰å‡ºç°
                 return true;
             }
 
             if (cur_window_handle == WorkerW_Handle)
             {
-                // ÏÈÓöµ½ÁËWorkerW£¬ËµÃ÷Ä¿±ê´°¿ÚÔÚWorkerWÖ®ÏÂ
+                // å…ˆé‡åˆ°äº†WorkerWï¼Œè¯´æ˜ç›®æ ‡çª—å£åœ¨WorkerWä¹‹ä¸‹
                 return false;
             }
 
@@ -511,7 +511,7 @@ public class Window_Services : MonoBehaviour
     }
 
     /// <summary>
-    /// »ñÈ¡ËùÓĞ´°¿Ú
+    /// è·å–æ‰€æœ‰çª—å£
     /// </summary>
     private List<Window_Info> Get_All_Window_Info()
     {
@@ -545,7 +545,7 @@ public class Window_Services : MonoBehaviour
     }
 
     /// <summary>
-    /// »ñÈ¡´°¿ÚĞÅÏ¢
+    /// è·å–çª—å£ä¿¡æ¯
     /// </summary>
     private Window_Info Get_Window_Info(IntPtr hWnd)
     {
@@ -568,22 +568,22 @@ public class Window_Services : MonoBehaviour
     }
 
     /// <summary>
-    /// ÅĞ¶ÏÊÇ·ñÎªÏµÍ³´°¿Ú
+    /// åˆ¤æ–­æ˜¯å¦ä¸ºç³»ç»Ÿçª—å£
     /// </summary>
     private bool Is_System_Window(Window_Info window_info)
     {
-        // ¼ì²éÀàÃû
+        // æ£€æŸ¥ç±»å
         if (systemWindowClasses.Contains(window_info.className)) return true;
 
-        // ¼ì²é±êÌâ
+        // æ£€æŸ¥æ ‡é¢˜
         if (systemWindowTitles.Contains(window_info.title)) return true;
 
-        //// ¼ì²é´°¿Ú´óĞ¡£¨¹ıÂËµô¹ıĞ¡µÄ´°¿Ú£¬Í¨³£ÊÇÏµÍ³¿Ø¼ş£©
+        //// æ£€æŸ¥çª—å£å¤§å°ï¼ˆè¿‡æ»¤æ‰è¿‡å°çš„çª—å£ï¼Œé€šå¸¸æ˜¯ç³»ç»Ÿæ§ä»¶ï¼‰
         //int window_width = window_info.rect.Right - window_info.rect.Left;
         //int window_height = window_info.rect.Bottom - window_info.rect.Top;
         //if (window_width < 50 || window_height < 50) return true;
 
-        //// ¼ì²éÊÇ·ñÔÚÆÁÄ»Íâ£¨ÏµÍ³ÓĞÊ±»á´´½¨ÆÁÄ»ÍâµÄ´°¿Ú£©
+        //// æ£€æŸ¥æ˜¯å¦åœ¨å±å¹•å¤–ï¼ˆç³»ç»Ÿæœ‰æ—¶ä¼šåˆ›å»ºå±å¹•å¤–çš„çª—å£ï¼‰
         //if (window_info.rect.Left < -1000 || window_info.rect.Top < -1000) return true;
 
         return false;
@@ -599,7 +599,7 @@ public class Window_Services : MonoBehaviour
     }
 
     /// <summary>
-    /// »ñÈ¡´°¿Ú±êÌâ
+    /// è·å–çª—å£æ ‡é¢˜
     /// </summary>
     private string Get_Window_Title(IntPtr hWnd)
     {
@@ -609,7 +609,7 @@ public class Window_Services : MonoBehaviour
     }
 
     /// <summary>
-    /// »ñÈ¡´°¿ÚÀàÃû
+    /// è·å–çª—å£ç±»å
     /// </summary>
     private string Get_Window_Class_Name(IntPtr hWnd)
     {

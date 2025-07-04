@@ -11,7 +11,7 @@ public class Character_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Character Services 单例创建完成");
+            Debug.Log("[Awake] Character Services 鍗曚緥鍒涘缓瀹屾垚");
         }
         else
         {

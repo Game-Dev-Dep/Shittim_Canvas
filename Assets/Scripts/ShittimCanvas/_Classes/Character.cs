@@ -61,7 +61,7 @@ public class Character : MonoBehaviour
             Camera_Services.Instance.MemoryLobby_Camera.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
             Camera_Services.Instance.MemoryLobby_Camera.orthographicSize = Recorder_Services.Instance.Recorder_Camera_Size;
             is_StoryMode_Camera_Fixed = true;
-            Recorder_Services.Console_Log($"Ïà»úÒÑ¹Ì¶¨: {Recorder_Services.Instance.Recorder_Camera_Size}");
+            Recorder_Services.Console_Log($"ç›¸æœºå·²å›ºå®š: {Recorder_Services.Instance.Recorder_Camera_Size}");
         }
 #endif
 
@@ -101,7 +101,7 @@ public class Character : MonoBehaviour
             {
                 StartCoroutine(Recorder_Services.Instance.Play_Talk_Clips_StoryMode(skeleton_animation));
                 is_StoryMode_Started = true;
-                Recorder_Services.Console_Log("¿ªÊ¼Â¼ÖÆ¹ÊÊÂÄ£Ê½");
+                Recorder_Services.Console_Log("å¼€å§‹å½•åˆ¶æ•…äº‹æ¨¡å¼");
             }
 
             if (Screenshot_Services.Instance.is_Screenshot)
@@ -120,7 +120,7 @@ public class Character : MonoBehaviour
     public void Load_Charachter(string character_name)
     {
         Console_Log($" ======================================== ");
-        Console_Log($"¿ªÊ¼¼ÓÔØ½ÇÉ«: {character_name}");
+        Console_Log($"å¼€å§‹åŠ è½½è§’è‰²: {character_name}");
         Index_Services.Instance.Character_Name = character_name;
         Character_Name = character_name;
         Character_Folder_Path = Path.Combine(File_Services.Student_Files_Folder_Path, character_name);
@@ -143,53 +143,53 @@ public class Character : MonoBehaviour
         if (Recorder_Services.Instance.is_Record)
         {
             Recorder_Services.Instance.recorder_controller.StartRecording();
-            Recorder_Services.Console_Log("¿ªÊ¼Â¼ÖÆ");
+            Recorder_Services.Console_Log("å¼€å§‹å½•åˆ¶");
         }
 
 #endif
 
         Unload_Character_Bundles_False();
 
-        Console_Log($"¼ÓÔØ½ÇÉ«: {character_name}");
+        Console_Log($"åŠ è½½è§’è‰²: {character_name}");
     }
 
     public void Load_Character_Base_Info()
     {
-        // ===== »ñÈ¡Ñ§ÉúÎÄ¼ş¼ĞÖĞµÄËùÓĞĞÅÏ¢ =====
+        // ===== è·å–å­¦ç”Ÿæ–‡ä»¶å¤¹ä¸­çš„æ‰€æœ‰ä¿¡æ¯ =====
         memory_lobby_info = File_Services.Load_Specific_Type_From_File<MemoryLobby_Info>(Path.Combine(Character_Folder_Path, "MemoryLobby_Info.json"));
 
-        // ===== »ñÈ¡ÆÁÄ»ĞÅÏ¢ÒÔ»ñÈ¡ÒªÊ¹ÓÃµÄĞÅÏ¢ =====
+        // ===== è·å–å±å¹•ä¿¡æ¯ä»¥è·å–è¦ä½¿ç”¨çš„ä¿¡æ¯ =====
         if (memory_lobby_info.Subtitles.Count != 0)
         {
-            // ===== ÅĞ¶ÏÊÇ·ñÓĞ±ØÒªÏÔÊ¾ÆÁÄ» =====
+            // ===== åˆ¤æ–­æ˜¯å¦æœ‰å¿…è¦æ˜¾ç¤ºå±å¹• =====
             Match match = Regex.Match(memory_lobby_info.Audio_Files.First(), @"memoriallobby_(\d+)");
             if (match.Success && match.Groups.Count > 1)
             {
                 if (int.TryParse(match.Groups[1].Value, out int first_audio_file_index))
                 {
-                    Console_Log($"ÒôÆµÎÄ¼ş´Ó {first_audio_file_index} ¿ªÊ¼");
+                    Console_Log($"éŸ³é¢‘æ–‡ä»¶ä» {first_audio_file_index} å¼€å§‹");
                     if (first_audio_file_index == 0)
                     {
-                        Console_Log($"½ÇÉ« {Character_Name} ÓĞ±ØÒªµÄÒôÆµÎÄ¼ş");
+                        Console_Log($"è§’è‰² {Character_Name} æœ‰å¿…è¦çš„éŸ³é¢‘æ–‡ä»¶");
                         has_Start_Idle_Audio = true;
                     }
                 }
             }
             else
             {
-                Console_Log($"ÒôÆµÎÄ¼şÃ»ÓĞÆ¥Åä");
+                Console_Log($"éŸ³é¢‘æ–‡ä»¶æ²¡æœ‰åŒ¹é…");
             }
 
 
 
-            // ===== »ñÈ¡ËùÓĞÒôÆµÎÄ¼ş =====
+            // ===== è·å–æ‰€æœ‰éŸ³é¢‘æ–‡ä»¶ =====
             string[] talk_animation_end_index_parts = memory_lobby_info.Subtitles.Last().AnimationName.Split("_");
             Talk_Animaiton_Num = int.Parse(talk_animation_end_index_parts[1].Replace("0", ""));
             Index_Services.Instance.Talk_Animaiton_Num = Talk_Animaiton_Num;
             
             
 
-            // ===== ÅĞ¶ÏÊÇ·ñÏÔÊ¾ÆÁÄ» =====
+            // ===== åˆ¤æ–­æ˜¯å¦æ˜¾ç¤ºå±å¹• =====
             is_Can_Show_Subtitle = memory_lobby_info.Audio_Files.Count == memory_lobby_info.Subtitles.Count ? true : false;
 
             if (Subtitle_Services.Instance != null)
@@ -227,12 +227,12 @@ public class Character : MonoBehaviour
             if (bgm_excel_db.Id == memory_lobby_info.BGMId)
             {
                 BGM_Path = bgm_excel_db.Path;
-                Console_Log($"²¥·ÅÒôÀÖ: {BGM_Path}");
+                Console_Log($"æ’­æ”¾éŸ³ä¹: {BGM_Path}");
             }
         }
         StartCoroutine(Audio_Services.Instance.Play_AudioClip(Audio_Services.AudioClip_Type.BGM, Path.Combine(File_Services.MX_Files_MediaResources_Folder_Path, $"{BGM_Path}.ogg")));
 
-        Console_Log($"ÒôÆµÎÄ¼şÊıÁ¿: {memory_lobby_info.Audio_Files.Count} ÓĞ±ØÒªµÄÒôÆµÎÄ¼ş: {has_Start_Idle_Audio} ½ÇÉ«ÒôÆµÎÄ¼ş: {memory_lobby_info.Subtitles.Count} Talk¶¯»­: {Talk_Animaiton_Num}");
+        Console_Log($"éŸ³é¢‘æ–‡ä»¶æ•°é‡: {memory_lobby_info.Audio_Files.Count} æœ‰å¿…è¦çš„éŸ³é¢‘æ–‡ä»¶: {has_Start_Idle_Audio} è§’è‰²éŸ³é¢‘æ–‡ä»¶: {memory_lobby_info.Subtitles.Count} TalkåŠ¨ç”»: {Talk_Animaiton_Num}");
     }
 
     private AssetBundle Core_Bundle;
@@ -244,20 +244,20 @@ public class Character : MonoBehaviour
     {
         dependencies_bundles_paths = File_Services.Load_Specific_Type_From_File<List<string>>(Path.Combine(File_Services.Student_Files_Folder_Path, Character_Name, "Bundles", "Dependencies.json"));
 
-        // ===== ¼ÓÔØºËĞÄAB ===== \\
+        // ===== åŠ è½½æ ¸å¿ƒAB ===== \\
         Core_Bundle = AssetBundle.LoadFromFile(File_Services.Root_Folder_Path + dependencies_bundles_paths.Last());
         if (Core_Bundle != null)
         {
-            Console_Log($"¼ÓÔØºËĞÄAB {Path.GetFileName(dependencies_bundles_paths.Last())}", Debug_Services.LogLevel.Core);
+            Console_Log($"åŠ è½½æ ¸å¿ƒAB {Path.GetFileName(dependencies_bundles_paths.Last())}", Debug_Services.LogLevel.Core);
             dependencies_bundles_paths.RemoveAt(dependencies_bundles_paths.Count - 1);
         }
         else
         {
-            Console_Log($"AB {Path.GetFileName(dependencies_bundles_paths.Last())} ¼ÓÔØÒì³£", Debug_Services.LogLevel.Debug, LogType.Warning);
+            Console_Log($"AB {Path.GetFileName(dependencies_bundles_paths.Last())} åŠ è½½å¼‚å¸¸", Debug_Services.LogLevel.Debug, LogType.Warning);
             return;
         }
 
-        // ===== ¼ÓÔØËùÓĞAB ===== \\
+        // ===== åŠ è½½æ‰€æœ‰AB ===== \\
         foreach (string dependencies_bundles_path in dependencies_bundles_paths)
         {
             string file_name = Path.GetFileName(dependencies_bundles_path);
@@ -270,12 +270,12 @@ public class Character : MonoBehaviour
             }
             else
             {
-                Console_Log($"¼ÓÔØAB {file_name} ¼ÓÔØÒì³£", Debug_Services.LogLevel.Debug, LogType.Error);
+                Console_Log($"åŠ è½½AB {file_name} åŠ è½½å¼‚å¸¸", Debug_Services.LogLevel.Debug, LogType.Error);
             }
         }
-        Console_Log($"¼ÓÔØÁË {Dependencies_Bundles.Count} ¸öÒÀÀµAB");
+        Console_Log($"åŠ è½½äº† {Dependencies_Bundles.Count} ä¸ªä¾èµ–AB");
 
-        // ===== ¼ÓÔØ½ÇÉ«AB ===== \\
+        // ===== åŠ è½½è§’è‰²AB ===== \\
         foreach (string file_path in Directory.GetFiles(Path.Combine(File_Services.Student_Files_Folder_Path, Character_Name, "Bundles"), "*.bundle", SearchOption.AllDirectories))
         {
             string file_name = Path.GetFileName(file_path); 
@@ -286,148 +286,148 @@ public class Character : MonoBehaviour
             }
             else
             {
-                Console_Log($"½ÇÉ«AB {file_name} ¼ÓÔØÒì³£", Debug_Services.LogLevel.Debug, LogType.Warning);
+                Console_Log($"è§’è‰²AB {file_name} åŠ è½½å¼‚å¸¸", Debug_Services.LogLevel.Debug, LogType.Warning);
             }
         }
-        Console_Log($"¼ÓÔØÁË {Character_Bundles.Count} ¸ö½ÇÉ«AB");
+        Console_Log($"åŠ è½½äº† {Character_Bundles.Count} ä¸ªè§’è‰²AB");
 
         foreach (AssetBundle character_bundle in Character_Bundles.Values)
         {
             SpineClip[] spine_clip_array = character_bundle.LoadAllAssets<SpineClip>();
             if (spine_clip_array.Length != 0)
             {
-                Console_Log($"¿ªÊ¼¼ÓÔØ {spine_clip_array.Length} ¸ö SpineClip", Debug_Services.LogLevel.Core);
+                Console_Log($"å¼€å§‹åŠ è½½ {spine_clip_array.Length} ä¸ª SpineClip", Debug_Services.LogLevel.Core);
                 foreach (SpineClip spine_clip in spine_clip_array)
                 {
                     spine_clip.Initialize();
-                    Console_Log($"¿ªÊ¼¼ÓÔØ {spine_clip.ClipName}", Debug_Services.LogLevel.Core);
+                    Console_Log($"å¼€å§‹åŠ è½½ {spine_clip.ClipName}", Debug_Services.LogLevel.Core);
                 }
-                Console_Log($"¼ÓÔØÁË {spine_clip_array.Length} ¸ö SpineClip", Debug_Services.LogLevel.Core);
+                Console_Log($"åŠ è½½äº† {spine_clip_array.Length} ä¸ª SpineClip", Debug_Services.LogLevel.Core);
             }
 
             VolumeProfile[] volume_profile_array = character_bundle.LoadAllAssets<VolumeProfile>();
             if (volume_profile_array.Length != 0)
             {
-                Console_Log($"¿ªÊ¼¼ÓÔØ {volume_profile_array.Length} ¸ö Volume Profile ÖĞµÄµÚÒ»¸ö", Debug_Services.LogLevel.Core);
+                Console_Log($"å¼€å§‹åŠ è½½ {volume_profile_array.Length} ä¸ª Volume Profile ä¸­çš„ç¬¬ä¸€ä¸ª", Debug_Services.LogLevel.Core);
                 volume_component = gameObject.AddComponent<Volume>();
                 if (Volume_Services.Instance != null)
                 {
                     Volume_Services.Instance.Volume_Component = volume_component;
                 }
                 volume_component.sharedProfile = volume_profile_array[0];
-                Console_Log($"µÚÒ»¸ö Volume Profile Îª: {volume_component.sharedProfile.name}", Debug_Services.LogLevel.Core);
+                Console_Log($"ç¬¬ä¸€ä¸ª Volume Profile ä¸º: {volume_component.sharedProfile.name}", Debug_Services.LogLevel.Core);
                 PaniniProjection panini_projection;
                 if (volume_component.profile.TryGet(out panini_projection))
                 {
                     panini_projection.active = false;
-                    Console_Log($"È¡Ïû PaniniProjection Ğ§¹û");
+                    Console_Log($"å–æ¶ˆ PaniniProjection æ•ˆæœ");
                 }
-                Console_Log($"¼ÓÔØÁË {volume_profile_array.Length} ¸ö Volume Profile ÖĞµÄµÚÒ»¸ö", Debug_Services.LogLevel.Core);
+                Console_Log($"åŠ è½½äº† {volume_profile_array.Length} ä¸ª Volume Profile ä¸­çš„ç¬¬ä¸€ä¸ª", Debug_Services.LogLevel.Core);
             }
         }
     }
     public void Instantiate_Character_GameObject()
     {
-        Console_Log("¿ªÊ¼ÊµÀı»¯½ÇÉ« Prefab");
+        Console_Log("å¼€å§‹å®ä¾‹åŒ–è§’è‰² Prefab");
 
         lobby_gameobject_prefab = (GameObject)Core_Bundle.LoadAsset($"Assets/_MX/AddressableAsset/UI/UILobbyElement/{memory_lobby_info.PrefabName}.prefab");
         if (lobby_gameobject_prefab != null)
         {
             lobby_gameobject_instantiated = Instantiate(lobby_gameobject_prefab, transform.position, Quaternion.identity);
-            Console_Log("³É¹¦ÊµÀı»¯½ÇÉ« Prefab");
+            Console_Log("æˆåŠŸå®ä¾‹åŒ–è§’è‰² Prefab");
         }
         else
         {
-            Console_Log("½ÇÉ« Prefab Îª¿Õ", Debug_Services.LogLevel.Debug, LogType.Error);
+            Console_Log("è§’è‰² Prefab ä¸ºç©º", Debug_Services.LogLevel.Debug, LogType.Error);
         }
 
-        Console_Log("Íê³ÉÊµÀı»¯½ÇÉ« Prefab");
+        Console_Log("å®Œæˆå®ä¾‹åŒ–è§’è‰² Prefab");
     }
     
     public void Init_SkeletonAnimation()
     {
-        Console_Log("¿ªÊ¼³õÊ¼»¯ SkeletonAnimation");
+        Console_Log("å¼€å§‹åˆå§‹åŒ– SkeletonAnimation");
 
         skeleton_animation = lobby_gameobject_instantiated.GetComponent<UILobbyContainer>().SpineCharacter.SkeletonAnimation;
         if (skeleton_animation != null)
         {
-            Console_Log($"ÕÒµ½ {skeleton_animation.gameObject.name} µÄ SkeletonAnimation", Debug_Services.LogLevel.Core);
+            Console_Log($"æ‰¾åˆ° {skeleton_animation.gameObject.name} çš„ SkeletonAnimation", Debug_Services.LogLevel.Core);
         }
         else
         {
-            Console_Log($"»ñÈ¡ SkeletonAnimation Ê§°ÜÎª¿Õ", Debug_Services.LogLevel.Debug, LogType.Error);
+            Console_Log($"è·å– SkeletonAnimation å¤±è´¥ä¸ºç©º", Debug_Services.LogLevel.Debug, LogType.Error);
         }
         skeleton_animation.AnimationState.Event += OnSpineEvent;
 
-        Console_Log("Íê³É³õÊ¼»¯ SkeletonAnimation");
+        Console_Log("å®Œæˆåˆå§‹åŒ– SkeletonAnimation");
     }
 
     public void Init_PlayableDirector()
     {
-        Console_Log("¿ªÊ¼³õÊ¼»¯ PlayerDirector");
+        Console_Log("å¼€å§‹åˆå§‹åŒ– PlayerDirector");
 
-        Console_Log($"ÕÒµ½ {lobby_gameobject_instantiated.GetComponentsInChildren<PlayableDirector>().Length} ¸ö PlayableDirector");
+        Console_Log($"æ‰¾åˆ° {lobby_gameobject_instantiated.GetComponentsInChildren<PlayableDirector>().Length} ä¸ª PlayableDirector");
         player_director = lobby_gameobject_instantiated.GetComponentsInChildren<PlayableDirector>().First();
         if (player_director != null)
         {
-            Console_Log($"ÕÒµ½ {player_director.gameObject.name} µÄ PlayableDirector", Debug_Services.LogLevel.Core);
+            Console_Log($"æ‰¾åˆ° {player_director.gameObject.name} çš„ PlayableDirector", Debug_Services.LogLevel.Core);
         }
         else
         {
-            Console_Log($"Ã»ÓĞÕÒµ½ PlayableDirector", Debug_Services.LogLevel.Debug, LogType.Error);
+            Console_Log($"æ²¡æœ‰æ‰¾åˆ° PlayableDirector", Debug_Services.LogLevel.Debug, LogType.Error);
         }
         
-        Console_Log("Íê³É³õÊ¼»¯ PlayerDirector");
+        Console_Log("å®Œæˆåˆå§‹åŒ– PlayerDirector");
     }
 
     public void Init_TimelineAsset()
     {
-        Console_Log("¿ªÊ¼³õÊ¼»¯ TimelineAsset ×ÊÔ´");
+        Console_Log("å¼€å§‹åˆå§‹åŒ– TimelineAsset èµ„æº");
 
         if (player_director != null)
         {
             timeline_asset = player_director.playableAsset as TimelineAsset;
             if (timeline_asset != null)
             {
-                Console_Log("»ñÈ¡µ½ player_director µÄ playableAsset");
+                Console_Log("è·å–åˆ° player_director çš„ playableAsset");
             }
             else
             {
-                Console_Log("»ñÈ¡µ½ player_director µÄ playableAsset Ê§°Ü", Debug_Services.LogLevel.Debug, LogType.Error);
+                Console_Log("è·å–åˆ° player_director çš„ playableAsset å¤±è´¥", Debug_Services.LogLevel.Debug, LogType.Error);
                 return;
             }
 
-            Console_Log("¿ªÊ¼ÔÚ¹ìµÀ1ÉÏÌí¼Ó Talk_M ¶¯»­", Debug_Services.LogLevel.Core);
+            Console_Log("å¼€å§‹åœ¨è½¨é“1ä¸Šæ·»åŠ  Talk_M åŠ¨ç”»", Debug_Services.LogLevel.Core);
             talk_m_track = timeline_asset.CreateTrack<SpineAnimationStateTrack>(null, "Talk_M");
             talk_m_track.trackIndex = 1;
             player_director.SetGenericBinding(talk_m_track, skeleton_animation);
-            Console_Log("Íê³ÉÔÚ¹ìµÀ1ÉÏÌí¼Ó Talk_M ¶¯»­", Debug_Services.LogLevel.Core);
+            Console_Log("å®Œæˆåœ¨è½¨é“1ä¸Šæ·»åŠ  Talk_M åŠ¨ç”»", Debug_Services.LogLevel.Core);
 
-            Console_Log("¿ªÊ¼ÔÚ¹ìµÀ2ÉÏÌí¼Ó Talk_A ¶¯»­", Debug_Services.LogLevel.Core);
+            Console_Log("å¼€å§‹åœ¨è½¨é“2ä¸Šæ·»åŠ  Talk_A åŠ¨ç”»", Debug_Services.LogLevel.Core);
             talk_a_track = timeline_asset.CreateTrack<SpineAnimationStateTrack>(null, "Talk_A");
             talk_a_track.trackIndex = 2;
             player_director.SetGenericBinding(talk_a_track, skeleton_animation);
-            Console_Log("Íê³ÉÔÚ¹ìµÀ2ÉÏÌí¼Ó Talk_A ¶¯»­", Debug_Services.LogLevel.Core);
+            Console_Log("å®Œæˆåœ¨è½¨é“2ä¸Šæ·»åŠ  Talk_A åŠ¨ç”»", Debug_Services.LogLevel.Core);
         }
         else
         {
-            Console_Log($"PlayableDirector Ê§°ÜÎª¿Õ", Debug_Services.LogLevel.Debug, LogType.Error);
+            Console_Log($"PlayableDirector å¤±è´¥ä¸ºç©º", Debug_Services.LogLevel.Debug, LogType.Error);
         }
 
-        Console_Log("Íê³É³õÊ¼»¯ TimelineAsset ×ÊÔ´");
+        Console_Log("å®Œæˆåˆå§‹åŒ– TimelineAsset èµ„æº");
     }
 
     public void Disable_ChatDialog_GameObject()
     {
         lobby_gameobject_instantiated.GetComponent<UILobbyContainer>().ChatDialog.gameObject.SetActive(false);
-        Console_Log("È¡Ïû ChatDialog");
+        Console_Log("å–æ¶ˆ ChatDialog");
     }
 
     private int Event_Index = 0;
     private int Audio_File_Index = 0;
     public void OnSpineEvent(TrackEntry track_entry, Spine.Event spine_event)
     {
-        Console_Log($"[{Event_Index++}] ÊÂ¼ş: {spine_event.Data.Name} ¶¯»­: {track_entry.Animation.Name} ¹ìµÀ: {track_entry.TrackIndex}");
+        Console_Log($"[{Event_Index++}] äº‹ä»¶: {spine_event.Data.Name} åŠ¨ç”»: {track_entry.Animation.Name} è½¨é“: {track_entry.TrackIndex}");
 
         if (spine_event.Data.Name.ToLower() == "talk")
         {
@@ -458,15 +458,15 @@ public class Character : MonoBehaviour
 
     public void Unload_Character()
     {
-        Console_Log($"¿ªÊ¼Ğ¶ÔØ½ÇÉ«: {Character_Name}");
+        Console_Log($"å¼€å§‹å¸è½½è§’è‰²: {Character_Name}");
 
         Index_Services.Instance.is_Idle_Mode = false;
         Index_Services.Instance.is_Talking = false;
         
-        //Ö»ÓĞÔÚ×ÖÄ»·şÎñ´æÔÚÇÒÕıÔÚÏÔÊ¾Ê±²ÅÍ£Ö¹×ÖÄ»
+        //åªæœ‰åœ¨å­—å¹•æœåŠ¡å­˜åœ¨ä¸”æ­£åœ¨æ˜¾ç¤ºæ—¶æ‰åœæ­¢å­—å¹•
         if (Subtitle_Services.Instance != null)
         {
-            //µÈÒ»ÏÂÀ´È·±£µ±Ç°×ÖÄ»ÄÜ¹»Õı³£ÏÔÊ¾
+            //ç­‰ä¸€ä¸‹æ¥ç¡®ä¿å½“å‰å­—å¹•èƒ½å¤Ÿæ­£å¸¸æ˜¾ç¤º
             StartCoroutine(DelayedStopSubtitle());
         }
         
@@ -479,13 +479,13 @@ public class Character : MonoBehaviour
         Resources.UnloadUnusedAssets();
         System.GC.Collect();
 
-        Console_Log($"Ğ¶ÔØ½ÇÉ«: {Character_Name}");
+        Console_Log($"å¸è½½è§’è‰²: {Character_Name}");
         Console_Log($" ======================================== ");
     }
 
     private IEnumerator DelayedStopSubtitle()
     {
-        //µÈºÃÖ¡£¡
+        //ç­‰å¥½å¸§ï¼
         yield return null;
         Subtitle_Services.Instance.is_Stopping_Display = true;
     }

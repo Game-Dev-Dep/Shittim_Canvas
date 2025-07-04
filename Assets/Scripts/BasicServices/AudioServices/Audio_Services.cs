@@ -18,7 +18,7 @@ public class Audio_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Audio Services µ¥Àı´´½¨Íê³É");
+            Debug.Log("[Awake] Audio Services å•ä¾‹åˆ›å»ºå®Œæˆ");
         }
         else
         {
@@ -99,7 +99,7 @@ public class Audio_Services : MonoBehaviour
 
     public void Get_Config()
     {
-        Console_Log("¿ªÊ¼¼ÓÔØËùÓĞ Audio Services ÅäÖÃÎÄ¼ş");
+        Console_Log("å¼€å§‹åŠ è½½æ‰€æœ‰ Audio Services é…ç½®æ–‡ä»¶");
 
         is_Global_Sound_On = Config_Services.Instance.Global_Function_Config.is_Global_Sound_On;
         Update_Global_Sound_Button_UI();
@@ -120,9 +120,9 @@ public class Audio_Services : MonoBehaviour
         BGM_Slider_Handler(BGM_Sound);
 
         BGMExcel_DB_list = File_Services.Load_Specific_Type_From_File<List<BGMExcel_DB>>(Path.Combine(File_Services.MX_Files_TableBundles_Folder_Path, "BGMExcel.json"));
-        Console_Log($"»ñÈ¡µ½ {BGMExcel_DB_list.Count} Ê× BGM ĞÅÏ¢");
+        Console_Log($"è·å–åˆ° {BGMExcel_DB_list.Count} é¦– BGM ä¿¡æ¯");
 
-        Console_Log("½áÊø¼ÓÔØËùÓĞ Audio Services ÅäÖÃÎÄ¼ş");
+        Console_Log("ç»“æŸåŠ è½½æ‰€æœ‰ Audio Services é…ç½®æ–‡ä»¶");
     }
 
     public void Set_Config()
@@ -391,7 +391,7 @@ public class Audio_Services : MonoBehaviour
     {
         if (gameobject == null)
         {
-            Console_Log("Ä¿±ê GameObject Îª¿Õ", Debug_Services.LogLevel.Debug, LogType.Error);
+            Console_Log("ç›®æ ‡ GameObject ä¸ºç©º", Debug_Services.LogLevel.Debug, LogType.Error);
             return;
         }
 
@@ -402,7 +402,7 @@ public class Audio_Services : MonoBehaviour
             if (audio_source != null)
             {
                 Destroy(audio_source);
-                Console_Log($"ÒÑÒÆ³ıÔÚ {gameobject} ÉÏµÄ AudioSource ×é¼ş: {audio_source.name}");
+                Console_Log($"å·²ç§»é™¤åœ¨ {gameobject} ä¸Šçš„ AudioSource ç»„ä»¶: {audio_source.name}");
             }
         }
     }
@@ -411,7 +411,7 @@ public class Audio_Services : MonoBehaviour
     {
         string full_path = Path.Combine("file:///", audio_file_path);
         string local_audioclip_name = Path.GetFileName(audio_file_path);
-        Console_Log($"±¾µØ AudioClip {local_audioclip_name} ¼ÓÔØÂ·¾¶: {full_path}");
+        Console_Log($"æœ¬åœ° AudioClip {local_audioclip_name} åŠ è½½è·¯å¾„: {full_path}");
         using (UnityWebRequest unity_web_request = UnityWebRequestMultimedia.GetAudioClip(full_path, UnityEngine.AudioType.OGGVORBIS))
         {
             yield return unity_web_request.SendWebRequest();
@@ -419,12 +419,12 @@ public class Audio_Services : MonoBehaviour
             {
                 AudioClip audioclip = DownloadHandlerAudioClip.GetContent(unity_web_request);
                 audioclip.name = local_audioclip_name;
-                Console_Log($"±¾µØ AudioClip {local_audioclip_name} ¼ÓÔØ³É¹¦");
+                Console_Log($"æœ¬åœ° AudioClip {local_audioclip_name} åŠ è½½æˆåŠŸ");
                 onLoaded?.Invoke(audioclip);
             }
             else
             {
-                Console_Log($"±¾µØ AudioClip {local_audioclip_name} ¼ÓÔØÊ§°Ü: {unity_web_request.error}", Debug_Services.LogLevel.Debug, LogType.Error);
+                Console_Log($"æœ¬åœ° AudioClip {local_audioclip_name} åŠ è½½å¤±è´¥: {unity_web_request.error}", Debug_Services.LogLevel.Debug, LogType.Error);
                 onLoaded?.Invoke(null);
             }
         }

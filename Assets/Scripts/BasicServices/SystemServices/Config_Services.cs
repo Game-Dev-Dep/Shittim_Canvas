@@ -11,7 +11,7 @@ public class Config_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Config Services µ¥Àı´´½¨Íê³É");
+            Debug.Log("[Awake] Config Services å•ä¾‹åˆ›å»ºå®Œæˆ");
         }
         else
         {
@@ -28,54 +28,54 @@ public class Config_Services : MonoBehaviour
     
     private void Start()
     {
-        Console_Log($"¿ªÊ¼³õÊ¼»¯ Config Services");
+        Console_Log($"å¼€å§‹åˆå§‹åŒ– Config Services");
 
         Save_Function_Settings_Button.onClick.AddListener(Save_Global_Function_Config_Listener);
 
         MemoryLobby_Camera_Config = File_Services.Load_Specific_Type_From_File<Camera_Config>(Path.Combine(File_Services.Config_Files_Folder_Path, "MemoryLobby Camera Config.json"));
-        Console_Log($"¶ÁÈ¡µ½µÄÉãÏñ»úÉèÖÃ:\n" +
-                    $"½ÇÉ«Ãû: {MemoryLobby_Camera_Config.Defalut_Character_Name}\n" +
-                    $"Î»ÖÃX: {MemoryLobby_Camera_Config.Camera_Position_X}\n" +
-                    $"Î»ÖÃY: {MemoryLobby_Camera_Config.Camera_Position_Y}\n" +
-                    $"Ğı×ªZ: {MemoryLobby_Camera_Config.Camera_Rotation_Z}\n" +
-                    $"Ëõ·Å: {MemoryLobby_Camera_Config.Camera_Size}"
+        Console_Log($"è¯»å–åˆ°çš„æ‘„åƒæœºè®¾ç½®:\n" +
+                    $"è§’è‰²å: {MemoryLobby_Camera_Config.Defalut_Character_Name}\n" +
+                    $"ä½ç½®X: {MemoryLobby_Camera_Config.Camera_Position_X}\n" +
+                    $"ä½ç½®Y: {MemoryLobby_Camera_Config.Camera_Position_Y}\n" +
+                    $"æ—‹è½¬Z: {MemoryLobby_Camera_Config.Camera_Rotation_Z}\n" +
+                    $"ç¼©æ”¾: {MemoryLobby_Camera_Config.Camera_Size}"
                     );
 
         Global_Function_Config = File_Services.Load_Specific_Type_From_File<Function_Config>(Path.Combine(File_Services.Config_Files_Folder_Path, "Function Config.json"));
-        Console_Log($"¶ÁÈ¡µ½µÄ¹¦ÄÜÉèÖÃ:\n" +
-                    $"ÍÏ×§: {Global_Function_Config.is_IK_On}\n" +
-                    $"¶Ô»°: {Global_Function_Config.is_Talk_On}\n" +
-                    $"ÈÕÓï¶Ô»°×ÖÄ»: {Global_Function_Config.is_Subtitle_JP_On}\n" +
-                    $"×Ô¶¨Òå¶Ô»°×ÖÄ»: {Global_Function_Config.is_Subtitle_Custom_On}\n" +
-                    $"È«¾ÖÉùÒô: {Global_Function_Config.is_Global_Sound_On}\n" +
-                    $"ÓïÒô: {Global_Function_Config.is_Talk_Sound_On}\n" +
-                    $"ÓïÒôÒôÁ¿: {Global_Function_Config.Talk_Sound}\n" +
-                    $"ÒôĞ§: {Global_Function_Config.is_SFX_Sound_On}\n" +
-                    $"ÒôĞ§ÒôÁ¿£º{Global_Function_Config.SFX_Sound}\n" +
+        Console_Log($"è¯»å–åˆ°çš„åŠŸèƒ½è®¾ç½®:\n" +
+                    $"æ‹–æ‹½: {Global_Function_Config.is_IK_On}\n" +
+                    $"å¯¹è¯: {Global_Function_Config.is_Talk_On}\n" +
+                    $"æ—¥è¯­å¯¹è¯å­—å¹•: {Global_Function_Config.is_Subtitle_JP_On}\n" +
+                    $"è‡ªå®šä¹‰å¯¹è¯å­—å¹•: {Global_Function_Config.is_Subtitle_Custom_On}\n" +
+                    $"å…¨å±€å£°éŸ³: {Global_Function_Config.is_Global_Sound_On}\n" +
+                    $"è¯­éŸ³: {Global_Function_Config.is_Talk_Sound_On}\n" +
+                    $"è¯­éŸ³éŸ³é‡: {Global_Function_Config.Talk_Sound}\n" +
+                    $"éŸ³æ•ˆ: {Global_Function_Config.is_SFX_Sound_On}\n" +
+                    $"éŸ³æ•ˆéŸ³é‡ï¼š{Global_Function_Config.SFX_Sound}\n" +
                     $"BGM: {Global_Function_Config.is_BGM_Sound_On}\n" +
-                    $"BGMÒôÁ¿: {Global_Function_Config.BGM_Sound}\n" +
-                    $"ºóÆÚ´¦Àí: {Global_Function_Config.is_Volume_On}\n" +
-                    $"¿ª»ú×ÔÆô¶¯: {Global_Function_Config.is_AutoStartup_On}\n" +
-                    $"Ä¬ÈÏ±ÚÖ½Ä£Ê½Æô¶¯: {Global_Function_Config.is_Auto_Wallpaper_Mode_On}"
+                    $"BGMéŸ³é‡: {Global_Function_Config.BGM_Sound}\n" +
+                    $"åæœŸå¤„ç†: {Global_Function_Config.is_Volume_On}\n" +
+                    $"å¼€æœºè‡ªå¯åŠ¨: {Global_Function_Config.is_AutoStartup_On}\n" +
+                    $"é»˜è®¤å£çº¸æ¨¡å¼å¯åŠ¨: {Global_Function_Config.is_Auto_Wallpaper_Mode_On}"
                     );
 
         Gloabal_WindowFilter_Config = File_Services.Load_Specific_Type_From_File<WindowFilter_Config>(Path.Combine(File_Services.Config_Files_Folder_Path, "WindowFilter Config.json"));
-        Console_Log($"¶ÁÈ¡µ½µÄ×Ô¶¨Òå¸²¸Ç´°¿ÚÉèÖÃ:\n" +
-                    $"´°¿Ú±êÌâ¸öÊı: {Gloabal_WindowFilter_Config.Title_Names.Count}\n" +
-                    $"´°¿ÚÀàÃû¸öÊı: {Gloabal_WindowFilter_Config.Class_Names.Count}"
+        Console_Log($"è¯»å–åˆ°çš„è‡ªå®šä¹‰è¦†ç›–çª—å£è®¾ç½®:\n" +
+                    $"çª—å£æ ‡é¢˜ä¸ªæ•°: {Gloabal_WindowFilter_Config.Title_Names.Count}\n" +
+                    $"çª—å£ç±»åä¸ªæ•°: {Gloabal_WindowFilter_Config.Class_Names.Count}"
                     );
 
-        Console_Log($"½áÊø³õÊ¼»¯ Config Services");
+        Console_Log($"ç»“æŸåˆå§‹åŒ– Config Services");
     }
 
     public void Save_Camera_Config(Camera_Config camera_config, string file_path)
     {
-        Console_Log($"±£´æµÄÉãÏñ»úÉèÖÃ:\n" +
-                    $"½ÇÉ«Ãû: {camera_config.Defalut_Character_Name}\n" +
-                    $"Î»ÖÃX: {camera_config.Camera_Position_X}\n" +
-                    $"Î»ÖÃY: {camera_config.Camera_Position_Y}\n" +
-                    $"Ğı×ªZ: {camera_config.Camera_Rotation_Z}\n" +
-                    $"Ëõ·Å: {camera_config.Camera_Size}");
+        Console_Log($"ä¿å­˜çš„æ‘„åƒæœºè®¾ç½®:\n" +
+                    $"è§’è‰²å: {camera_config.Defalut_Character_Name}\n" +
+                    $"ä½ç½®X: {camera_config.Camera_Position_X}\n" +
+                    $"ä½ç½®Y: {camera_config.Camera_Position_Y}\n" +
+                    $"æ—‹è½¬Z: {camera_config.Camera_Rotation_Z}\n" +
+                    $"ç¼©æ”¾: {camera_config.Camera_Size}");
         File_Services.Save_Specific_Type_To_File<Camera_Config>(camera_config, file_path);
     }
 
@@ -91,21 +91,21 @@ public class Config_Services : MonoBehaviour
 
     public void Save_Function_Config(Function_Config function_config, string file_path)
     {
-        Console_Log($"±£´æµÄ¹¦ÄÜÉèÖÃ:\n" +
-                    $"ÍÏ×§: {function_config.is_IK_On}\n" +
-                    $"¶Ô»°: {function_config.is_Talk_On}\n" +
-                    $"ÈÕÓï¶Ô»°×ÖÄ»: {Global_Function_Config.is_Subtitle_JP_On}\n" +
-                    $"×Ô¶¨Òå¶Ô»°×ÖÄ»: {Global_Function_Config.is_Subtitle_Custom_On}\n" +
-                    $"È«¾ÖÉùÒô: {function_config.is_Global_Sound_On}\n" +
-                    $"ÓïÒô: {function_config.is_Talk_Sound_On}\n" +
-                    $"ÓïÒôÒôÁ¿: {function_config.Talk_Sound}\n" +
-                    $"ÒôĞ§: {function_config.is_SFX_Sound_On}\n" +
-                    $"ÒôĞ§ÒôÁ¿£º{function_config.SFX_Sound}\n" +
+        Console_Log($"ä¿å­˜çš„åŠŸèƒ½è®¾ç½®:\n" +
+                    $"æ‹–æ‹½: {function_config.is_IK_On}\n" +
+                    $"å¯¹è¯: {function_config.is_Talk_On}\n" +
+                    $"æ—¥è¯­å¯¹è¯å­—å¹•: {Global_Function_Config.is_Subtitle_JP_On}\n" +
+                    $"è‡ªå®šä¹‰å¯¹è¯å­—å¹•: {Global_Function_Config.is_Subtitle_Custom_On}\n" +
+                    $"å…¨å±€å£°éŸ³: {function_config.is_Global_Sound_On}\n" +
+                    $"è¯­éŸ³: {function_config.is_Talk_Sound_On}\n" +
+                    $"è¯­éŸ³éŸ³é‡: {function_config.Talk_Sound}\n" +
+                    $"éŸ³æ•ˆ: {function_config.is_SFX_Sound_On}\n" +
+                    $"éŸ³æ•ˆéŸ³é‡ï¼š{function_config.SFX_Sound}\n" +
                     $"BGM: {function_config.is_BGM_Sound_On}\n" +
-                    $"BGMÒôÁ¿: {function_config.BGM_Sound}\n" +
-                    $"ºóÆÚ´¦Àí: {function_config.is_Volume_On}\n" +
-                    $"¿ª»ú×ÔÆô¶¯: {function_config.is_AutoStartup_On}\n" +
-                    $"Ä¬ÈÏ±ÚÖ½Ä£Ê½Æô¶¯: {function_config.is_Auto_Wallpaper_Mode_On}");
+                    $"BGMéŸ³é‡: {function_config.BGM_Sound}\n" +
+                    $"åæœŸå¤„ç†: {function_config.is_Volume_On}\n" +
+                    $"å¼€æœºè‡ªå¯åŠ¨: {function_config.is_AutoStartup_On}\n" +
+                    $"é»˜è®¤å£çº¸æ¨¡å¼å¯åŠ¨: {function_config.is_Auto_Wallpaper_Mode_On}");
         File_Services.Save_Specific_Type_To_File<Function_Config>(function_config, file_path);
     }
 

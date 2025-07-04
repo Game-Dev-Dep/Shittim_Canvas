@@ -10,7 +10,7 @@ public class Framerate_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Framerate Services µ¥Àı´´½¨Íê³É");
+            Debug.Log("[Awake] Framerate Services å•ä¾‹åˆ›å»ºå®Œæˆ");
         }
         else
         {
@@ -35,7 +35,7 @@ public class Framerate_Services : MonoBehaviour
 
     private void Start()
     {
-        Console_Log("½áÊø³õÊ¼»¯ Framerate Services");
+        Console_Log("ç»“æŸåˆå§‹åŒ– Framerate Services");
 
         VSync_Toggle_Button.onClick.AddListener(Toggle_VSync_Mode);
 
@@ -45,25 +45,25 @@ public class Framerate_Services : MonoBehaviour
 
         Update_Button_UI();
 
-        Console_Log("½áÊø³õÊ¼»¯ Framerate Services");
+        Console_Log("ç»“æŸåˆå§‹åŒ– Framerate Services");
     }
 
     public void Toggle_VSync_Mode()
     {
-        Console_Log("´¥·¢ÇĞ»» VSync Ä£Ê½");
+        Console_Log("è§¦å‘åˆ‡æ¢ VSync æ¨¡å¼");
 
         is_VSync_Mode = !is_VSync_Mode;
 
         if (is_VSync_Mode)
         {
-            Console_Log("ÇĞ»»Îª VSync Ä£Ê½");
+            Console_Log("åˆ‡æ¢ä¸º VSync æ¨¡å¼");
             QualitySettings.vSyncCount = 1;
             Application.targetFrameRate = -1;
             
         }
         else
         {
-            Console_Log("ÇĞ»»ÎªÖ¸¶¨Ö¡ÂÊÄ£Ê½");
+            Console_Log("åˆ‡æ¢ä¸ºæŒ‡å®šå¸§ç‡æ¨¡å¼");
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = Target_Framerate;
         }
@@ -77,26 +77,26 @@ public class Framerate_Services : MonoBehaviour
     {
         if (!is_VSync_Mode)
         {
-            Console_Log("¿ªÊ¼ÉèÖÃÄ¿±êÖ¡ÂÊ");
+            Console_Log("å¼€å§‹è®¾ç½®ç›®æ ‡å¸§ç‡");
 
             if (int.TryParse(value, out int input_framerate) && input_framerate > 0 && input_framerate < 360)
             {
-                Console_Log($"Ä¿±êÖ¡ÂÊ {input_framerate} ÎªºÏ·¨µÄ·Ç¸ºÕûÊı");
+                Console_Log($"ç›®æ ‡å¸§ç‡ {input_framerate} ä¸ºåˆæ³•çš„éè´Ÿæ•´æ•°");
                 if (!is_temp_change) Target_Framerate = input_framerate;
                 Application.targetFrameRate = input_framerate;
                 Update_InputField_UI();
             }
             else
             {
-                Console_Log($"Ä¿±êÖ¡ÂÊ {input_framerate} ²»ÎªºÏ·¨µÄ·Ç¸ºÕûÊı");
+                Console_Log($"ç›®æ ‡å¸§ç‡ {input_framerate} ä¸ä¸ºåˆæ³•çš„éè´Ÿæ•´æ•°");
                 Framerate_InputField.text = Target_Framerate.ToString();
             }
 
-            Console_Log("½áÊøÉèÖÃÄ¿±êÖ¡ÂÊ");
+            Console_Log("ç»“æŸè®¾ç½®ç›®æ ‡å¸§ç‡");
         }
         else
         {
-            Console_Log("µ±Ç°ÎªVSyncÄ£Ê½£¬²»ÄÜÖ¸¶¨Ö¡ÂÊ");
+            Console_Log("å½“å‰ä¸ºVSyncæ¨¡å¼ï¼Œä¸èƒ½æŒ‡å®šå¸§ç‡");
         }
     }
 
