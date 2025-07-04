@@ -83,6 +83,13 @@ public class Dropdown_Services : MonoBehaviour
         {
             SetDefaultCharacterThumbnail();
         }
+
+        // 绑到相机保存按钮，疏影的锅。
+        var cameraServices = Camera_Services.Instance;
+        if (cameraServices != null && cameraServices.Save_Camera_Settings_Button != null)
+        {
+            cameraServices.Save_Camera_Settings_Button.onClick.AddListener(SaveDropdownSelection);
+        }
     }
 
     void InitializeOptionHeight()
@@ -367,9 +374,6 @@ public class Dropdown_Services : MonoBehaviour
         {
             mainButtonIcon.texture = defaultIcon;
         }
-        //保存选择的学生
-        PlayerPrefs.SetString("Dropdown_SelectedCharacter", selectedCharacter);
-        PlayerPrefs.Save();
         Character_Services.Instance.Switch_Character(selectedCharacter);
         dropdownPanel.SetActive(false);
         isDropdownOpen = false;
@@ -455,6 +459,16 @@ public class Dropdown_Services : MonoBehaviour
         {
             Debug.LogWarning($"[Dropdown_Services] Lobbyillust 不包含 key: {lastSelected}，使用默认图标");
             mainButtonIcon.texture = defaultIcon;
+        }
+    }
+
+    //保存当前下拉菜单选择，往上看可以找到绑着相机保存按钮的code
+    public void SaveDropdownSelection()
+    {
+        if (mainButtonLabel != null)
+        {
+            PlayerPrefs.SetString("Dropdown_SelectedCharacter", mainButtonLabel.text);
+            PlayerPrefs.Save();
         }
     }
 }
