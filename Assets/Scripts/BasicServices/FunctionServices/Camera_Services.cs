@@ -12,7 +12,7 @@ public class Camera_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Camera Services µ¥Àý´´½¨Íê³É");
+            Debug.Log("[Awake] Camera Services ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
         }
         else
         {
@@ -35,26 +35,26 @@ public class Camera_Services : MonoBehaviour
     public TextMeshProUGUI Camera_Mode_Text;
 
     [Header("Drag Settings")]
-    public float Drag_Sensitivity = 0.4f;  // ÍÏ×§ÁéÃô¶È
+    public float Drag_Sensitivity = 0.4f;  // ï¿½ï¿½×§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     [Header("Zoom Settings")]
-    public float Zoom_Sensitivity = 0.01f;  // Ëõ·ÅÁéÃô¶È
-    public float Zoom_Min_Size = 0.01f;  // ×îÐ¡Ëõ·ÅÖµ
-    public float Zoom_Max_Size = 2f;  // ×î´óËõ·ÅÖµ
+    public float Zoom_Sensitivity = 0.01f;  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public float Zoom_Min_Size = 0.01f;  // ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½Öµ
+    public float Zoom_Max_Size = 2f;  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
 
     [Header("Rotation Settings")]
-    public float Rotation_Sensitivity = 0.5f;  // Ðý×ªÁéÃô¶È
-    public float Rotation_Min_Angle = -180f;  // ×îÐ¡Ðý×ª½Ç¶È
-    public float Rotation_Max_Angle = 180f;  // ×î´óÐý×ª½Ç¶È
+    public float Rotation_Sensitivity = 0.5f;  // ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public float Rotation_Min_Angle = -180f;  // ï¿½ï¿½Ð¡ï¿½ï¿½×ªï¿½Ç¶ï¿½
+    public float Rotation_Max_Angle = 180f;  // ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½Ç¶ï¿½
 
-    private bool is_Drag_Mode;  // ÍÏ×§Ä£Ê½¼¤»î
-    private bool is_Rotate_Mode;  // Ðý×ªÄ£Ê½¼¤»î
+    private bool is_Drag_Mode;  // ï¿½ï¿½×§Ä£Ê½ï¿½ï¿½ï¿½ï¿½
+    private bool is_Rotate_Mode;  // ï¿½ï¿½×ªÄ£Ê½ï¿½ï¿½ï¿½ï¿½
     private Vector3 Drag_Start_Position;
     private bool is_Camera_Fixed = false;
 
     private void Start()
     {
-        Console_Log("¿ªÊ¼³õÊ¼»¯ Camera Services");
+        Console_Log("ï¿½ï¿½Ê¼ï¿½ï¿½Ê¼ï¿½ï¿½ Camera Services");
 
         Read_Camera_Settings_Button.onClick.AddListener(
             () => Load_Camera_Config(MemoryLobby_Camera, Config_Services.Instance.MemoryLobby_Camera_Config)
@@ -66,7 +66,7 @@ public class Camera_Services : MonoBehaviour
             () => Reset_Camera_Settings(MemoryLobby_Camera)
         );
 
-        Console_Log("½áÊø³õÊ¼»¯ Camera Services");
+        Console_Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ Camera Services");
     }
 
     private void Update()
@@ -80,7 +80,7 @@ public class Camera_Services : MonoBehaviour
                 if (is_Drag_Mode)
                 {
                     Camera_Mode_Panel.SetActive(true);
-                    Camera_Mode_Text.SetText("Ëõ·ÅÄ£Ê½");
+                    Camera_Mode_Text.SetText("ï¿½ï¿½ï¿½ï¿½Ä£Ê½");
                     if (Input.mouseScrollDelta.y != 0)
                     {
                         Zoom_Handler(MemoryLobby_Camera);
@@ -98,7 +98,7 @@ public class Camera_Services : MonoBehaviour
                 if (is_Rotate_Mode)
                 {
                     Camera_Mode_Panel.SetActive(true);
-                    Camera_Mode_Text.SetText("Ðý×ªÄ£Ê½");
+                    Camera_Mode_Text.SetText("ï¿½ï¿½×ªÄ£Ê½");
                     if (Input.mouseScrollDelta.y != 0)
                     {
                         Rotation_Handler(MemoryLobby_Camera);
@@ -115,11 +115,11 @@ public class Camera_Services : MonoBehaviour
                 if (!is_Camera_Fixed)
                 {
                     Console_Log(
-                    $"µ±Ç°µÄÉãÏñ»úÉèÖÃ:\n" +
-                    $"Î»ÖÃX: {MemoryLobby_Camera.transform.position}\n" +
-                    $"Î»ÖÃY: {MemoryLobby_Camera.transform.position.y}\n" +
-                    $"Ðý×ªZ: {MemoryLobby_Camera.transform.eulerAngles.z}\n" +
-                    $"Ëõ·Å: {MemoryLobby_Camera.orthographicSize}"
+                    $"ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:\n" +
+                    $"Î»ï¿½ï¿½X: {MemoryLobby_Camera.transform.position}\n" +
+                    $"Î»ï¿½ï¿½Y: {MemoryLobby_Camera.transform.position.y}\n" +
+                    $"ï¿½ï¿½×ªZ: {MemoryLobby_Camera.transform.eulerAngles.z}\n" +
+                    $"ï¿½ï¿½ï¿½ï¿½: {MemoryLobby_Camera.orthographicSize}"
                     );
 
                     if (Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Position_X == 0 &&
@@ -127,21 +127,21 @@ public class Camera_Services : MonoBehaviour
                         Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Rotation_Z == 0 &&
                         Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Size == 1)
                     {
-                        Console_Log("µ±Ç°µÄÉãÏñ»úÉèÖÃÓëÄ¬ÈÏÉèÖÃÒ»ÖÂ£¬ÎÞÐè½ÃÕý");
+                        Console_Log("ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Â£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
                     }
                     else
                     {
-                        Console_Log("µ±Ç°µÄÉãÏñ»úÉèÖÃÓëÄ¬ÈÏµÄÉèÖÃ²»Ò»ÖÂ£¬¿ªÊ¼½ÃÕý");
+                        Console_Log("ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½Ïµï¿½ï¿½ï¿½ï¿½Ã²ï¿½Ò»ï¿½Â£ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½");
                         MemoryLobby_Camera.transform.position = new Vector2(Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Position_X, Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Position_Y);
                         MemoryLobby_Camera.transform.rotation = Quaternion.Euler(0f, 0f, Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Rotation_Z);
                         MemoryLobby_Camera.orthographicSize = Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Size;
 
                         Console_Log(
-                        $"½ÃÕýºóµÄÉãÏñ»úÉèÖÃ:\n" +
-                        $"Î»ÖÃX: {MemoryLobby_Camera.transform.position}\n" +
-                        $"Î»ÖÃY: {MemoryLobby_Camera.transform.position.y}\n" +
-                        $"Ðý×ªZ: {MemoryLobby_Camera.transform.eulerAngles.z}\n" +
-                        $"Ëõ·Å: {MemoryLobby_Camera.orthographicSize}");
+                        $"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:\n" +
+                        $"Î»ï¿½ï¿½X: {MemoryLobby_Camera.transform.position}\n" +
+                        $"Î»ï¿½ï¿½Y: {MemoryLobby_Camera.transform.position.y}\n" +
+                        $"ï¿½ï¿½×ªZ: {MemoryLobby_Camera.transform.eulerAngles.z}\n" +
+                        $"ï¿½ï¿½ï¿½ï¿½: {MemoryLobby_Camera.orthographicSize}");
                     }
 
                     is_Camera_Fixed = true;
@@ -154,23 +154,23 @@ public class Camera_Services : MonoBehaviour
     {
         MemoryLobby_Camera = camera;
         Load_Camera_Config(MemoryLobby_Camera, Config_Services.Instance.MemoryLobby_Camera_Config);
-        Console_Log("ÒÑ³õÊ¼»¯¼ÇÒä´óÌüÉãÏñ»ú");
+        Console_Log("ï¿½Ñ³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
         MemoryLobby_Camera.GetUniversalAdditionalCameraData().renderPostProcessing = true;
-        Console_Log("ÒÑÆôÓÃÉãÏñ»úµÄ Post Processing Ñ¡Ïî");
+        Console_Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Post Processing Ñ¡ï¿½ï¿½");
     }
 
     public void Toggle_Drag_Mode()
     {
         is_Drag_Mode = !is_Drag_Mode;
-        Console_Log((is_Drag_Mode ? "ÆôÓÃ" : "½ûÓÃ") + "ÉãÏñ»úËõ·ÅÄ£Ê½");
+        Console_Log((is_Drag_Mode ? "ï¿½ï¿½ï¿½ï¿½" : "ï¿½ï¿½ï¿½ï¿½") + "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½");
         is_Rotate_Mode = false;
     }
 
     public void Zoom_Handler(Camera camera)
     {
-        float mouse_scroll_delta = -Input.mouseScrollDelta.y;  // ¸ù¾Ý¹öÂÖ·½Ïòµ÷ÕûÉãÏñ»ú´óÐ¡
+        float mouse_scroll_delta = -Input.mouseScrollDelta.y;  // ï¿½ï¿½ï¿½Ý¹ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡
         float zoom_new_size = camera.orthographicSize + mouse_scroll_delta * Zoom_Sensitivity;
-        camera.orthographicSize = Mathf.Clamp(zoom_new_size, Zoom_Min_Size, Zoom_Max_Size);  // ÏÞÖÆËõ·Å·¶Î§
+        camera.orthographicSize = Mathf.Clamp(zoom_new_size, Zoom_Min_Size, Zoom_Max_Size);  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½Î§
     }
 
     public void Drag_Start(Camera camera)
@@ -180,31 +180,31 @@ public class Camera_Services : MonoBehaviour
 
     public void Drag_Handler(Camera camera, Vector3 drag_start_position)
     {
-        Vector3 mouse_cur_position = Get_Mouse_World_Position(camera);  // ¼ÆËãµ±Ç°Êó±êÎ»ÖÃ (ÊÀ½ç×ø±ê)
-        Vector3 mouse_delta_postition = drag_start_position - mouse_cur_position;  // ¼ÆËãÎ»ÒÆ²îÖµ (½öXYÖá)
+        Vector3 mouse_cur_position = Get_Mouse_World_Position(camera);  // ï¿½ï¿½ï¿½ãµ±Ç°ï¿½ï¿½ï¿½Î»ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+        Vector3 mouse_delta_postition = drag_start_position - mouse_cur_position;  // ï¿½ï¿½ï¿½ï¿½Î»ï¿½Æ²ï¿½Öµ (ï¿½ï¿½XYï¿½ï¿½)
         mouse_delta_postition.z = 0;
-        camera.transform.position += mouse_delta_postition * Drag_Sensitivity;  // Ó¦ÓÃÎ»ÒÆ
-        Drag_Start(camera);  // ¸üÐÂÆðÊ¼Î»ÖÃ£¬ÊµÏÖÆ½»¬ÍÏ×§
+        camera.transform.position += mouse_delta_postition * Drag_Sensitivity;  // Ó¦ï¿½ï¿½Î»ï¿½ï¿½
+        Drag_Start(camera);  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼Î»ï¿½Ã£ï¿½Êµï¿½ï¿½Æ½ï¿½ï¿½ï¿½ï¿½×§
     }
 
     public void Toggle_Rotate_Mode()
     {
         is_Rotate_Mode = !is_Rotate_Mode;
-        Console_Log((is_Drag_Mode ? "ÆôÓÃ" : "½ûÓÃ") + "ÉãÏñ»úÐý×ª¿ØÖÆ");
+        Console_Log((is_Drag_Mode ? "ï¿½ï¿½ï¿½ï¿½" : "ï¿½ï¿½ï¿½ï¿½") + "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½");
         is_Drag_Mode = false;
     }
 
     public void Rotation_Handler(Camera camera)
     {
-        float scroll_delta = Input.mouseScrollDelta.y;  // »ñÈ¡¹öÂÖÊäÈëÖµ
-        float rotation_cur_angle = camera.transform.eulerAngles.z;  // ¼ÆËãÐÂµÄÐý×ª½Ç¶È
+        float scroll_delta = Input.mouseScrollDelta.y;  // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+        float rotation_cur_angle = camera.transform.eulerAngles.z;  // ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½×ªï¿½Ç¶ï¿½
         float rotation_new_angle = rotation_cur_angle + scroll_delta * Rotation_Sensitivity;
 
         //if (new_rotation_angle > 180f) new_rotation_angle = 180f;
         //if (new_rotation_angle < -180f) new_rotation_angle = -180;
 
         //rotation_new_angle = Mathf.Clamp(rotation_new_angle, Rotation_Min_Angle, Rotation_Max_Angle);
-        camera.transform.rotation = Quaternion.Euler(0f, 0f, rotation_new_angle);  // Ó¦ÓÃÐý×ª (½öZÖá)
+        camera.transform.rotation = Quaternion.Euler(0f, 0f, rotation_new_angle);  // Ó¦ï¿½ï¿½ï¿½ï¿½×ª (ï¿½ï¿½Zï¿½ï¿½)
     }
 
     Vector3 Get_Mouse_World_Position(Camera camera)

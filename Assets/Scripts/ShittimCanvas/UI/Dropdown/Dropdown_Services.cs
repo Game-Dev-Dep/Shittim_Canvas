@@ -68,11 +68,28 @@ public class Dropdown_Services : MonoBehaviour
         scrollRect.content = content;
         scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHideAndExpandViewport;
         InitializeOptionHeight();
-        SetDefaultCharacterThumbnail();
         if (searchInputField != null)
             searchInputField.onValueChanged.AddListener(OnSearchValueChanged);
         FilterOptions();
         InitializeOptionPool();
+
+        //加载上次选择的学生
+        string lastSelected = PlayerPrefs.GetString("Dropdown_SelectedCharacter", "");
+        if (!string.IsNullOrEmpty(lastSelected))
+        {
+            StartCoroutine(DelaySetPreview(lastSelected));
+        }
+        else
+        {
+            SetDefaultCharacterThumbnail();
+        }
+
+        // 绑到相机保存按钮，疏影的锅。
+        var cameraServices = Camera_Services.Instance;
+        if (cameraServices != null && cameraServices.Save_Camera_Settings_Button != null)
+        {
+            cameraServices.Save_Camera_Settings_Button.onClick.AddListener(SaveDropdownSelection);
+        }
     }
 
     void InitializeOptionHeight()
@@ -414,6 +431,44 @@ public class Dropdown_Services : MonoBehaviour
         {
             contentLayoutGroup.childAlignment = TextAnchor.UpperCenter;
             Canvas.ForceUpdateCanvases();
+        }
+    }
+
+    IEnumerator DelaySetPreview(string lastSelected)
+    {
+        yield return null; //还是等一帧，突然加载貌似选择的缩略图不会加载
+        //Debug相关就留在这了，出问题看log能查
+
+        mainButtonLabel.text = lastSelected;
+        if (lastSelected != "Textures" && Texture_Services.Lobbyillust.ContainsKey(lastSelected))
+        {
+            string thumbnailPath = Path.Combine(File_Services.Student_Lists_Folder_Path, Texture_Services.Lobbyillust[lastSelected] + ".png");
+            Texture2D thumbnail = Texture_Services.Get_Texture_By_Path(thumbnailPath);
+            Debug.Log($"[Dropdown_Services] 尝试加载缩略图: {thumbnailPath}");
+            if (thumbnail != null)
+            {
+                mainButtonIcon.texture = thumbnail;
+            }
+            else
+            {
+                Debug.LogWarning("[Dropdown_Services] 加载缩略图失败，使用默认图标");
+                mainButtonIcon.texture = defaultIcon;
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"[Dropdown_Services] Lobbyillust 不包含 key: {lastSelected}，使用默认图标");
+            mainButtonIcon.texture = defaultIcon;
+        }
+    }
+
+    //保存当前下拉菜单选择，往上看可以找到绑着相机保存按钮的code
+    public void SaveDropdownSelection()
+    {
+        if (mainButtonLabel != null)
+        {
+            PlayerPrefs.SetString("Dropdown_SelectedCharacter", mainButtonLabel.text);
+            PlayerPrefs.Save();
         }
     }
 }
