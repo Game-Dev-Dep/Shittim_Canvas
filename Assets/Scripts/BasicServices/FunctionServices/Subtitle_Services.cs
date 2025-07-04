@@ -12,7 +12,7 @@ public class Subtitle_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Subtitle Services 单例创建完成");
+            Debug.Log("[Awake] Subtitle Services 初始化");
         }
         else
         {
@@ -93,20 +93,22 @@ public class Subtitle_Services : MonoBehaviour
         Update_JP_Button_UI();
         Update_Custom_Button_UI();
 
-        Console_Log("结束初始化 Subtitle Services");
+        Console_Log("初始化 Subtitle Services");
     }
 
     public void Update()
     {
+        // 显示JP字幕
         if (Subtitle_JP_Request_Queue.Count > 0)
         {
-            if( show_subtitle_coroutine == null)
+            if (show_subtitle_coroutine == null)
             {
                 show_subtitle_coroutine = StartCoroutine(Show_Subtitle_Coroutine(Subtitle_JP_Request_Queue.Dequeue()));
             }
         }
 
-        if (Subtitle_Custom_Request_Queue.Count > 0)
+        // 显示自定义字幕 - 如果JP字幕已经显示完毕，则显示自定义字幕
+        if (Subtitle_JP_Request_Queue.Count == 0 && Subtitle_Custom_Request_Queue.Count > 0)
         {
             if (show_subtitle_coroutine == null)
             {
@@ -145,17 +147,31 @@ public class Subtitle_Services : MonoBehaviour
 
     public void Show_Subtitle(Subtitle_Request subtitle_request)
     {
-        Console_Log($"日文字幕: {subtitle_request.Text_JP} 自定义字幕: {subtitle_request.Text_Custom} 持续时间: {subtitle_request.Text_Duration}s");
-        Subtitle_JP_Request_Queue.Enqueue(subtitle_request);
+        Console_Log($"显示字幕: {subtitle_request.Text_JP} 自定义字幕: {subtitle_request.Text_Custom} 持续时间: {subtitle_request.Text_Duration}s");
+        
+        // 如果正在显示字幕，则停止显示
         if (show_subtitle_coroutine != null)
         {
             is_Stopping_Display = true;
+            // 等待一帧后重置停止标志
+            StartCoroutine(ResetStoppingFlagAfterFrame());
         }
+        
+        Subtitle_JP_Request_Queue.Enqueue(subtitle_request);
+    }
+
+    private IEnumerator ResetStoppingFlagAfterFrame()
+    {
+        yield return null; // 等待一帧
+        is_Stopping_Display = false;
     }
 
     public IEnumerator Show_Subtitle_Coroutine(Subtitle_Request subtitle_request)
     {
-        Console_Log("Show_Subtitle_Coroutine 协程开始", Debug_Services.LogLevel.Ignore);
+        Console_Log("Show_Subtitle_Coroutine 开始", Debug_Services.LogLevel.Ignore);
+
+        // 如果正在显示字幕，则停止显示
+        is_Stopping_Display = false;
 
         if (Subtitle_JP_Text.alpha != 0) StartCoroutine(Text_Fade_Out(Subtitle_JP_Text, Text_Fade_Duration));
         if (Subtitle_Custom_Text.alpha != 0) StartCoroutine(Text_Fade_Out(Subtitle_Custom_Text, Text_Fade_Duration));
@@ -167,6 +183,14 @@ public class Subtitle_Services : MonoBehaviour
         if (is_Subtitle_Custom_On) StartCoroutine(Text_Fade_In(Subtitle_Custom_Text, Text_Fade_Duration));
         yield return new WaitForSeconds(Text_Fade_Duration);
 
+        // 如果正在停止显示，则停止显示
+        if (is_Stopping_Display)
+        {
+            Console_Log("字幕停止显示", Debug_Services.LogLevel.Ignore);
+            show_subtitle_coroutine = null;
+            yield break;
+        }
+
         yield return StartCoroutine(Subtitle_Display(subtitle_request.Text_Duration));
 
         if (is_Subtitle_JP_On) StartCoroutine(Text_Fade_Out(Subtitle_JP_Text, Text_Fade_Duration));
@@ -175,7 +199,7 @@ public class Subtitle_Services : MonoBehaviour
 
         if (is_Stopping_Display) is_Stopping_Display = false;
         show_subtitle_coroutine = null;
-        Console_Log("Show_Subtitle_Coroutine 协程结束", Debug_Services.LogLevel.Ignore);
+        Console_Log("Show_Subtitle_Coroutine 完成", Debug_Services.LogLevel.Ignore);
     }
 
     private IEnumerator Subtitle_Display(float text_display_duration)
@@ -187,7 +211,7 @@ public class Subtitle_Services : MonoBehaviour
         {
             if (is_Stopping_Display)
             {
-                Console_Log("触发停止显示字幕");
+                Console_Log("字幕停止显示");
                 yield break;
             }
 
@@ -195,7 +219,7 @@ public class Subtitle_Services : MonoBehaviour
             yield return null;
         }
 
-        Console_Log("结束显示字幕", Debug_Services.LogLevel.Ignore);
+        Console_Log("字幕显示完成", Debug_Services.LogLevel.Ignore);
     }
 
     private IEnumerator Text_Fade_In(TextMeshProUGUI text, float text_fade_duration)
@@ -217,7 +241,7 @@ public class Subtitle_Services : MonoBehaviour
 
         text.alpha = 1;
 
-        Console_Log("结束淡入字幕", Debug_Services.LogLevel.Ignore);
+        Console_Log("淡入字幕完成", Debug_Services.LogLevel.Ignore);
     }
 
     private IEnumerator Text_Fade_Out(TextMeshProUGUI text, float text_fade_duration)
@@ -239,7 +263,7 @@ public class Subtitle_Services : MonoBehaviour
 
         text.alpha = 0;
 
-        Console_Log("结束淡出字幕", Debug_Services.LogLevel.Ignore);
+        Console_Log("淡出字幕完成", Debug_Services.LogLevel.Ignore);
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Subtitle Services", message, loglevel, logtype); }
