@@ -1,0 +1,77 @@
+
+# 顶级 EditorConfig 文件
+root = true
+
+###############################
+# 编码设置
+###############################
+
+# 所有 C# 文件使用 UTF-8 编码
+[*.cs]
+charset = utf-8
+
+# JSON 文件使用 UTF-8 编码
+[*.json]
+charset = utf-8
+
+# YAML 文件（Unity 场景和预制件）使用 UTF-8 编码
+[*.yaml]
+charset = utf-8
+
+# Shader 文件使用 UTF-8 编码
+[*.shader]
+charset = utf-8
+
+# 文本文件和其他文件使用 UTF-8 编码
+[*.txt]
+charset = utf-8
+
+###############################
+# 缩进和空格规则
+###############################
+
+# C# 文件使用 4 个空格缩进
+[*.cs]
+indent_style = space
+indent_size = 4
+
+# JSON 文件使用 2 个空格缩进
+[*.json]
+indent_style = space
+indent_size = 2
+
+# YAML 文件使用 2 个空格缩进
+[*.yaml]
+indent_style = space
+indent_size = 2
+
+# Shader 文件使用 4 个空格缩进
+[*.shader]
+indent_style = space
+indent_size = 4
+
+# 文本文件使用 4 个空格缩进
+[*.txt]
+indent_style = space
+indent_size = 4
+
+
+###############################
+# 行尾规则
+###############################
+
+# 确保所有文件以换行符结尾
+[*]
+insert_final_newline = true
+
+# 统一使用 LF 换行符（适用于跨平台项目）
+[*]
+end_of_line = lf
+
+###############################
+# 其他规则
+###############################
+
+# 删除行尾的多余空格
+[*]
+trim_trailing_whitespace = true
