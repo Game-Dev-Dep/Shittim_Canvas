@@ -83,27 +83,27 @@ Shader "DSFX/FX_SHADER_AlphaBlend_Add"
                 float2 uv = input.texcoord.xy * _Texture_ST.xy + _Texture_ST.zw;
                 float2 customUV = uv + input.texcoord.zw;
                 
-                // Ñ¡ÔñÊ¹ÓÃÔ­Ê¼UV»¹ÊÇ´øÆ«ÒÆµÄUV
+                // é€‰æ‹©ä½¿ç”¨åŽŸå§‹UVè¿˜æ˜¯å¸¦åç§»çš„UV
                 float2 finalUV = _CustomData_Offset_Use > 0 ? customUV : uv;
                 
-                // ²ÉÑùÎÆÀí
+                // é‡‡æ ·çº¹ç†
                 float4 texSample = SAMPLE_TEXTURE2D(_Texture, sampler_Texture, finalUV);
                 
-                // Ñ¡ÔñÊ¹ÓÃRGBÍ¨µÀ»¹ÊÇAlphaÍ¨µÀ
+                // é€‰æ‹©ä½¿ç”¨RGBé€šé“è¿˜æ˜¯Alphaé€šé“
                 float texValue = _RGBRGBA > 0 ? texSample.w : texSample.x;
                 
-                // ¼ÆËã»ù´¡ÑÕÉ«
+                // è®¡ç®—åŸºç¡€é¢œè‰²
                 float3 baseColor = _Color.rgb * vec3_ctor(_Multiply);
                 baseColor *= vec3_ctor(texValue);
                 
-                // ¼ÆËãÍ¸Ã÷¶È
+                // è®¡ç®—é€æ˜Žåº¦
                 float alpha = texValue * input.color.w * _Color.w * _Multiply;
                 alpha = saturate(alpha);
                 
-                // Ñ¡ÔñÎÆÀíÑÕÉ«
+                // é€‰æ‹©çº¹ç†é¢œè‰²
                 float3 texColor = _MainTexture_No > 0 ? float3(1,1,1) : texSample.rgb;
                 
-                // ×îÖÕÑÕÉ«¼ÆËã
+                // æœ€ç»ˆé¢œè‰²è®¡ç®—
                 float3 finalColor = texColor * input.color.rgb * baseColor;
                 
                 return half4(finalColor, alpha);

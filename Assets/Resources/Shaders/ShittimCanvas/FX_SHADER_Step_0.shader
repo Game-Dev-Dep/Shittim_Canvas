@@ -59,9 +59,9 @@ Shader "DSFX/FX_SHADER_Step_0"
                 float4 positionOS : POSITION;
                 float2 uv : TEXCOORD0;
                 float4 color : COLOR;
-                float4 customData1 : TEXCOORD1; // ¶ÔÓ¦Ô­Ê¼v1
-                float4 customData2 : TEXCOORD2; // ¶ÔÓ¦Ô­Ê¼v2
-                float4 customData3 : TEXCOORD3; // ¶ÔÓ¦Ô­Ê¼v3
+                float4 customData1 : TEXCOORD1; // å¯¹åº”åŸå§‹v1
+                float4 customData2 : TEXCOORD2; // å¯¹åº”åŸå§‹v2
+                float4 customData3 : TEXCOORD3; // å¯¹åº”åŸå§‹v3
             };
 
             struct Varyings
@@ -71,7 +71,7 @@ Shader "DSFX/FX_SHADER_Step_0"
                 float4 customData1 : TEXCOORD1;
                 float4 color : COLOR;
                 float4 customData2 : TEXCOORD2;
-                float4 customData3 : TEXCOORD3; // ĞÂÔöÍ¨µÀ
+                float4 customData3 : TEXCOORD3; // æ–°å¢é€šé“
             };
 
             TEXTURE2D(_Tex_Main);
@@ -102,19 +102,19 @@ Shader "DSFX/FX_SHADER_Step_0"
             {
                 Varyings output;
                 
-                // ÏÔÊ½³õÊ¼»¯ËùÓĞ³ÉÔ±
+                // æ˜¾å¼åˆå§‹åŒ–æ‰€æœ‰æˆå‘˜
                 ZERO_INITIALIZE(Varyings, output);
                 
                 output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
                 
-                // ÍêÕû³õÊ¼»¯uv½á¹¹Ìå
+                // å®Œæ•´åˆå§‹åŒ–uvç»“æ„ä½“
                 output.uv.xy = input.uv;
                 output.uv.zw = float2(0,0);
                 
-                // ´«µİËùÓĞ×Ô¶¨ÒåÊı¾İ
-                output.customData1 = input.customData1;  // ¶ÔÓ¦Ô­Ê¼v1
-                output.customData2 = input.customData2;  // ¶ÔÓ¦Ô­Ê¼v2
-                output.customData3 = input.customData3;  // ¶ÔÓ¦Ô­Ê¼v3
+                // ä¼ é€’æ‰€æœ‰è‡ªå®šä¹‰æ•°æ®
+                output.customData1 = input.customData1;  // å¯¹åº”åŸå§‹v1
+                output.customData2 = input.customData2;  // å¯¹åº”åŸå§‹v2
+                output.customData3 = input.customData3;  // å¯¹åº”åŸå§‹v3
                 
                 output.color = input.color;
                 
@@ -123,24 +123,24 @@ Shader "DSFX/FX_SHADER_Step_0"
 
             half4 frag(Varyings input) : SV_Target
             {
-                // [1] Mask´¦Àí ------------------------
+                // [1] Maskå¤„ç† ------------------------
                 float2 uvMask = input.uv.xy * _Tex_Mask_ST.xy + _Tex_Mask_ST.zw;
                 uvMask += _Time.y * float2(_Mask_Speed_X, _Mask_Speed_Y);
     
                 #ifdef _CUSTOM_DATA_MASK_OFFSET_USE_ON
-                    uvMask += input.customData2.xy; // Ê¹ÓÃXY¶ø·ÇZW
+                    uvMask += input.customData2.xy; // ä½¿ç”¨XYè€ŒéZW
                 #endif
     
                 float maskValue = SAMPLE_TEXTURE2D(_Tex_Mask, sampler_Tex_Mask, uvMask).r;
 
-                // [2] Step¼ÆËã ------------------------
+                // [2] Stepè®¡ç®— ------------------------
                 float stepThreshold = lerp(_Step_Power, 1.0 - input.color.a, 
                                         _Step_Custom_DataVertex_color_Use);
                 stepThreshold = lerp(stepThreshold, input.customData1.x, 
                                         _Step_Scroll_Use);
                 float stepResult = step(stepThreshold, maskValue);
 
-                // [3] Ö÷ÎÆÀí´¦Àí ----------------------
+                // [3] ä¸»çº¹ç†å¤„ç† ----------------------
                 float2 uvMain = input.uv.xy * _Tex_Main_ST.xy + _Tex_Main_ST.zw;
                 uvMain += _Time.y * float2(_Main_Speed_X, _Main_Speed_Y);
     
@@ -150,7 +150,7 @@ Shader "DSFX/FX_SHADER_Step_0"
     
                 half4 mainTex = SAMPLE_TEXTURE2D(_Tex_Main, sampler_Tex_Main, uvMain);
 
-                // [4] ÑÕÉ«»ìºÏ ------------------------
+                // [4] é¢œè‰²æ··åˆ ------------------------
                 #ifdef _RGBRGBA_ON
                     float alphaSource = mainTex.a;
                 #else
@@ -166,13 +166,13 @@ Shader "DSFX/FX_SHADER_Step_0"
                 half3 finalColor = mainTex.rgb * input.color.rgb;
                 finalColor *= stepResult; 
                 finalColor *= _Color.rgb;
-                finalColor *= alphaSource; // ĞÂÔö¹Ø¼ü²½Öè
+                finalColor *= alphaSource; // æ–°å¢å…³é”®æ­¥éª¤
                 finalColor *= _Multiply;
 
-                // [5] Í¸Ã÷¶È¼ÆËã ----------------------
+                // [5] é€æ˜åº¦è®¡ç®— ----------------------
                 half finalAlpha = stepResult * _Color.a;
                 finalAlpha *= alphaSource * alphaMultiplier;
-                finalAlpha *= _Multiply; // ×îºóÓ¦ÓÃÈ«¾ÖÇ¿¶È
+                finalAlpha *= _Multiply; // æœ€ååº”ç”¨å…¨å±€å¼ºåº¦
                 finalAlpha = saturate(finalAlpha);
 
                 return half4(finalColor, finalAlpha);

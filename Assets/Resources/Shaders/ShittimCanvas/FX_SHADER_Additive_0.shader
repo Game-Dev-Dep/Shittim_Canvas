@@ -42,7 +42,7 @@ Shader "DSFX/FX_SHADER_Additive_0"
                 float4 positionOS : POSITION;
                 float2 uv : TEXCOORD0;
                 float4 color : COLOR;
-                float4 customData1 : TEXCOORD1;  // ¶ÔÓ¦v1
+                float4 customData1 : TEXCOORD1;  // å¯¹åº”v1
             };
 
             struct Varyings
@@ -67,11 +67,11 @@ Shader "DSFX/FX_SHADER_Additive_0"
                 Varyings output;
                 output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
                 
-                // UV´¦Àí
-                output.uvData.xy = TRANSFORM_TEX(input.uv, _Texture);  // Ó¦ÓÃST±ä»»
-                output.uvData.zw = input.uv;  // ±£ÁôÔ­Ê¼UV
+                // UVå¤„ç†
+                output.uvData.xy = TRANSFORM_TEX(input.uv, _Texture);  // åº”ç”¨STå˜æ¢
+                output.uvData.zw = input.uv;  // ä¿ç•™åŸå§‹UV
                 
-                // ´«µİ×Ô¶¨ÒåÊı¾İ
+                // ä¼ é€’è‡ªå®šä¹‰æ•°æ®
                 output.customData = input.customData1;
                 output.color = input.color;
                 
@@ -80,9 +80,9 @@ Shader "DSFX/FX_SHADER_Additive_0"
 
             half4 frag(Varyings input) : SV_Target
             {
-                // UVÆ«ÒÆ¼ÆËã
+                // UVåç§»è®¡ç®—
                 float2 baseUV = input.uvData.xy;
-                float2 offsetUV = baseUV + input.customData.xy;  // Ê¹ÓÃcustomDataµÄxy·ÖÁ¿×÷ÎªÆ«ÒÆ
+                float2 offsetUV = baseUV + input.customData.xy;  // ä½¿ç”¨customDataçš„xyåˆ†é‡ä½œä¸ºåç§»
                 
                 #ifdef _CUSTOM_DATA_OFFSET_USE_ON
                     float2 finalUV = offsetUV;
@@ -90,17 +90,17 @@ Shader "DSFX/FX_SHADER_Additive_0"
                     float2 finalUV = baseUV;
                 #endif
 
-                // ÎÆÀí²ÉÑù
+                // çº¹ç†é‡‡æ ·
                 half4 tex = SAMPLE_TEXTURE2D(_Texture, sampler_Texture, finalUV);
                 
-                // ÑÕÉ«»ìºÏ
+                // é¢œè‰²æ··åˆ
                 half3 result = tex.rgb;
-                result *= input.color.rgb;  // ¶¥µãÑÕÉ«»ìºÏ
-                result *= _Color.rgb;      // HDRÑÕÉ«ÔöÇ¿
-                result *= input.color.a;   // ¶¥µãAlpha¿ØÖÆ
-                result *= tex.a;           // ÎÆÀíAlpha¿ØÖÆ
+                result *= input.color.rgb;  // é¡¶ç‚¹é¢œè‰²æ··åˆ
+                result *= _Color.rgb;      // HDRé¢œè‰²å¢å¼º
+                result *= input.color.a;   // é¡¶ç‚¹Alphaæ§åˆ¶
+                result *= tex.a;           // çº¹ç†Alphaæ§åˆ¶
 
-                // Êä³ö½á¹û£¨±£³ÖAlphaÎª1.0£©
+                // è¾“å‡ºç»“æœï¼ˆä¿æŒAlphaä¸º1.0ï¼‰
                 return half4(result, 1.0);
 
                 

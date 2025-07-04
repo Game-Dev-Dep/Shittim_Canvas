@@ -67,7 +67,7 @@ Shader "Hidden/ShittimCanvas"
                 return output;
             }
 
-            // »ìºÏÄ£Ê½º¯Êý
+            // æ··åˆæ¨¡å¼å‡½æ•°
             float3 BlendOverlay(float3 base, float3 blend)
             {
                 float3 result;
@@ -103,7 +103,7 @@ Shader "Hidden/ShittimCanvas"
 
             float4 frag(Varyings input) : SV_Target
             {
-                // ²ÉÑùÖ÷ÎÆÀí
+                // é‡‡æ ·ä¸»çº¹ç†
                 float4 mainColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
                 
                 float2 ShittimCanvasUV;
@@ -111,18 +111,18 @@ Shader "Hidden/ShittimCanvas"
                 
                 if (_Tiling > 0.5)
                 {
-                    // Æ½ÆÌÄ£Ê½
+                    // å¹³é“ºæ¨¡å¼
                     float2 tiledUV = input.uv * _TilingCount;
                     float2 cellUV = frac(tiledUV);
                     
-                    // ÔÚÃ¿¸ö¸ñ×ÓÖÐÐÄ·ÅÖÃË®Ó¡
+                    // åœ¨æ¯ä¸ªæ ¼å­ä¸­å¿ƒæ”¾ç½®æ°´å°
                     float2 cellCenter = float2(0.5, 0.5);
                     float2 offset = cellUV - cellCenter;
                     
-                    // ¼ÆËãË®Ó¡UV
+                    // è®¡ç®—æ°´å°UV
                     ShittimCanvasUV = (offset / _Scale) + 0.5;
                     
-                    // ¼ì²éÊÇ·ñÔÚË®Ó¡·¶Î§ÄÚ
+                    // æ£€æŸ¥æ˜¯å¦åœ¨æ°´å°èŒƒå›´å†…
                     if (ShittimCanvasUV.x >= 0.0 && ShittimCanvasUV.x <= 1.0 && 
                         ShittimCanvasUV.y >= 0.0 && ShittimCanvasUV.y <= 1.0)
                     {
@@ -132,17 +132,17 @@ Shader "Hidden/ShittimCanvas"
                 }
                 else
                 {
-                    // µ¥¸öË®Ó¡Ä£Ê½
+                    // å•ä¸ªæ°´å°æ¨¡å¼
                     float2 screenPos = input.uv;
                     float2 ShittimCanvasCenter = _Position;
                     
-                    // ¼ÆËãÏà¶ÔÓÚË®Ó¡ÖÐÐÄµÄÆ«ÒÆ
+                    // è®¡ç®—ç›¸å¯¹äºŽæ°´å°ä¸­å¿ƒçš„åç§»
                     float2 offset = screenPos - ShittimCanvasCenter;
                     
-                    // Ó¦ÓÃËõ·Å²¢×ª»»µ½ÎÆÀíUV¿Õ¼ä
+                    // åº”ç”¨ç¼©æ”¾å¹¶è½¬æ¢åˆ°çº¹ç†UVç©ºé—´
                     ShittimCanvasUV = (offset / _Scale) + 0.5;
                     
-                    // ¼ì²éÊÇ·ñÔÚË®Ó¡·¶Î§ÄÚ
+                    // æ£€æŸ¥æ˜¯å¦åœ¨æ°´å°èŒƒå›´å†…
                     if (ShittimCanvasUV.x >= 0.0 && ShittimCanvasUV.x <= 1.0 && 
                         ShittimCanvasUV.y >= 0.0 && ShittimCanvasUV.y <= 1.0)
                     {
@@ -155,13 +155,13 @@ Shader "Hidden/ShittimCanvas"
                 {
                     float4 ShittimCanvasColor = SAMPLE_TEXTURE2D(_ShittimCanvasTex, sampler_ShittimCanvasTex, ShittimCanvasUV);
                     
-                    // Ó¦ÓÃ·Ç³£µÍµÄÍ¸Ã÷¶È£¬Ê¹Ë®Ó¡¼¸ºõ²»¿É¼û
+                    // åº”ç”¨éžå¸¸ä½Žçš„é€æ˜Žåº¦ï¼Œä½¿æ°´å°å‡ ä¹Žä¸å¯è§
                     float finalOpacity = _Opacity * ShittimCanvasAlpha;
                     
-                    // Ó¦ÓÃ»ìºÏÄ£Ê½
+                    // åº”ç”¨æ··åˆæ¨¡å¼
                     float3 blendedColor = ApplyBlendMode(mainColor.rgb, ShittimCanvasColor.rgb, _BlendMode);
                     
-                    // Ê¹ÓÃ¼«µÍÍ¸Ã÷¶È»ìºÏ
+                    // ä½¿ç”¨æžä½Žé€æ˜Žåº¦æ··åˆ
                     mainColor.rgb = lerp(mainColor.rgb, blendedColor, finalOpacity);
                 }
                 

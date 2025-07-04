@@ -53,7 +53,7 @@ Shader "DSFX/FX_SHADER_Explosion_Smoke_Blur_Flowmap_0"
             #pragma shader_feature_local _FLOWSPEED_DATA_USE_ON
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl" // ÐÂÔö
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl" // â€“Â¬â€˜Ë†
 
             
 

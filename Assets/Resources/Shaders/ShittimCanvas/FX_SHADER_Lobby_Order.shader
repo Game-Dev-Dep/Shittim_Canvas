@@ -63,20 +63,20 @@ Shader "FX/FX_SHADER_Lobby_Order"
             {
                 if (input.uv.x < 0.01 || input.uv.x > 1.0 || input.uv.y < 0.0 || input.uv.y > 1.0)
                 {
-                    // ³¬³ö·¶Î§·µ»ØÍ¸Ã÷
+                    // è¶…å‡ºèŒƒå›´è¿”å›é€æ˜
                     return half4(0, 0, 0, 0);
                 }
 
-                // »ù´¡ÎÆÀí²ÉÑù
+                // åŸºç¡€çº¹ç†é‡‡æ ·
                 half4 texColor = SAMPLE_TEXTURE2D(_TextureSample0, sampler_TextureSample0, input.uv);
                 
-                // ¹Ì¶¨Ê¹ÓÃRÍ¨µÀ×÷ÎªÍ¸Ã÷¶ÈÔ´
+                // å›ºå®šä½¿ç”¨Ré€šé“ä½œä¸ºé€æ˜åº¦æº
                 float alphaSource = texColor.a;
 
-                // ÑÕÉ«¼ÆËã£¨±£³ÖÔ­Ê¼Ç¿¶ÈÂß¼­£©
+                // é¢œè‰²è®¡ç®—ï¼ˆä¿æŒåŸå§‹å¼ºåº¦é€»è¾‘ï¼‰
                 half3 finalColor = texColor.rgb * _Color0.rgb * input.color.rgb;
 
-                // Í¸Ã÷¶È¼ÆËã£¨RÍ¨µÀ * ¶¥µãÉ«Alpha * ÑÕÉ«²ÎÊıAlpha£©
+                // é€æ˜åº¦è®¡ç®—ï¼ˆRé€šé“ * é¡¶ç‚¹è‰²Alpha * é¢œè‰²å‚æ•°Alphaï¼‰
                 half alpha = alphaSource * input.color.a;
 
                 return half4(finalColor, 1);

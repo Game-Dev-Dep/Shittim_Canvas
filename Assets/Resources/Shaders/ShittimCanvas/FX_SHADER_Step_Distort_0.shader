@@ -132,7 +132,7 @@ Shader "DSFX/FX_SHADER_Step_Distort_0"
 
             half4 frag(Varyings input) : SV_Target
             {
-                // Å¤ÇúÎÆÀí´¦Àí
+                // æ‰­æ›²çº¹ç†å¤„ç†
                 float2 uvDistort = input.uv.xy * _Tex_Distort_ST.xy + _Tex_Distort_ST.zw;
                 float2 distortSpeed = _Time.y * float2(_Dis_Speed_X, _Dis_Speed_Y);
                 float2 distortUV = uvDistort + distortSpeed;
@@ -144,11 +144,11 @@ Shader "DSFX/FX_SHADER_Step_Distort_0"
                     float2 distortPower = float2(_Distortion_Power_X, _Distortion_Power_Y);
                 #endif
 
-                // ÕÚÕÖÎÆÀí´¦Àí
+                // é®ç½©çº¹ç†å¤„ç†
                 float2 uvMask = input.uv.xy * _Tex_Mask_ST.xy + _Tex_Mask_ST.zw;
                 uvMask += _Time.y * float2(_Mask_Speed_X, _Mask_Speed_Y);
                 
-                // UVµş¼Ó¼ÆËã
+                // UVå åŠ è®¡ç®—
                 #ifdef _UV_ADD_USE_ON
                     float2 uvAdd = input.uv.xy * _UV_Add_TilingOffset.xy + _UV_Add_TilingOffset.zw;
                     float uvAddFactor = uvAdd.x + uvAdd.y;
@@ -156,7 +156,7 @@ Shader "DSFX/FX_SHADER_Step_Distort_0"
                     float uvAddFactor = 1.0;
                 #endif
 
-                // Ó¦ÓÃÅ¤Çú
+                // åº”ç”¨æ‰­æ›²
                 float2 finalDistort = distortValue * distortPower * uvAddFactor;
                 uvMask += finalDistort;
 
@@ -164,17 +164,17 @@ Shader "DSFX/FX_SHADER_Step_Distort_0"
                     uvMask += input.customData2.zw;
                 #endif
 
-                // ÕÚÕÖ²ÉÑù
+                // é®ç½©é‡‡æ ·
                 float mask = SAMPLE_TEXTURE2D(_Tex_Mask, sampler_Tex_Mask, uvMask).r;
 
-                // ²½Öè¼ÆËã
+                // æ­¥éª¤è®¡ç®—
                 float stepThreshold = lerp(_Step_Power, 1.0 - input.color.a, 
                     _Step_Custom_DataVertex_color_Use);
                 stepThreshold = lerp(stepThreshold, input.customData1.x, 
                     _Step_Scroll_Use);
                 float stepResult = step(stepThreshold, mask);
 
-                // Ö÷ÎÆÀí´¦Àí
+                // ä¸»çº¹ç†å¤„ç†
                 float2 uvMain = input.uv.xy * _Tex_Main_ST.xy + _Tex_Main_ST.zw;
                 uvMain += _Time.y * float2(_Main_Speed_X, _Main_Speed_Y);
                 uvMain += finalDistort;
@@ -183,14 +183,14 @@ Shader "DSFX/FX_SHADER_Step_Distort_0"
                     uvMain += input.customData1.zw;
                 #endif
 
-                // Ö÷ÎÆÀí²ÉÑù
+                // ä¸»çº¹ç†é‡‡æ ·
                 half4 mainTex = SAMPLE_TEXTURE2D(_Tex_Main, sampler_Tex_Main, uvMain);
 
-                // ÑÕÉ«ºÏ³É
+                // é¢œè‰²åˆæˆ
                 half3 finalColor = mainTex.rgb * input.color.rgb * _Color.rgb * _Multiply;
                 finalColor *= stepResult;
 
-                // Alpha¼ÆËã
+                // Alphaè®¡ç®—
                 #ifdef _RGBRGBA_ON
                     float alphaSource = mainTex.a;
                 #else

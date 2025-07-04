@@ -63,13 +63,13 @@ Shader "DSFX/FX_SHADER_AlphaBlend_2_Roz"
 
             half4 frag(Varyings input) : SV_Target 
             {
-                // ÎÆÀí²ÉÑù
+                // çº¹ç†é‡‡æ ·
                 half4 texColor = SAMPLE_TEXTURE2D(_Texture, sampler_Texture, input.uv);
                 
-                // ÑÕÉ«¼ÆËãÁ÷³Ì
-                half4 result = texColor * input.color;  // ¶¥µãÉ«»ìºÏ
-                result *= _Color0;                      // HDRÑÕÉ«»ìºÏ
-                result.rgb *= _Float0;                  // Ç¿¶È¿ØÖÆ
+                // é¢œè‰²è®¡ç®—æµç¨‹
+                half4 result = texColor * input.color;  // é¡¶ç‚¹è‰²æ··åˆ
+                result *= _Color0;                      // HDRé¢œè‰²æ··åˆ
+                result.rgb *= _Float0;                  // å¼ºåº¦æ§åˆ¶
 
                 return result;
             }

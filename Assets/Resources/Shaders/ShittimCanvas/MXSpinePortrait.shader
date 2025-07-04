@@ -5,7 +5,7 @@ Shader "Spine/Skeleton MX Portrait"
         [HDR] _Color ("Tint (_Color)", Color) = (1,1,1,1)
         _Black ("Black Point (_Black)", Vector) = (0,0,0,0)
         [NoScaleOffset] _MainTex ("Main Tex", 2D) = "black" {}
-        // ÒÔÏÂÊôĞÔÔÚHLSLÖĞÎ´Ê¹ÓÃ£¬½öÎª²ÄÖÊÃæ°åÏÔÊ¾
+        // ä»¥ä¸‹å±æ€§åœ¨HLSLä¸­æœªä½¿ç”¨ï¼Œä»…ä¸ºæè´¨é¢æ¿æ˜¾ç¤º
         _ColorFilterR ("GradingColorR", Vector) = (1,1,1,1)
         _ColorFilterG ("GradingColorG", Vector) = (1,1,1,1)
         _ColorFilterB ("GradingColorB", Vector) = (1,1,1,1)
@@ -74,31 +74,31 @@ Shader "Spine/Skeleton MX Portrait"
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
                 
-                // ÕıÈ·»ñÈ¡È«¾Ö mip bias
+                // æ­£ç¡®è·å–å…¨å±€ mip bias
                 float mipBias = 0.0;
                 #if defined(UNITY_COMPILER_HLSL)
                     mipBias = unity_GlobalMipBias.x;
                 #endif
                 
-                // ²ÉÑùÖ÷ÎÆÀí
+                // é‡‡æ ·ä¸»çº¹ç†
                 float4 texColor = SAMPLE_TEXTURE2D_BIAS(_MainTex, sampler_MainTex, i.uv, mipBias);
                 
-                // ·´É«¼ÆËã (1 - RGB)
+                // åè‰²è®¡ç®— (1 - RGB)
                 float3 invertedColor = 1.0 - texColor.rgb;
                 
-                // »ù´¡ÑÕÉ«»ìºÏ
+                // åŸºç¡€é¢œè‰²æ··åˆ
                 float4 baseColor = texColor * _Color;
                 
-                // AlphaÍ¨µÀ¼ÆËã
+                // Alphaé€šé“è®¡ç®—
                 float finalAlpha = texColor.a * i.color.a * _Color.a;
                 
-                // ºÚÉ«µã»ìºÏ
+                // é»‘è‰²ç‚¹æ··åˆ
                 float3 blendedColor = (invertedColor * _Black) + baseColor.rgb;
                 
-                // Ó¦ÓÃ¶¥µãÑÕÉ«
+                // åº”ç”¨é¡¶ç‚¹é¢œè‰²
                 blendedColor *= i.color.rgb;
                 
-                // ×îÖÕÑÕÉ«ºÏ³É
+                // æœ€ç»ˆé¢œè‰²åˆæˆ
                 return float4(baseColor.www * blendedColor, finalAlpha);
             }
             ENDHLSL

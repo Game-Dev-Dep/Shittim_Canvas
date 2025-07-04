@@ -46,8 +46,8 @@ Shader "DSFX/FX_SHADER_AlphaBlend_0"
                 float4 positionOS : POSITION;
                 float2 uv : TEXCOORD0;
                 float4 color : COLOR;
-                float4 customData1 : TEXCOORD1; // ¶ÔÓ¦v1
-                float4 customData2 : TEXCOORD2; // ¶ÔÓ¦v2
+                float4 customData1 : TEXCOORD1; // å¯¹åº”v1
+                float4 customData2 : TEXCOORD2; // å¯¹åº”v2
             };
 
             struct Varyings
@@ -72,10 +72,10 @@ Shader "DSFX/FX_SHADER_AlphaBlend_0"
                 Varyings output;
                 output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
                 
-                // »ù´¡UV¼ÆËã
+                // åŸºç¡€UVè®¡ç®—
                 output.uvData.xy = TRANSFORM_TEX(input.uv, _Texture);
                 
-                // ×Ô¶¨ÒåÆ«ÒÆ´¦Àí
+                // è‡ªå®šä¹‰åç§»å¤„ç†
                 output.uvData.zw = input.uv + input.customData1.xy;
                 
                 output.customData = input.customData2;
@@ -86,41 +86,41 @@ Shader "DSFX/FX_SHADER_AlphaBlend_0"
 
             half4 frag(Varyings input) : SV_Target
             {
-                // UV»ìºÏ¼ÆËã
+                // UVæ··åˆè®¡ç®—
                 #ifdef _CUSTOM_DATA_OFFSET_USE_ON
                     float2 finalUV = input.uvData.zw;
                 #else
                     float2 finalUV = input.uvData.xy;
                 #endif
 
-                // ÎÆÀí²ÉÑù
+                // çº¹ç†é‡‡æ ·
                 half4 tex = SAMPLE_TEXTURE2D(_Texture, sampler_Texture, finalUV);
 
-                // °×Ä£Ä£Ê½
+                // ç™½æ¨¡æ¨¡å¼
                 #ifdef _MAIN_TEXTURE_NO_ON
                     half3 baseColor = half3(1,1,1);
                 #else
                     half3 baseColor = tex.rgb;
                 #endif
 
-                // ÑÕÉ«»ìºÏ
+                // é¢œè‰²æ··åˆ
                 half3 finalColor = baseColor;
-                finalColor *= _Color.rgb;         // HDRÑÕÉ«
-                finalColor *= input.color.rgb;     // ¶¥µãÑÕÉ«
-                finalColor *= _Multiply;          // È«¾ÖÇ¿¶È
+                finalColor *= _Color.rgb;         // HDRé¢œè‰²
+                finalColor *= input.color.rgb;     // é¡¶ç‚¹é¢œè‰²
+                finalColor *= _Multiply;          // å…¨å±€å¼ºåº¦
 
-                // AlphaÍ¨µÀÑ¡Ôñ
+                // Alphaé€šé“é€‰æ‹©
                 #ifdef _RGBRGBA_ON
                     half alpha = tex.a;
                 #else
                     half alpha = tex.r;
                 #endif
 
-                // Í¸Ã÷¶È¼ÆËã
+                // é€æ˜åº¦è®¡ç®—
                 half finalAlpha = alpha;
-                finalAlpha *= input.color.a;      // ¶¥µãAlpha
-                finalAlpha *= _Color.a;           // Ö÷ÑÕÉ«Alpha
-                finalAlpha *= _Multiply;           // È«¾ÖÇ¿¶È
+                finalAlpha *= input.color.a;      // é¡¶ç‚¹Alpha
+                finalAlpha *= _Color.a;           // ä¸»é¢œè‰²Alpha
+                finalAlpha *= _Multiply;           // å…¨å±€å¼ºåº¦
                 finalAlpha = saturate(finalAlpha);
 
                 return half4(finalColor, finalAlpha);
