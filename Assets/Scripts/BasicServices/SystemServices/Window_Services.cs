@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -146,9 +147,9 @@ public class Window_Services : MonoBehaviour
         Cover_Status_Text.gameObject.SetActive(false);
 
         Handle_Status_Text.SetText(
-            $"Program Manager: {Program_Manager_Handle}\n" +
-            $"WorkerW: {WorkerW_Handle}\n" +
-            $"Shittim Canvas: {Unity_Handle}"
+            $"Program Manager: {Program_Manager_Handle.ToString("X8")}\n" +
+            $"WorkerW: {WorkerW_Handle.ToString("X8")}\n" +
+            $"Shittim Canvas: {Unity_Handle.ToString("X8")}"
         );
 
         StartCoroutine(Get_Cover_Window_Coroutine());
@@ -205,6 +206,47 @@ public class Window_Services : MonoBehaviour
     }
 
     public bool Get_WorkW_Handle()
+    {
+        // 新增：检测 WorkerW 窗口是否创建
+        Console_Log("开始检测 WorkerW 窗口");
+        WorkerW_Handle = IntPtr.Zero;
+        bool found = false;
+        int attempts = 0;
+        const int maxAttempts = 10; // 最多尝试10次
+        const int interval = 100;   // 每次间隔100ms
+
+        while (attempts < maxAttempts && !found)
+        {
+            // 查找所有 WorkerW 窗口
+            IntPtr hwnd = IntPtr.Zero;
+            while ((hwnd = Win32Wrapper.FindWindowEx(IntPtr.Zero, hwnd, "WorkerW", null)) != IntPtr.Zero)
+            {
+                // 检查是否包含关键子窗口 SHELLDLL_DefView
+                IntPtr shellView = Win32Wrapper.FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+                if (shellView != IntPtr.Zero)
+                {
+                    WorkerW_Handle = hwnd;
+                    found = true;
+                    Console_Log($"找到 WorkerW 窗口: {WorkerW_Handle}");
+                    return true;
+                }
+            }
+
+            if (!found)
+            {
+                Thread.Sleep(interval); // 等待一段时间再重试
+                attempts++;
+            }
+        }
+
+        if (!found)
+        {
+            Console_Log("未找到 WorkerW 窗口", Debug_Services.LogLevel.Debug, LogType.Warning);
+        }
+        return false;
+    }
+
+    public bool Get_WorkW_Handle_Old()
     {
         Console_Log("开始查找 WorkerW 窗口句柄");
 

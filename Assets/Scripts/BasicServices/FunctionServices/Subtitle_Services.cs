@@ -12,7 +12,7 @@ public class Subtitle_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Subtitle Services 初始化");
+            Debug.Log("[Awake] Subtitle Services 单例创建完成");
         }
         else
         {

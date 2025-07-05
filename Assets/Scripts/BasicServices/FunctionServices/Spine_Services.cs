@@ -13,7 +13,7 @@ public class Spine_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Spine Services 等瞰斐膘俇傖");
+            Debug.Log("[Awake] Spine Services 单例创建完成");
         }
         else
         {
