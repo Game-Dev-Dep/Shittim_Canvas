@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Xml.Serialization;
+using Utils;
 
 public class Wallpaper_Services : MonoBehaviour
 {
@@ -176,6 +177,31 @@ public class Wallpaper_Services : MonoBehaviour
         Console_Log($"壁纸模式最终屏幕模式: {Screen.fullScreenMode}");
 
         Console_Log("成功进入壁纸模式");
+
+        // 6. 显示系统通知
+#if !UNITY_EDITOR
+        if (SystemTray_Services.IsNotificationEnabled)
+        {
+            try
+            {
+                TrayIcon.ShowBalloonTip(
+                    "Shittim Canvas", 
+                    "已进入壁纸模式，右键托盘图标可返回正常模式或退出软件", 
+                    TrayIcon.ToolTipIcon.Info, 
+                    true
+                );
+                Console_Log("已发送系统通知");
+            }
+            catch (Exception ex)
+            {
+                Console_Log($"发送系统通知失败: {ex.Message}", Debug_Services.LogLevel.Debug, LogType.Warning);
+            }
+        }
+        else
+        {
+            Console_Log("通知已关闭，跳过系统通知");
+        }
+#endif
     }
 
     public void Quit_Wallpaper_Mode()
@@ -197,6 +223,31 @@ public class Wallpaper_Services : MonoBehaviour
         Console_Log($"编辑模式最终屏幕模式: {Screen.fullScreenMode}");
 
         Console_Log("成功退回编辑模式");
+
+        // 显示退出壁纸模式通知
+#if !UNITY_EDITOR
+        if (SystemTray_Services.IsNotificationEnabled)
+        {
+            try
+            {
+                TrayIcon.ShowBalloonTip(
+                    "Shittim Canvas", 
+                    "已恢复正常窗口模式。", 
+                    TrayIcon.ToolTipIcon.Info, 
+                    true
+                );
+                Console_Log("已发送退出壁纸模式通知");
+            }
+            catch (Exception ex)
+            {
+                Console_Log($"发送退出壁纸模式通知失败: {ex.Message}", Debug_Services.LogLevel.Debug, LogType.Warning);
+            }
+        }
+        else
+        {
+            Console_Log("通知已关闭，跳过退出壁纸模式通知");
+        }
+#endif
     }
 
     private void Toggle_Auto_Wallpaper_Mode()
