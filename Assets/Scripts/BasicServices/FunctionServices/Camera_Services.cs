@@ -12,7 +12,7 @@ public class Camera_Services : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("[Awake] Camera Services �����������");
+            Debug.Log("[Awake] Camera Services 单例创建完成");
         }
         else
         {
@@ -35,26 +35,26 @@ public class Camera_Services : MonoBehaviour
     public TextMeshProUGUI Camera_Mode_Text;
 
     [Header("Drag Settings")]
-    public float Drag_Sensitivity = 0.4f;  // ��ק������
+    public float Drag_Sensitivity = 0.4f;  // 拖拽灵敏度
 
     [Header("Zoom Settings")]
-    public float Zoom_Sensitivity = 0.01f;  // ����������
-    public float Zoom_Min_Size = 0.01f;  // ��С����ֵ
-    public float Zoom_Max_Size = 2f;  // �������ֵ
+    public float Zoom_Sensitivity = 0.01f;  // 缩放灵敏度
+    public float Zoom_Min_Size = 0.01f;  // 最小缩放值
+    public float Zoom_Max_Size = 2f;  // 最大缩放值
 
     [Header("Rotation Settings")]
-    public float Rotation_Sensitivity = 0.5f;  // ��ת������
-    public float Rotation_Min_Angle = -180f;  // ��С��ת�Ƕ�
-    public float Rotation_Max_Angle = 180f;  // �����ת�Ƕ�
+    public float Rotation_Sensitivity = 0.5f;  // 旋转灵敏度
+    public float Rotation_Min_Angle = -180f;  // 最小旋转角度
+    public float Rotation_Max_Angle = 180f;  // 最大旋转角度
 
-    private bool is_Drag_Mode;  // ��קģʽ����
-    private bool is_Rotate_Mode;  // ��תģʽ����
+    private bool is_Drag_Mode;  // 拖拽模式激活
+    private bool is_Rotate_Mode;  // 旋转模式激活
     private Vector3 Drag_Start_Position;
     private bool is_Camera_Fixed = false;
 
     private void Start()
     {
-        Console_Log("��ʼ��ʼ�� Camera Services");
+        Console_Log("开始初始化 Camera Services");
 
         Read_Camera_Settings_Button.onClick.AddListener(
             () => Load_Camera_Config(MemoryLobby_Camera, Config_Services.Instance.MemoryLobby_Camera_Config)
@@ -66,7 +66,7 @@ public class Camera_Services : MonoBehaviour
             () => Reset_Camera_Settings(MemoryLobby_Camera)
         );
 
-        Console_Log("������ʼ�� Camera Services");
+        Console_Log("结束初始化 Camera Services");
     }
 
     private void Update()
@@ -80,7 +80,7 @@ public class Camera_Services : MonoBehaviour
                 if (is_Drag_Mode)
                 {
                     Camera_Mode_Panel.SetActive(true);
-                    Camera_Mode_Text.SetText("����ģʽ");
+                    Camera_Mode_Text.SetText("缩放模式");
                     if (Input.mouseScrollDelta.y != 0)
                     {
                         Zoom_Handler(MemoryLobby_Camera);
@@ -98,14 +98,14 @@ public class Camera_Services : MonoBehaviour
                 if (is_Rotate_Mode)
                 {
                     Camera_Mode_Panel.SetActive(true);
-                    Camera_Mode_Text.SetText("��תģʽ");
+                    Camera_Mode_Text.SetText("旋转模式");
                     if (Input.mouseScrollDelta.y != 0)
                     {
                         Rotation_Handler(MemoryLobby_Camera);
                     }
                 }
 
-                if(!is_Drag_Mode && !is_Rotate_Mode)
+                if (!is_Drag_Mode && !is_Rotate_Mode)
                 {
                     Camera_Mode_Panel.SetActive(false);
                 }
@@ -115,11 +115,11 @@ public class Camera_Services : MonoBehaviour
                 if (!is_Camera_Fixed)
                 {
                     Console_Log(
-                    $"��ǰ�����������:\n" +
-                    $"λ��X: {MemoryLobby_Camera.transform.position}\n" +
-                    $"λ��Y: {MemoryLobby_Camera.transform.position.y}\n" +
-                    $"��תZ: {MemoryLobby_Camera.transform.eulerAngles.z}\n" +
-                    $"����: {MemoryLobby_Camera.orthographicSize}"
+                    $"当前的摄像机设置:\n" +
+                    $"位置X: {MemoryLobby_Camera.transform.position}\n" +
+                    $"位置Y: {MemoryLobby_Camera.transform.position.y}\n" +
+                    $"旋转Z: {MemoryLobby_Camera.transform.eulerAngles.z}\n" +
+                    $"缩放: {MemoryLobby_Camera.orthographicSize}"
                     );
 
                     if (Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Position_X == 0 &&
@@ -127,21 +127,21 @@ public class Camera_Services : MonoBehaviour
                         Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Rotation_Z == 0 &&
                         Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Size == 1)
                     {
-                        Console_Log("��ǰ�������������Ĭ������һ�£��������");
+                        Console_Log("当前的摄像机设置与默认设置一致，无需矫正");
                     }
                     else
                     {
-                        Console_Log("��ǰ�������������Ĭ�ϵ����ò�һ�£���ʼ����");
+                        Console_Log("当前的摄像机设置与默认的设置不一致，开始矫正");
                         MemoryLobby_Camera.transform.position = new Vector2(Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Position_X, Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Position_Y);
                         MemoryLobby_Camera.transform.rotation = Quaternion.Euler(0f, 0f, Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Rotation_Z);
                         MemoryLobby_Camera.orthographicSize = Config_Services.Instance.MemoryLobby_Camera_Config.Camera_Size;
 
                         Console_Log(
-                        $"����������������:\n" +
-                        $"λ��X: {MemoryLobby_Camera.transform.position}\n" +
-                        $"λ��Y: {MemoryLobby_Camera.transform.position.y}\n" +
-                        $"��תZ: {MemoryLobby_Camera.transform.eulerAngles.z}\n" +
-                        $"����: {MemoryLobby_Camera.orthographicSize}");
+                        $"矫正后的摄像机设置:\n" +
+                        $"位置X: {MemoryLobby_Camera.transform.position}\n" +
+                        $"位置Y: {MemoryLobby_Camera.transform.position.y}\n" +
+                        $"旋转Z: {MemoryLobby_Camera.transform.eulerAngles.z}\n" +
+                        $"缩放: {MemoryLobby_Camera.orthographicSize}");
                     }
 
                     is_Camera_Fixed = true;
@@ -154,23 +154,23 @@ public class Camera_Services : MonoBehaviour
     {
         MemoryLobby_Camera = camera;
         Load_Camera_Config(MemoryLobby_Camera, Config_Services.Instance.MemoryLobby_Camera_Config);
-        Console_Log("�ѳ�ʼ��������������");
+        Console_Log("已初始化记忆大厅摄像机");
         MemoryLobby_Camera.GetUniversalAdditionalCameraData().renderPostProcessing = true;
-        Console_Log("������������� Post Processing ѡ��");
+        Console_Log("已启用摄像机的 Post Processing 选项");
     }
 
     public void Toggle_Drag_Mode()
     {
         is_Drag_Mode = !is_Drag_Mode;
-        Console_Log((is_Drag_Mode ? "����" : "����") + "���������ģʽ");
+        Console_Log((is_Drag_Mode ? "启用" : "禁用") + "摄像机缩放模式");
         is_Rotate_Mode = false;
     }
 
     public void Zoom_Handler(Camera camera)
     {
-        float mouse_scroll_delta = -Input.mouseScrollDelta.y;  // ���ݹ��ַ�������������С
+        float mouse_scroll_delta = -Input.mouseScrollDelta.y;  // 根据滚轮方向调整摄像机大小
         float zoom_new_size = camera.orthographicSize + mouse_scroll_delta * Zoom_Sensitivity;
-        camera.orthographicSize = Mathf.Clamp(zoom_new_size, Zoom_Min_Size, Zoom_Max_Size);  // �������ŷ�Χ
+        camera.orthographicSize = Mathf.Clamp(zoom_new_size, Zoom_Min_Size, Zoom_Max_Size);  // 限制缩放范围
     }
 
     public void Drag_Start(Camera camera)
@@ -180,31 +180,31 @@ public class Camera_Services : MonoBehaviour
 
     public void Drag_Handler(Camera camera, Vector3 drag_start_position)
     {
-        Vector3 mouse_cur_position = Get_Mouse_World_Position(camera);  // ���㵱ǰ���λ�� (��������)
-        Vector3 mouse_delta_postition = drag_start_position - mouse_cur_position;  // ����λ�Ʋ�ֵ (��XY��)
+        Vector3 mouse_cur_position = Get_Mouse_World_Position(camera);  // 计算当前鼠标位置 (世界坐标)
+        Vector3 mouse_delta_postition = drag_start_position - mouse_cur_position;  // 计算位移差值 (仅XY轴)
         mouse_delta_postition.z = 0;
-        camera.transform.position += mouse_delta_postition * Drag_Sensitivity;  // Ӧ��λ��
-        Drag_Start(camera);  // ������ʼλ�ã�ʵ��ƽ����ק
+        camera.transform.position += mouse_delta_postition * Drag_Sensitivity;  // 应用位移
+        Drag_Start(camera);  // 更新起始位置，实现平滑拖拽
     }
 
     public void Toggle_Rotate_Mode()
     {
         is_Rotate_Mode = !is_Rotate_Mode;
-        Console_Log((is_Drag_Mode ? "����" : "����") + "�������ת����");
+        Console_Log((is_Drag_Mode ? "启用" : "禁用") + "摄像机旋转控制");
         is_Drag_Mode = false;
     }
 
     public void Rotation_Handler(Camera camera)
     {
-        float scroll_delta = Input.mouseScrollDelta.y;  // ��ȡ��������ֵ
-        float rotation_cur_angle = camera.transform.eulerAngles.z;  // �����µ���ת�Ƕ�
+        float scroll_delta = Input.mouseScrollDelta.y;  // 获取滚轮输入值
+        float rotation_cur_angle = camera.transform.eulerAngles.z;  // 计算新的旋转角度
         float rotation_new_angle = rotation_cur_angle + scroll_delta * Rotation_Sensitivity;
 
         //if (new_rotation_angle > 180f) new_rotation_angle = 180f;
         //if (new_rotation_angle < -180f) new_rotation_angle = -180;
 
         //rotation_new_angle = Mathf.Clamp(rotation_new_angle, Rotation_Min_Angle, Rotation_Max_Angle);
-        camera.transform.rotation = Quaternion.Euler(0f, 0f, rotation_new_angle);  // Ӧ����ת (��Z��)
+        camera.transform.rotation = Quaternion.Euler(0f, 0f, rotation_new_angle);  // 应用旋转 (仅Z轴)
     }
 
     Vector3 Get_Mouse_World_Position(Camera camera)
