@@ -18,7 +18,8 @@
         "Unity.RenderPipelines.Universal.Editor",
         "Unity.RenderPipelines.Universal.Runtime",
         "Unity.RenderPipelines.Universal.Shaders",
-        "Unity.RenderPipeline.Universal.ShaderLibrary"
+        "Unity.RenderPipeline.Universal.ShaderLibrary",
+        "Unity.Localization"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
