@@ -205,51 +205,14 @@ public class Window_Services : MonoBehaviour
         return Program_Manager_Handle != IntPtr.Zero ? true : false;
     }
 
+
+    // 重构的沉底方案，适配各种刁钻的Windows 11！包括24H2！！
     public bool Get_WorkW_Handle()
     {
-        // 新增：检测 WorkerW 窗口是否创建
-        Console_Log("开始检测 WorkerW 窗口");
-        WorkerW_Handle = IntPtr.Zero;
-        bool found = false;
-        int attempts = 0;
-        const int maxAttempts = 10; // 最多尝试10次
-        const int interval = 100;   // 每次间隔100ms
-
-        while (attempts < maxAttempts && !found)
-        {
-            // 查找所有 WorkerW 窗口
-            IntPtr hwnd = IntPtr.Zero;
-            while ((hwnd = Win32Wrapper.FindWindowEx(IntPtr.Zero, hwnd, "WorkerW", null)) != IntPtr.Zero)
-            {
-                // 检查是否包含关键子窗口 SHELLDLL_DefView
-                IntPtr shellView = Win32Wrapper.FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
-                if (shellView != IntPtr.Zero)
-                {
-                    WorkerW_Handle = hwnd;
-                    found = true;
-                    Console_Log($"找到 WorkerW 窗口: {WorkerW_Handle}");
-                    return true;
-                }
-            }
-
-            if (!found)
-            {
-                Thread.Sleep(interval); // 等待一段时间再重试
-                attempts++;
-            }
-        }
-
-        if (!found)
-        {
-            Console_Log("未找到 WorkerW 窗口", Debug_Services.LogLevel.Debug, LogType.Warning);
-        }
-        return false;
-    }
-
-    public bool Get_WorkW_Handle_Old()
-    {
         Console_Log("开始查找 WorkerW 窗口句柄");
+        WorkerW_Handle = IntPtr.Zero;
 
+        // 方法1: 使用EnumWindows查找包含SHELLDLL_DefView的WorkerW (适用于Windows 10和早期Windows 11)
         Console_Log("开始寻找与 SHELLDLL_DefView 同级的 WorkerW 窗口");
         Win32Wrapper.EnumWindows(new Win32Wrapper.EnumWindowsProc((tophandle, topparamhandle) =>
         {
@@ -264,6 +227,7 @@ public class Window_Services : MonoBehaviour
             {
                 Console_Log($"找到了 SHELLDLL_DefView 窗口句柄: {SHELLDLL_DefView_Handle}");
 
+                // 获取包含SHELLDLL_DefView的窗口的下一个子窗口，这玩意就是WorkerW
                 WorkerW_Handle = Win32Wrapper.FindWindowEx(
                                     IntPtr.Zero,    // 在所有顶级窗口中查找
                                     tophandle,      // 从当前顶级窗口(tophandle)之后开始枚举
@@ -280,11 +244,10 @@ public class Window_Services : MonoBehaviour
             return true;
         }), IntPtr.Zero);
 
+        // 方法2: 如果方法1失败，尝试在Progman下直接查找WorkerW (适用于及其刁钻的Windows 11 24H2)
         if (WorkerW_Handle == IntPtr.Zero)
         {
-            Console_Log("未找到与 SHELLDLL_DefView 同级的 WorkerW 窗口！", Debug_Services.LogLevel.Debug, LogType.Warning);
-
-            Console_Log("开始查找在 Progman 下的 WorkerW 窗口");
+            Console_Log("方法1失败，尝试在 Progman 下查找 WorkerW 窗口 (Windows 11 24H2兼容)");
             WorkerW_Handle = Win32Wrapper.FindWindowEx(
                                 Program_Manager_Handle,    // 从 Progman 窗口开始查找
                                 IntPtr.Zero,               // 从第一个子窗口开始
@@ -302,9 +265,109 @@ public class Window_Services : MonoBehaviour
             }
         }
 
+        // 方法3: 如果前两种方法都失败，尝试强制创建WorkerW (参考桌面壁纸软件Lively的实现，感谢Lively开源以及各位开发者的努力！狠狠的谴责微软！)
+        if (WorkerW_Handle == IntPtr.Zero)
+        {
+            Console_Log("前两种方法都失败，尝试强制创建 WorkerW");
+            WorkerW_Handle = Create_WorkerW_Force();
+            
+            if (WorkerW_Handle != IntPtr.Zero)
+            {
+                Console_Log($"强制创建 WorkerW 成功: {WorkerW_Handle}");
+            }
+            else
+            {
+                Console_Log("强制创建 WorkerW 失败！", Debug_Services.LogLevel.Debug, LogType.Error);
+            }
+        }
+
         Console_Log("结束查找 WorkerW 窗口句柄");
         return WorkerW_Handle != IntPtr.Zero ? true : false;
     }
+
+    /// <summary>
+    /// 强制创建WorkerW (参考Lively的WinDesktopCore实现)
+    /// </summary>
+    private IntPtr Create_WorkerW_Force()
+    {
+        Console_Log("开始强制创建 WorkerW");
+        
+        // 重新发送0x052C消息，使用不同的参数
+        IntPtr result = IntPtr.Zero;
+        
+        // 尝试不同的参数组合
+        var paramCombinations = new[]
+        {
+            new { wParam = new IntPtr(0), lParam = new IntPtr(0) },
+            new { wParam = new IntPtr(0xD), lParam = new IntPtr(0x1) },
+            new { wParam = new IntPtr(0), lParam = new IntPtr(1) },
+            new { wParam = new IntPtr(1), lParam = new IntPtr(0) }
+        };
+
+        foreach (var param in paramCombinations)
+        {
+            Console_Log($"尝试参数组合: wParam={param.wParam}, lParam={param.lParam}");
+            
+            Win32Wrapper.SendMessageTimeout(
+                Program_Manager_Handle, 
+                0x052C, 
+                param.wParam, 
+                param.lParam, 
+                Win32Wrapper.SendMessageTimeoutFlags.SMTO_NORMAL, 
+                1000, 
+                out result
+            );
+
+            // 等待一段时间让WorkerW创建
+            Thread.Sleep(100);
+
+            // 尝试查找WorkerW
+            IntPtr tempWorkerW = Win32Wrapper.FindWindowEx(
+                Program_Manager_Handle,
+                IntPtr.Zero,
+                "WorkerW",
+                IntPtr.Zero
+            );
+
+            if (tempWorkerW != IntPtr.Zero)
+            {
+                Console_Log($"使用参数 wParam={param.wParam}, lParam={param.lParam} 成功创建 WorkerW: {tempWorkerW}");
+                return tempWorkerW;
+            }
+        }
+
+        // 如果还是失败，尝试枚举所有顶级窗口查找WorkerW
+        Console_Log("尝试枚举所有顶级窗口查找 WorkerW");
+        IntPtr foundWorkerW = IntPtr.Zero;
+        Win32Wrapper.EnumWindows(new Win32Wrapper.EnumWindowsProc((tophandle, topparamhandle) =>
+        {
+            StringBuilder className = new StringBuilder(256);
+            Win32Wrapper.GetClassName(tophandle, className, className.Capacity);
+            
+            if (className.ToString() == "WorkerW")
+            {
+                // 检查这个WorkerW是否包含SHELLDLL_DefView
+                IntPtr shellView = Win32Wrapper.FindWindowEx(tophandle, IntPtr.Zero, "SHELLDLL_DefView", IntPtr.Zero);
+                if (shellView != IntPtr.Zero)
+                {
+                    foundWorkerW = tophandle;
+                    return false; // 停止枚举
+                }
+            }
+            return true;
+        }), IntPtr.Zero);
+
+        if (foundWorkerW != IntPtr.Zero)
+        {
+            Console_Log($"通过枚举找到 WorkerW: {foundWorkerW}");
+            return foundWorkerW;
+        }
+
+        Console_Log("强制创建 WorkerW 失败");
+        return IntPtr.Zero;
+    }
+
+
 
     public bool Get_Unity_Handle()
     {
