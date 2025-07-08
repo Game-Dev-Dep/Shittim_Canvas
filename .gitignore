@@ -25,6 +25,9 @@ Screenshots/
 *.userprefs
 *.vsconfig
 
+# 忽略 Visual Studio Code 配置文件夹
+.vscode/
+
 # 保留资产 .meta 文件
 !*/**/*.meta
 /Assets/Resources/Fonts
