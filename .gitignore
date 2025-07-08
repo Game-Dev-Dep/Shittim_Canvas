@@ -27,3 +27,4 @@ Screenshots/
 
 # 保留资产 .meta 文件
 !*/**/*.meta
+/Assets/Resources/Fonts
