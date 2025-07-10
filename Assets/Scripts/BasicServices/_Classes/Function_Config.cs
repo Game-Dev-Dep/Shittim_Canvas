@@ -17,4 +17,8 @@ public class Function_Config
     public bool is_Volume_On = true;
     public bool is_AutoStartup_On = false;
     public bool is_Auto_Wallpaper_Mode_On = false;
+    
+    // VSync相关配置
+    public bool is_VSync_Mode = true;
+    public int Target_Framerate = 120;
 }

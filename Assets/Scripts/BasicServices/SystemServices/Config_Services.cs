@@ -86,6 +86,7 @@ public class Config_Services : MonoBehaviour
         Audio_Services.Instance.Set_Config();
         Volume_Services.Instance.Set_Config(); //这玩意报not exist，但不妨碍build，就先不管了
         Wallpaper_Services.Instance.Set_Config();
+        Framerate_Services.Instance.Set_Config();
         Save_Function_Config(Global_Function_Config, Path.Combine(File_Services.Config_Files_Folder_Path, "Function Config.json"));
     }
 
