@@ -115,7 +115,7 @@ public class Dropdown_Services : MonoBehaviour
         // 设置默认标签文本
         if (mainButtonLabel != null)
         {
-            mainButtonLabel.text = defaultCharacterName;
+            SetTextWithLocalization(mainButtonLabel, defaultCharacterName);
         }
 
         // 加载默认角色的缩略图
@@ -145,6 +145,27 @@ public class Dropdown_Services : MonoBehaviour
             mainButtonIcon.texture = defaultIcon;
             Debug.Log("[Dropdown_Services] 使用默认图标");
         }
+    }
+
+    // 辅助方法：设置文本，优先使用Localization_To_TMP组件（主要修Localization的bug）
+    private void SetTextWithLocalization(TMPro.TMP_Text textComponent, string text)
+    {
+        var localizationComponentType = System.Type.GetType("Localization_To_TMP");
+        if (localizationComponentType != null)
+        {
+            var localizationComponent = textComponent.GetComponent(localizationComponentType);
+            if (localizationComponent != null)
+            {
+                var setManualTextMethod = localizationComponentType.GetMethod("Set_Manual_Text", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                if (setManualTextMethod != null)
+                {
+                    setManualTextMethod.Invoke(localizationComponent, new object[] { text });
+                    return;
+                }
+            }
+        }
+        // 如果没有找到Localization_To_TMP组件，直接设置文本
+        textComponent.text = text;
     }
 
     void LoadFolderNames()
@@ -356,7 +377,9 @@ public class Dropdown_Services : MonoBehaviour
 
     void OnOptionSelectedByName(string selectedCharacter)
     {
-        mainButtonLabel.text = selectedCharacter;
+        // 使用辅助方法设置文本
+        SetTextWithLocalization(mainButtonLabel, selectedCharacter);
+        
         if (selectedCharacter != "Textures")
         {
             if (Texture_Services.Lobbyillust.ContainsKey(selectedCharacter))
@@ -433,13 +456,12 @@ public class Dropdown_Services : MonoBehaviour
             Canvas.ForceUpdateCanvases();
         }
     }
-
     IEnumerator DelaySetPreview(string lastSelected)
     {
         yield return null; //还是等一帧，突然加载貌似选择的缩略图不会加载
         //Debug相关就留在这了，出问题看log能查
 
-        mainButtonLabel.text = lastSelected;
+        SetTextWithLocalization(mainButtonLabel, lastSelected);
         if (lastSelected != "Textures" && Texture_Services.Lobbyillust.ContainsKey(lastSelected))
         {
             string thumbnailPath = Path.Combine(File_Services.Student_Lists_Folder_Path, Texture_Services.Lobbyillust[lastSelected] + ".png");
