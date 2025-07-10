@@ -280,6 +280,17 @@ public class Wallpaper_Services : MonoBehaviour
         {
             tooltipService.SendMessage("HideTooltip", SendMessageOptions.DontRequireReceiver);
         }
+        
+        // 直接控制Tooltip区域的显示状态（之前有些情况还是隐藏不了，所以暴力一点）
+        var tooltipArea = GameObject.Find("Tool Tips Area");
+        if (tooltipArea != null)
+        {
+#if UNITY_EDITOR
+            tooltipArea.SetActive(!is_Wallpaper_Mode_Editor);
+#else
+            tooltipArea.SetActive(!is_Wallpaper_Mode);
+#endif
+        }
     }
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Wallpaper_Services", message, loglevel, logtype); }
 }
