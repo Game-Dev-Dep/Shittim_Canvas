@@ -46,6 +46,10 @@ public class Wallpaper_Services : MonoBehaviour
     public bool is_Wallpaper_Mode_Editor = false;
 #endif
 
+    // VSync设置备份
+    private bool saved_VSync_Mode = true;
+    private int saved_Target_Framerate = 120;
+
     private void Get_Config()
     {
         is_Auto_Wallpaper_Mode_On = Config_Services.Instance.Global_Function_Config.is_Auto_Wallpaper_Mode_On;
@@ -128,6 +132,14 @@ public class Wallpaper_Services : MonoBehaviour
     public void Enter_Wallpaper_Mode()
     {
         Console_Log("触发进入壁纸模式");
+
+        // 保存当前VSync设置
+        if (Framerate_Services.Instance != null)
+        {
+            saved_VSync_Mode = Framerate_Services.Instance.is_VSync_Mode;
+            saved_Target_Framerate = Framerate_Services.Instance.Target_Framerate;
+            Console_Log($"保存VSync设置: VSync={saved_VSync_Mode}, 目标帧率={saved_Target_Framerate}");
+        }
 
         // 1. 重新获取Unity窗口句柄
         IntPtr unityHandle = Win32Wrapper.FindUnityWindow();
@@ -221,6 +233,16 @@ public class Wallpaper_Services : MonoBehaviour
 
         Console_Log($"编辑模式最终屏幕分辨率: {Screen.width} × {Screen.height}");
         Console_Log($"编辑模式最终屏幕模式: {Screen.fullScreenMode}");
+
+        // 从壁纸模式回正常模式恢复VSync设置
+        if (Framerate_Services.Instance != null)
+        {
+            Console_Log($"恢复VSync设置: VSync={saved_VSync_Mode}, 目标帧率={saved_Target_Framerate}");
+            Framerate_Services.Instance.is_VSync_Mode = saved_VSync_Mode;
+            Framerate_Services.Instance.Target_Framerate = saved_Target_Framerate;
+            Framerate_Services.Instance.Apply_VSync_Settings();
+            Framerate_Services.Instance.Update_Button_UI();
+        }
 
         Console_Log("成功退回编辑模式");
 

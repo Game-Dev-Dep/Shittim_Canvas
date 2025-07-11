@@ -17,6 +17,8 @@ public class Localization_To_TMP : MonoBehaviour
 
     private TextMeshProUGUI TMP_Component;
     private LocalizedString Localized_String = new LocalizedString();
+    private bool is_Manually_Set = false; // 标记是否被手动设置过
+    private string last_Manual_Text = ""; // 记录最后手动设置的文本
 
     private void Awake()
     {
@@ -43,8 +45,19 @@ public class Localization_To_TMP : MonoBehaviour
     }
     private void OnEnable()
     {
-        // 重新启用时更新文本
-        Update_Text(Localized_String.GetLocalizedString());
+        // 重新启用时，如果之前被手动设置过，则恢复手动设置的文本
+        if (is_Manually_Set && !string.IsNullOrEmpty(last_Manual_Text))
+        {
+            if (TMP_Component != null)
+            {
+                TMP_Component.text = last_Manual_Text;
+            }
+        }
+        else
+        {
+            // 否则使用本地化文本
+            Update_Text(Localized_String.GetLocalizedString());
+        }
     }
 
     private void OnDestroy()
@@ -59,7 +72,7 @@ public class Localization_To_TMP : MonoBehaviour
     /// </summary>
     private void Update_Text(string translated_value)
     {
-        if (TMP_Component != null)
+        if (TMP_Component != null && !is_Manually_Set)
         {
             TMP_Component.text = translated_value;
         }
@@ -80,6 +93,29 @@ public class Localization_To_TMP : MonoBehaviour
     /// </summary>
     public void Refresh_Text()
     {
+        Update_Text(Localized_String.GetLocalizedString());
+    }
+
+    /// <summary>
+    /// 手动设置文本，这会覆盖本地化文本
+    /// </summary>
+    public void Set_Manual_Text(string text)
+    {
+        if (TMP_Component != null)
+        {
+            TMP_Component.text = text;
+            is_Manually_Set = true;
+            last_Manual_Text = text;
+        }
+    }
+
+    /// <summary>
+    /// 重置为本地化文本
+    /// </summary>
+    public void Reset_To_Localized_Text()
+    {
+        is_Manually_Set = false;
+        last_Manual_Text = "";
         Update_Text(Localized_String.GetLocalizedString());
     }
 }

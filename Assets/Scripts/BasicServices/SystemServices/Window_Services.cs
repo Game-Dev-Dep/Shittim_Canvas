@@ -470,7 +470,8 @@ public class Window_Services : MonoBehaviour
                             {
                                 if (last_is_VSync_Mode)
                                 {
-                                    Framerate_Services.Instance.Toggle_VSync_Mode();
+                                    Framerate_Services.Instance.is_VSync_Mode = true;
+                                    Framerate_Services.Instance.Apply_VSync_Settings();
                                     Framerate_Services.Instance.Update_Button_UI();
                                     Framerate_Services.Instance.Update_InputField_UI();
 
@@ -496,7 +497,8 @@ public class Window_Services : MonoBehaviour
                             {
                                 if (last_is_VSync_Mode)
                                 {
-                                    Framerate_Services.Instance.Toggle_VSync_Mode();
+                                    Framerate_Services.Instance.is_VSync_Mode = true;
+                                    Framerate_Services.Instance.Apply_VSync_Settings();
                                     Framerate_Services.Instance.Update_Button_UI();
                                     Framerate_Services.Instance.Update_InputField_UI();
 
@@ -526,7 +528,8 @@ public class Window_Services : MonoBehaviour
                 {
                     if (last_is_VSync_Mode)
                     {
-                        Framerate_Services.Instance.Toggle_VSync_Mode();
+                        Framerate_Services.Instance.is_VSync_Mode = true;
+                        Framerate_Services.Instance.Apply_VSync_Settings();
                         Framerate_Services.Instance.Update_Button_UI();
                         Framerate_Services.Instance.Update_InputField_UI();
 

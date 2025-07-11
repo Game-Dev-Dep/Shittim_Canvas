@@ -102,6 +102,15 @@ public class Audio_Services : MonoBehaviour
         Console_Log("开始加载所有 Audio Services 配置文件");
 
         is_Global_Sound_On = Config_Services.Instance.Global_Function_Config.is_Global_Sound_On;
+        // 立即应用全局声音状态到音频混音器
+        if (is_Global_Sound_On)
+        {
+            Master_Audio_Mixer_Group.audioMixer.SetFloat("Global_Volume", 0f);
+        }
+        else
+        {
+            Master_Audio_Mixer_Group.audioMixer.SetFloat("Global_Volume", -80f);
+        }
         Update_Global_Sound_Button_UI();
 
         is_Talk_Sound_On = Config_Services.Instance.Global_Function_Config.is_Talk_Sound_On;
@@ -238,14 +247,17 @@ public class Audio_Services : MonoBehaviour
             Talk_Slider.interactable = true;
             Talk_Sound = value;
             Talk_Slider.value = value;
+            // 应用音量到音频混音器
+            Talk_Audio_Mixer_Group.audioMixer.SetFloat("Talk_Volume", Get_Decibels(value, -80, -5));
         }
         else
         {
             Talk_Slider.interactable = false;
             Talk_Slider.value = 0;
+            // 当声音关闭时，直接设置音频混音器为静音
+            Talk_Audio_Mixer_Group.audioMixer.SetFloat("Talk_Volume", -80f);
         }
         
-        Talk_Audio_Mixer_Group.audioMixer.SetFloat("Talk_Volume", Get_Decibels(Talk_Slider.value, -80, -5));
         Update_Talk_Text();
     }
 
@@ -262,14 +274,17 @@ public class Audio_Services : MonoBehaviour
             SFX_Slider.interactable = true;
             SFX_Sound = value;
             SFX_Slider.value = value;
+            // 应用音量到音频混音器
+            SFX_Audio_Mixer_Group.audioMixer.SetFloat("SFX_Volume", Get_Decibels(value, -80, -7));
         }
         else
         {
             SFX_Slider.interactable = false;
             SFX_Slider.value = 0;
+            // 当声音关闭时，直接设置音频混音器为静音
+            SFX_Audio_Mixer_Group.audioMixer.SetFloat("SFX_Volume", -80f);
         }
         
-        SFX_Audio_Mixer_Group.audioMixer.SetFloat("SFX_Volume", Get_Decibels(SFX_Slider.value, -80, -7));
         Update_SFX_Text();
     }
 
@@ -286,14 +301,17 @@ public class Audio_Services : MonoBehaviour
             BGM_Slider.interactable = true;
             BGM_Sound = value;
             BGM_Slider.value = value;
+            // 应用音量到音频混音器
+            BGM_Audio_Mixer_Group.audioMixer.SetFloat("BGM_Volume", Get_Decibels(value, -80, -25));
         }
         else
         {
             BGM_Slider.interactable = false;
             BGM_Slider.value = 0;
+            // 当声音关闭时，直接设置音频混音器为静音
+            BGM_Audio_Mixer_Group.audioMixer.SetFloat("BGM_Volume", -80f);
         }
         
-        BGM_Audio_Mixer_Group.audioMixer.SetFloat("BGM_Volume", Get_Decibels(BGM_Slider.value, -80, -25));
         Update_BGM_Text();
     }
     private void Update_BGM_Text()

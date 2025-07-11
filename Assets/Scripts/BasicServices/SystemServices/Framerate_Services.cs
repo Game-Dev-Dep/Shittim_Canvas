@@ -35,7 +35,10 @@ public class Framerate_Services : MonoBehaviour
 
     private void Start()
     {
-        Console_Log("结束初始化 Framerate Services");
+        Console_Log("开始初始化 Framerate Services");
+
+        // 从配置加载VSync设置
+        Get_Config();
 
         VSync_Toggle_Button.onClick.AddListener(Toggle_VSync_Mode);
 
@@ -48,18 +51,46 @@ public class Framerate_Services : MonoBehaviour
         Console_Log("结束初始化 Framerate Services");
     }
 
+    private void Get_Config()
+    {
+        if (Config_Services.Instance != null)
+        {
+            is_VSync_Mode = Config_Services.Instance.Global_Function_Config.is_VSync_Mode;
+            Target_Framerate = Config_Services.Instance.Global_Function_Config.Target_Framerate;
+        }
+        else
+        {
+            Console_Log("Config_Services.Instance 未初始化，使用默认VSync设置", Debug_Services.LogLevel.Debug, LogType.Warning);
+            // 使用默认值，这些value已经在字段声明中设置了，应该不会出啥问题
+        }
+        
+        // 应用加载的设置
+        Apply_VSync_Settings();
+    }
+
+    public void Set_Config()
+    {
+        Config_Services.Instance.Global_Function_Config.is_VSync_Mode = is_VSync_Mode;
+        Config_Services.Instance.Global_Function_Config.Target_Framerate = Target_Framerate;
+    }
+
     public void Toggle_VSync_Mode()
     {
         Console_Log("触发切换 VSync 模式");
 
         is_VSync_Mode = !is_VSync_Mode;
 
+        Apply_VSync_Settings();
+        Update_Button_UI();
+    }
+
+    public void Apply_VSync_Settings()
+    {
         if (is_VSync_Mode)
         {
             Console_Log("切换为 VSync 模式");
             QualitySettings.vSyncCount = 1;
             Application.targetFrameRate = -1;
-            
         }
         else
         {
@@ -67,8 +98,6 @@ public class Framerate_Services : MonoBehaviour
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = Target_Framerate;
         }
-
-        Update_Button_UI();
     }
 
     public void Set_Target_Framerate_Listener(string value) { Set_Target_Framerate(value); }
@@ -122,5 +151,5 @@ public class Framerate_Services : MonoBehaviour
         }
     }
 
-    private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Framerate Services", message, loglevel, logtype); }
+    private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Framerate_Services", message, loglevel, logtype); }
 }
