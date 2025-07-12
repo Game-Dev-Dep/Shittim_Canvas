@@ -1,4 +1,4 @@
-Shader "ShittimCanvas/UI/Round_Conor"
+Shader "ShittimCanvas/UI/Round_Coner"
 {
     Properties
     {
