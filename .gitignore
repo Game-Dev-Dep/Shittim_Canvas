@@ -30,4 +30,13 @@ Screenshots/
 
 # 保留资产 .meta 文件
 !*/**/*.meta
+
+# 忽略 Unity 字体文件夹
 /Assets/Resources/Fonts/Original_Font
+
+# 忽略 Unity 可寻址资源的动态
+/Assets/AddressableAssetsData/link.xml
+/Assets/AddressableAssetsData/link.xml.meta
+
+# 忽略 Unity 工作区配置
+/UserSettings/Layouts/default-2021.dwlt
