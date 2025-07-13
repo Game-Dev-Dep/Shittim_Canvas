@@ -221,16 +221,19 @@ public class Character : MonoBehaviour
             Index_Services.Instance.Talk_Animaiton_Num = 0;
         }
 
-
+        float loop_start_time = 0f;
+        float loop_end_time = 0f;
         foreach (BGMExcel_DB bgm_excel_db in Audio_Services.Instance.BGMExcel_DB_list)
         {
             if (bgm_excel_db.Id == memory_lobby_info.BGMId)
             {
                 BGM_Path = bgm_excel_db.Path;
-                Console_Log($"播放音乐: {BGM_Path}");
+                loop_start_time = bgm_excel_db.LoopStartTime;
+                loop_end_time = bgm_excel_db.LoopEndTime;
+                Console_Log($"播放音乐: {BGM_Path} 循环起始: {bgm_excel_db.LoopStartTime} 循环结束: {bgm_excel_db.LoopEndTime}");
             }
         }
-        StartCoroutine(Audio_Services.Instance.Play_AudioClip(Audio_Services.AudioClip_Type.BGM, Path.Combine(File_Services.MX_Files_MediaResources_Folder_Path, $"{BGM_Path}.ogg")));
+        StartCoroutine(Audio_Services.Instance.Play_AudioClip(Audio_Services.AudioClip_Type.BGM, Path.Combine(File_Services.MX_Files_MediaResources_Folder_Path, $"{BGM_Path}.ogg"), null, true, loop_start_time, loop_end_time));
 
         Console_Log($"音频文件数量: {memory_lobby_info.Audio_Files.Count} 有必要的音频文件: {has_Start_Idle_Audio} 角色音频文件: {memory_lobby_info.Subtitles.Count} Talk动画: {Talk_Animaiton_Num}");
     }
@@ -472,6 +475,7 @@ public class Character : MonoBehaviour
         
         Audio_Services.Remove_All_AudioSources(Audio_Services.Instance.Talk_GameObject);
         Audio_Services.Remove_All_AudioSources(Audio_Services.Instance.SFX_GameObject);
+        Destroy(Audio_Services.Instance.BGM_GameObject.GetComponent<Audio_Loop_Controller>());
         Audio_Services.Remove_All_AudioSources(Audio_Services.Instance.BGM_GameObject);
         Destroy(GameObject.Find("UI Root"));
         Destroy(GetComponent<Volume>());

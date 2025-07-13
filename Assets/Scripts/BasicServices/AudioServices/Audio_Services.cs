@@ -333,7 +333,14 @@ public class Audio_Services : MonoBehaviour
         return 20.0f * Mathf.Log10(linearValue);
     }
 
-    public IEnumerator Play_AudioClip(AudioClip_Type audioclip_type, string audio_file_path, AudioClip audio_clip = null, bool is_loop = false)
+    public IEnumerator Play_AudioClip(
+        AudioClip_Type audioclip_type,
+        string audio_file_path,
+        AudioClip audio_clip = null,
+        bool is_loop = false,
+        float loop_start_time = 0f,
+        float loop_end_time = 0f
+    )
     {
         AudioSource audio_source = null;
 
@@ -347,6 +354,8 @@ public class Audio_Services : MonoBehaviour
                 }
             }));
         }
+
+        bool is_use_custom_loop = is_loop && loop_start_time != 0f && loop_end_time != 0f;
 
         switch (audioclip_type)
         {
@@ -364,13 +373,22 @@ public class Audio_Services : MonoBehaviour
                 audio_source = BGM_GameObject.AddComponent<AudioSource>();
                 audio_source.outputAudioMixerGroup = BGM_Audio_Mixer_Group;
                 audio_source.clip = audio_clip;
-                audio_source.loop = true;
+                if (is_use_custom_loop)
+                {
+                    audio_source.loop = false;
+                    Audio_Loop_Controller audio_loop_controller = audio_source.gameObject.AddComponent<Audio_Loop_Controller>();
+                    audio_loop_controller.Initialize(loop_start_time, loop_end_time);
+                }
+                else
+                {
+                    audio_source.loop = true;
+                }
                 break;
         }
 
         audio_source.Play();
 
-        if(!audio_source.loop)
+        if(!audio_source.loop && !is_use_custom_loop)
         {
             yield return new WaitForSeconds(audio_clip.length);
             Destroy(audio_source);
