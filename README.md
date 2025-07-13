@@ -6,9 +6,8 @@
 
 <div align="center">
   <a href="https://qm.qq.com/q/ZJwgEAu92g">加入QQ群：961293316</a>
+  <p>一个专为老师们打造的回忆大厅壁纸工具，让你重温与学生们的美好时光~</p>
 </div>
-
-一个专为老师们打造的回忆大厅壁纸工具，让你重温与学生们的美好时光~
 
 <div align="center">
   <img src="Assets/Resources/Pictures/Preview.png" alt="Shittim Canvas Preview" width="600"/>
