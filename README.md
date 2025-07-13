@@ -1,7 +1,7 @@
+<div align="center">
+  
 # Shittim Canvas - 什亭画布
 
-<div align="center">
-  <img src="Assets/Resources/Pictures/Logo.png" alt="Shittim Canvas Logo" width="500"/>
 </div>
 
 <div align="center">
