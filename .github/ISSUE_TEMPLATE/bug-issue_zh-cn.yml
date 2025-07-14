@@ -36,6 +36,10 @@ body:
       placeholder: 拖放截图/录屏到此处。
     validations:  
       required: false
+  - type: input
+    attributes:
+      label: Windows版本
+      description: 这可以帮助我们识别是否为Windows的特定版本问题，您可以运行 `winver` 来获取版本号。
   - type: markdown
     attributes:
       value: |
