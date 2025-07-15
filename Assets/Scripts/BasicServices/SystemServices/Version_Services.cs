@@ -39,14 +39,18 @@ public class Version_Services : MonoBehaviour
         }
     }
 
-    [Header("Version Info")]
+    [Header("Custom Version Info (自定义版本信息)")]
     [SerializeField]
-    private string version_String;
+    private string custom_Version_String;
     [SerializeField]
-    private string build_Time_String;
+    private string custom_Build_Time_String;
     
-    public string Version_String { get { return version_String; } private set { version_String = value; } }
-    public string Build_Time_String { get { return build_Time_String; } private set { build_Time_String = value; } }
+    [Header("Auto Version Info")]
+    private string auto_Version_String;
+    private string auto_Build_Time_String;
+    
+    public string Version_String { get; private set; }
+    public string Build_Time_String { get; private set; }
 
     private void Start()
     {
@@ -75,13 +79,17 @@ public class Version_Services : MonoBehaviour
 
     private void Initialize_Version_Info()
     {
-        // 读Unity设置的版本号
-        Version_String = Application.version;
+        // 获取自动识别的版本信息（备用）
+        auto_Version_String = Application.version;
+        auto_Build_Time_String = Get_Build_Time();
         
-        // 读构建时间
-        Build_Time_String = Get_Build_Time();
+        // 优先使用自定义版本，如果自定义内容为空则使用自动识别的内容
+        Version_String = !string.IsNullOrEmpty(custom_Version_String) ? custom_Version_String : auto_Version_String;
+        Build_Time_String = !string.IsNullOrEmpty(custom_Build_Time_String) ? custom_Build_Time_String : auto_Build_Time_String;
         
         Console_Log($"版本信息初始化完成: {Version_String}, 构建时间: {Build_Time_String}");
+        Console_Log($"版本: {custom_Version_String ?? "未设置"}, 识别版本: {auto_Version_String}");
+        Console_Log($"构建时间: {custom_Build_Time_String ?? "未设置"}, 识别构建时间: {auto_Build_Time_String}");
     }
 
     private string Get_Build_Time()
@@ -133,6 +141,32 @@ public class Version_Services : MonoBehaviour
     public string Get_Full_Version_Info()
     {
         return $"Shittim Canvas v{Version_String} ({Build_Time_String})";
+    }
+
+    // 提供设置自定义版本信息的方法
+    public void Set_Custom_Version(string version, string buildTime = null)
+    {
+        custom_Version_String = version;
+        if (!string.IsNullOrEmpty(buildTime))
+        {
+            custom_Build_Time_String = buildTime;
+        }
+        
+        // 重新初始化版本信息
+        Initialize_Version_Info();
+        Update_Version_UI();
+        
+        Console_Log($"版本: {version}, 构建时间: {buildTime ?? "未设置"}");
+    }
+
+    // 清除自定义版本信息，恢复使用自动识别
+    public void Clear_Custom_Version()
+    {
+        custom_Version_String = null;
+        custom_Build_Time_String = null;
+        
+        Initialize_Version_Info();
+        Update_Version_UI();
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) 
