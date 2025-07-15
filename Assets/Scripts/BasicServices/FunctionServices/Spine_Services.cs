@@ -38,7 +38,7 @@ public class Spine_Services : MonoBehaviour
     [Header("Spine Settings")]
     public string Talk_M_Animation_Name = "Talk_{0}_M";
     public string Talk_A_Animation_Name = "Talk_{0}_A";
-    public float Talk_Mix_To_Empty = 2f;
+    public float Talk_Mix_To_Empty = 0.1f;
 
 
     [Header("Core Variable")]
@@ -97,10 +97,10 @@ public class Spine_Services : MonoBehaviour
         string full_talk_a_animation_name = string.Format(Talk_A_Animation_Name, index.ToString("D2"));
 
         skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, Talk_Mix_To_Empty);
-        skeleton_animation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, full_talk_m_animation_name, false, 0);
+        skeleton_animation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, full_talk_m_animation_name, false, Talk_Mix_To_Empty);
 
         skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, Talk_Mix_To_Empty);
-        skeleton_animation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, full_talk_a_animation_name, false, 0);
+        skeleton_animation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, full_talk_a_animation_name, false, Talk_Mix_To_Empty);
 
         float duration = Mathf.Max(
             skeleton_animation.AnimationState.Data.SkeletonData.FindAnimation(full_talk_m_animation_name).Duration,
@@ -109,6 +109,8 @@ public class Spine_Services : MonoBehaviour
 
         yield return new WaitForSeconds(duration);
 
+        skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, Talk_Mix_To_Empty);
+        skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, Talk_Mix_To_Empty);
         onComplete?.Invoke();
     }
 }
