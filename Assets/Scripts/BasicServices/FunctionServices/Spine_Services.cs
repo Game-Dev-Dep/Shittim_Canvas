@@ -96,11 +96,11 @@ public class Spine_Services : MonoBehaviour
         string full_talk_m_animation_name = string.Format(Talk_M_Animation_Name, index.ToString("D2"));
         string full_talk_a_animation_name = string.Format(Talk_A_Animation_Name, index.ToString("D2"));
 
-        skeleton_animation.AnimationState.SetEmptyAnimation(1, Talk_Mix_To_Empty);
-        skeleton_animation.AnimationState.AddAnimation(1, full_talk_m_animation_name, false, 0);
+        skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, Talk_Mix_To_Empty);
+        skeleton_animation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, full_talk_m_animation_name, false, 0);
 
-        skeleton_animation.AnimationState.SetEmptyAnimation(2, Talk_Mix_To_Empty);
-        skeleton_animation.AnimationState.AddAnimation(2, full_talk_a_animation_name, false, 0);
+        skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, Talk_Mix_To_Empty);
+        skeleton_animation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, full_talk_a_animation_name, false, 0);
 
         float duration = Mathf.Max(
             skeleton_animation.AnimationState.Data.SkeletonData.FindAnimation(full_talk_m_animation_name).Duration,

@@ -194,21 +194,18 @@ public class SpineDragIK : MonoBehaviour
         {
             Console_Log($"{gameObject.name} OnPress 松开");
 
-            SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(1, 0.5f);
-            SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(2, 0.5f);
+            SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, 0.5f);
+            SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, 0.5f);
 
-            SpineController.SkeletonAnimation.AnimationState.SetAnimation(1, EndClip.ClipName, false);
+            SpineController.SkeletonAnimation.AnimationState.SetAnimation(Index_Services.Instance.M_Track_Num, EndClip.ClipName, false);
             Console_Log($"{gameObject.name} 播放结束动画 01: {EndClip.ClipName}");
 
             if (EndClip.SyncPlayClipObjects.Count() != 0 && EndClip.SyncPlayClipObjects.First() != null)
             {
                 SpineClip sync_clip = EndClip.SyncPlayClipObjects[0] as SpineClip;
                 Console_Log($"{gameObject.name} 播放结束动画 02: {sync_clip.ClipName}");
-                SpineController.SkeletonAnimation.AnimationState.SetAnimation(2, sync_clip.ClipName, false);
+                SpineController.SkeletonAnimation.AnimationState.SetAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, false);
             }
-
-            SpineController.SkeletonAnimation.AnimationState.AddEmptyAnimation(1, 0.5f, 0f);
-            SpineController.SkeletonAnimation.AnimationState.AddEmptyAnimation(2, 0.5f, 0f);
 
             //isUpdating = false;
             screenPos = new Vector3(0, 0, 0);
@@ -278,30 +275,30 @@ public class SpineDragIK : MonoBehaviour
         yield return new WaitForSeconds(TriggerDelay);
         if (isPressing)
         {
-            SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(1, 0.5f);
-            SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(2, 0.5f);
+            SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, 0.5f);
+            SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, 0.5f);
 
             if (IngClip.Loop)
             {
-                SpineController.SkeletonAnimation.AnimationState.SetAnimation(1, IngClip.ClipName, true);
+                SpineController.SkeletonAnimation.AnimationState.SetAnimation(Index_Services.Instance.M_Track_Num, IngClip.ClipName, true);
                 Console_Log($"{gameObject.name} 播放进行动画 01: {IngClip.ClipName}");
                 if (IngClip.SyncPlayClipObjects.Count() != 0 && IngClip.SyncPlayClipObjects.First() != null)
                 {
                     SpineClip sync_clip = IngClip.SyncPlayClipObjects[0] as SpineClip;
                     Console_Log($"{gameObject.name} 播放进行动画 02: {sync_clip.ClipName}");
-                    SpineController.SkeletonAnimation.AnimationState.SetAnimation(2, sync_clip.ClipName, true);
+                    SpineController.SkeletonAnimation.AnimationState.SetAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, true);
                 }
             }
             else
             {
-                TrackEntry track_entry = SpineController.SkeletonAnimation.AnimationState.SetAnimation(1, IngClip.ClipName, false);
+                TrackEntry track_entry = SpineController.SkeletonAnimation.AnimationState.SetAnimation(Index_Services.Instance.M_Track_Num, IngClip.ClipName, false);
                 track_entry.Complete += OnClipComplete;
                 Console_Log($"{gameObject.name} 播放起始动画 01: {IngClip.ClipName}");
                 if (IngClip.SyncPlayClipObjects.Count() != 0 && IngClip.SyncPlayClipObjects.First() != null)
                 {
                     SpineClip sync_clip = IngClip.SyncPlayClipObjects[0] as SpineClip;
                     Console_Log($"{gameObject.name} 播放起始动画 02: {sync_clip.ClipName}");
-                    SpineController.SkeletonAnimation.AnimationState.SetAnimation(2, sync_clip.ClipName, true);
+                    SpineController.SkeletonAnimation.AnimationState.SetAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, true);
                 }
             }
             

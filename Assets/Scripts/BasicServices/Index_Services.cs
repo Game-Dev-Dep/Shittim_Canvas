@@ -19,6 +19,8 @@ public class Index_Services : MonoBehaviour
     [Header("Character Related")]
     public string Character_Name;
     public int Talk_Animaiton_Num = 0;
+    public int M_Track_Num = 1;
+    public int A_Track_Num = 2;
     public GameObject Cur_Responsing_Object = null;
     public bool is_Talking = false;
     public bool is_Idle_Mode = false;

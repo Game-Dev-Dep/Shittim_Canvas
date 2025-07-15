@@ -9929,6 +9929,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Character_Name: 
   Talk_Animaiton_Num: 0
+  M_Track_Num: 1
+  A_Track_Num: 2
   Cur_Responsing_Object: {fileID: 0}
   is_Talking: 0
   is_Idle_Mode: 0
@@ -16835,7 +16837,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.00002193451}
   m_SizeDelta: {x: 472, y: 123}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1676114036

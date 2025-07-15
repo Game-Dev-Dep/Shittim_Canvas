@@ -39,6 +39,7 @@ public class Character : MonoBehaviour
 
     public PlayableDirector player_director;
     public TimelineAsset timeline_asset;
+    public SpineAnimationStateTrack original_track;
     public SpineAnimationStateTrack talk_m_track;
     public SpineAnimationStateTrack talk_a_track;
 
@@ -50,6 +51,10 @@ public class Character : MonoBehaviour
 
     public GameObject EyeIK_GameObject;
     private bool is_EyeIK_GameObject_Founded = false;
+
+    public bool is_Idle_Sync_SpineClip_Inited = false;
+    public SpineClip Idle_SpineClip;
+    public List<SpineAnimationStateTrack> Idle_Sync_SpineClip_Track_List = new List<SpineAnimationStateTrack>();
 
     private void Update()
     {
@@ -88,6 +93,22 @@ public class Character : MonoBehaviour
             }
         }
 
+        if (!is_Idle_Sync_SpineClip_Inited)
+        {
+            for (int i = 0; i < Idle_SpineClip.SyncPlayClipObjects.Count(); i++)
+            {
+                if (Idle_SpineClip.SyncPlayClipObjects[i] != null)
+                {
+                    Idle_Sync_SpineClip_Track_List.Add(timeline_asset.CreateTrack<SpineAnimationStateTrack>(null, $"Idle_Sync_Clip_0{i}"));
+                    Idle_Sync_SpineClip_Track_List[i].trackIndex = i + 1;
+                    player_director.SetGenericBinding(Idle_Sync_SpineClip_Track_List[i], skeleton_animation);
+                    skeleton_animation.AnimationState.SetAnimation(Idle_Sync_SpineClip_Track_List[i].trackIndex, ((SpineClip)Idle_SpineClip.SyncPlayClipObjects[i]).ClipName, ((SpineClip)Idle_SpineClip.SyncPlayClipObjects[i]).Loop);
+                    Console_Log($"轨道 {Idle_Sync_SpineClip_Track_List[i].trackIndex} 上播放同步动画 {((SpineClip)Idle_SpineClip.SyncPlayClipObjects[i]).ClipName}", Debug_Services.LogLevel.Core);
+                }
+            }
+            is_Idle_Sync_SpineClip_Inited = true;
+        }
+
         if (!is_Character_Idle_Mode)
         {
             if (skeleton_animation.AnimationState.GetCurrent(0)?.Animation.Name == "Idle_01") is_Character_Idle_Mode = true;
@@ -113,6 +134,7 @@ public class Character : MonoBehaviour
                 }
             }
 #endif
+            
         }
     }
 
@@ -400,17 +422,44 @@ public class Character : MonoBehaviour
                 return;
             }
 
-            Console_Log("开始在轨道1上添加 Talk_M 动画", Debug_Services.LogLevel.Core);
-            talk_m_track = timeline_asset.CreateTrack<SpineAnimationStateTrack>(null, "Talk_M");
-            talk_m_track.trackIndex = 1;
-            player_director.SetGenericBinding(talk_m_track, skeleton_animation);
-            Console_Log("完成在轨道1上添加 Talk_M 动画", Debug_Services.LogLevel.Core);
+            Console_Log("开始检查 Idle_01 动画的同步播放动画", Debug_Services.LogLevel.Core);
+            foreach (TrackAsset timeline_track in timeline_asset.GetOutputTracks())
+            {
+                if (timeline_track is SpineAnimationStateTrack spine_animation_state_track)
+                {
+                    original_track = spine_animation_state_track;
+                    foreach (TimelineClip timeline_clip in original_track.GetClips())
+                    {
+                        SpineAnimationStateClip spine_animation_state_clip = timeline_clip.asset as SpineAnimationStateClip;
+                        SpineClip spine_clip = spine_animation_state_clip.template.animationReference as SpineClip;
+                        if (spine_clip != null)
+                        {
+                            if (spine_clip.ClipName == "Idle_01")
+                            {
+                                Console_Log("找到了 Idle_01 动画", Debug_Services.LogLevel.Core);
+                                Idle_SpineClip = spine_clip;
+                                Console_Log($"Idle_01 动画有 {spine_clip.SyncPlayClipObjects.Count()} 个同步动画", Debug_Services.LogLevel.Core);
+                            }
+                        }
+                    }
+                }
+            }
+            Console_Log("结束检查 Idle_01 动画的同步播放动画", Debug_Services.LogLevel.Core);
 
-            Console_Log("开始在轨道2上添加 Talk_A 动画", Debug_Services.LogLevel.Core);
+
+            Console_Log($"开始在轨道 {Idle_SpineClip.SyncPlayClipObjects.Count() + 1} 上添加 Talk_M 动画", Debug_Services.LogLevel.Core);
+            Index_Services.Instance.M_Track_Num = Idle_SpineClip.SyncPlayClipObjects.Count() + 1;
+            talk_m_track = timeline_asset.CreateTrack<SpineAnimationStateTrack>(null, "Talk_M");
+            talk_m_track.trackIndex = Idle_SpineClip.SyncPlayClipObjects.Count() + 1;
+            player_director.SetGenericBinding(talk_m_track, skeleton_animation);
+            Console_Log($"完成在轨道 {Idle_SpineClip.SyncPlayClipObjects.Count() + 1} 上添加 Talk_M 动画", Debug_Services.LogLevel.Core);
+
+            Console_Log($"开始在轨道 {Idle_SpineClip.SyncPlayClipObjects.Count() + 2} 上添加 Talk_A 动画", Debug_Services.LogLevel.Core);
+            Index_Services.Instance.A_Track_Num = Idle_SpineClip.SyncPlayClipObjects.Count() + 2;
             talk_a_track = timeline_asset.CreateTrack<SpineAnimationStateTrack>(null, "Talk_A");
-            talk_a_track.trackIndex = 2;
+            talk_a_track.trackIndex = Idle_SpineClip.SyncPlayClipObjects.Count() + 2;
             player_director.SetGenericBinding(talk_a_track, skeleton_animation);
-            Console_Log("完成在轨道2上添加 Talk_A 动画", Debug_Services.LogLevel.Core);
+            Console_Log($"完成在轨道 {Idle_SpineClip.SyncPlayClipObjects.Count() + 2} 上添加 Talk_A 动画", Debug_Services.LogLevel.Core);
         }
         else
         {
