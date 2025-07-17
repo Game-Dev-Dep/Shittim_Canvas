@@ -50,6 +50,11 @@ body:
       description: 请运行 `winver` 来获取您的 Windows 版本号。这可以帮助我们识别是否为 Windows 的特定版本问题。
       placeholder: 例如：Windows 10 版本 22H2
 
+  - type: input
+    attributes:
+      label: 软件版本
+      description: 您可以在软件的左上角找到
+
   - type: markdown
     attributes:
       value: |
