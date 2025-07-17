@@ -32,13 +32,13 @@ public class AutoStartup_Services : MonoBehaviour
     private const string REGISTRY_KEY = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
     private const string APP_NAME = "ShittimCanvas";
 
-    public void Get_Config()
+    private void Get_Config()
     {
         is_AutoStartup_On = Config_Services.Instance.Global_Function_Config.is_AutoStartup_On;
         Update_AutoStartup_Button_UI();
     }
 
-    private void Set_Config()
+    public void Set_Config()
     {
         Config_Services.Instance.Global_Function_Config.is_AutoStartup_On = is_AutoStartup_On;
     }
@@ -48,6 +48,7 @@ public class AutoStartup_Services : MonoBehaviour
         Console_Log("开始初始化 AutoStartup Services");
 
         Get_Config();
+        Update_AutoStartup_Button_UI();
         AutoStartup_Toggle_Button.onClick.AddListener(Toggle_AutoStartup);
 
         Console_Log("结束初始化 AutoStartup Services");

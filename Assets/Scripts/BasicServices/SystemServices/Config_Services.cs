@@ -84,7 +84,8 @@ public class Config_Services : MonoBehaviour
         Spine_Services.Instance.Set_Config();
         Subtitle_Services.Instance.Set_Config();
         Audio_Services.Instance.Set_Config();
-        Volume_Services.Instance.Set_Config(); //这玩意报not exist，但不妨碍build，就先不管了
+        Volume_Services.Instance.Set_Config();
+        AutoStartup_Services.Instance.Set_Config();
         Wallpaper_Services.Instance.Set_Config();
         Framerate_Services.Instance.Set_Config();
         Save_Function_Config(Global_Function_Config, Path.Combine(File_Services.Config_Files_Folder_Path, "Function Config.json"));
@@ -109,9 +110,6 @@ public class Config_Services : MonoBehaviour
                     $"默认壁纸模式启动: {function_config.is_Auto_Wallpaper_Mode_On}");
         File_Services.Save_Specific_Type_To_File<Function_Config>(function_config, file_path);
     }
-                    // 修了一下上面的参名，在这留个备份（
-                    //$"日语对话字幕: {Global_Function_Config.is_Subtitle_JP_On}\n" +
-                    //$"自定义对话字幕: {Global_Function_Config.is_Subtitle_Custom_On}\n" +
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Config_Services", message, loglevel, logtype); }
 }
