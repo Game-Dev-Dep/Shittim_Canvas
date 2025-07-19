@@ -230,6 +230,7 @@ public class Camera_Services : MonoBehaviour
         camera_config.Camera_Rotation_Z = camera.transform.eulerAngles.z;
         camera_config.Camera_Size = camera.orthographicSize;
         Config_Services.Instance.Save_Camera_Config(camera_config, Path.Combine(File_Services.Config_Files_Folder_Path, "MemoryLobby Camera Config.json"));
+        Toast_Wrapper_Services.ShowToast("摄像机/学生设置已保存！", 3f, "success");
     }
 
     public void Reset_Camera_Settings(Camera camera)
@@ -237,6 +238,7 @@ public class Camera_Services : MonoBehaviour
         camera.transform.position = new Vector2(0, 0);
         camera.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         camera.orthographicSize = 1;
+        Toast_Wrapper_Services.ShowToast("摄像机/学生设置已重置！", 3f, "success");
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Camera_Services", message, loglevel, logtype); }
