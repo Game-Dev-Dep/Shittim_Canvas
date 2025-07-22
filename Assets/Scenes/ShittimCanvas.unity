@@ -6537,6 +6537,7 @@ GameObject:
   - component: {fileID: 716643199}
   - component: {fileID: 716643192}
   - component: {fileID: 716643198}
+  - component: {fileID: 716643202}
   - component: {fileID: 716643197}
   - component: {fileID: 716643200}
   - component: {fileID: 716643196}
@@ -6751,6 +6752,19 @@ MonoBehaviour:
   AutoStartup_Toggle_Button: {fileID: 918662617}
   AutoStartup_On_Icon: {fileID: 1970338432}
   AutoStartup_Off_Icon: {fileID: 1201563976}
+--- !u!114 &716643202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 716643190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67b5f438f9fba45469cded368e965bc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  is_Notification_On: 1
 --- !u!1 &724047547
 GameObject:
   m_ObjectHideFlags: 0
@@ -8165,8 +8179,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 18ad0fec5c8c9aa49ad643256ddcbc90, type: 2}
-  m_sharedMaterial: {fileID: -2578932939760109495, guid: 18ad0fec5c8c9aa49ad643256ddcbc90, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -11697,8 +11711,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0184f6c531751004eb0aa1680463d25b, type: 2}
-  m_sharedMaterial: {fileID: 5028231101451846589, guid: 0184f6c531751004eb0aa1680463d25b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -13441,7 +13455,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 942794297}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.97924227
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -16909,7 +16923,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00008178846}
+  m_AnchoredPosition: {x: 0, y: 0.000007222028}
   m_SizeDelta: {x: 472, y: 123}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1676114036

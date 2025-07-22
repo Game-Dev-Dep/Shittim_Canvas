@@ -70,11 +70,13 @@ public class Wallpaper_Services : MonoBehaviour
         Auto_Wallpaper_Mode_Toggle_Button.onClick.AddListener(Toggle_Auto_Wallpaper_Mode);
 
 #if !UNITY_EDITOR
+
         if (is_Auto_Wallpaper_Mode_On)
         {
             is_Wallpaper_Mode = false;
             Toggle_Wallpaper_Mode();
         }
+
 #endif
 
         Console_Log("结束初始化 Wallpaper Services");
@@ -190,30 +192,7 @@ public class Wallpaper_Services : MonoBehaviour
 
         Console_Log("成功进入壁纸模式");
 
-        // 6. 显示系统通知
-#if !UNITY_EDITOR
-        if (SystemTray_Services.IsNotificationEnabled)
-        {
-            try
-            {
-                TrayIcon.ShowBalloonTip(
-                    "Shittim Canvas", 
-                    "已进入壁纸模式，右键托盘图标可返回正常模式或退出软件", 
-                    TrayIcon.ToolTipIcon.Info, 
-                    true
-                );
-                Console_Log("已发送系统通知");
-            }
-            catch (Exception ex)
-            {
-                Console_Log($"发送系统通知失败: {ex.Message}", Debug_Services.LogLevel.Debug, LogType.Warning);
-            }
-        }
-        else
-        {
-            Console_Log("通知已关闭，跳过系统通知");
-        }
-#endif
+        Notification_Services.Instance.Send_Notifiction("已进入壁纸模式，右键托盘图标可返回正常模式或退出软件");
     }
 
     public void Quit_Wallpaper_Mode()
@@ -245,31 +224,6 @@ public class Wallpaper_Services : MonoBehaviour
         }
 
         Console_Log("成功退回编辑模式");
-
-        // 显示退出壁纸模式通知
-#if !UNITY_EDITOR
-        if (SystemTray_Services.IsNotificationEnabled)
-        {
-            try
-            {
-                TrayIcon.ShowBalloonTip(
-                    "Shittim Canvas", 
-                    "已恢复正常窗口模式。", 
-                    TrayIcon.ToolTipIcon.Info, 
-                    true
-                );
-                Console_Log("已发送退出壁纸模式通知");
-            }
-            catch (Exception ex)
-            {
-                Console_Log($"发送退出壁纸模式通知失败: {ex.Message}", Debug_Services.LogLevel.Debug, LogType.Warning);
-            }
-        }
-        else
-        {
-            Console_Log("通知已关闭，跳过退出壁纸模式通知");
-        }
-#endif
     }
 
     private void Toggle_Auto_Wallpaper_Mode()
@@ -314,5 +268,8 @@ public class Wallpaper_Services : MonoBehaviour
 #endif
         }
     }
+
+
+
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Wallpaper_Services", message, loglevel, logtype); }
 }

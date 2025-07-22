@@ -8,9 +8,6 @@ public class SystemTray_Services : MonoBehaviour
     [SerializeField]
     public Texture2D SystemTray_Icon;
 
-    // 通知开关状态
-    public static bool IsNotificationEnabled = true;
-
     void Awake()
     {
 #if !UNITY_EDITOR
@@ -32,37 +29,17 @@ public class SystemTray_Services : MonoBehaviour
 #endif
     }
 
-    private void Toggle_Notification()
+    public void Toggle_Notification()
     {
-        IsNotificationEnabled = !IsNotificationEnabled;
-        Debug.Log($"系统托盘触发: 切换通知状态 - {IsNotificationEnabled}");
-        
-        // 显示状态变更通知
-        ShowNotificationStatusChange();
-    }
+        Notification_Services.Instance.is_Notification_On = !Notification_Services.Instance.is_Notification_On;
+        Console_Log($"系统托盘触发: 切换通知状态为 {Notification_Services.Instance.is_Notification_On}");
 
-    private void ShowNotificationStatusChange()
-    {
-#if !UNITY_EDITOR
-        try
-        {
-            TrayIcon.ShowBalloonTip(
-                "Shittim Canvas", 
-                IsNotificationEnabled ? "通知已开启" : "通知已关闭", 
-                TrayIcon.ToolTipIcon.Info, 
-                true
-            );
-        }
-        catch (Exception ex)
-        {
-            Debug.LogWarning($"发送通知状态变更通知失败: {ex.Message}");
-        }
-#endif
+        Notification_Services.Instance.Send_Notifiction(Notification_Services.Instance.is_Notification_On ? "通知已开启" : "通知已关闭");
     }
 
     private void Enter_Wallpaper_Mode()
     {
-        Debug.Log($"系统托盘触发: 进入壁纸模式");
+        Console_Log($"系统托盘触发: 进入壁纸模式");
 
         if (!Wallpaper_Services.Instance.is_Wallpaper_Mode)
         {
@@ -72,7 +49,7 @@ public class SystemTray_Services : MonoBehaviour
     }
     private void Quit_Wallpaper_Mode()
     {
-        Debug.Log($"系统托盘触发: 返回正常模式");
+        Console_Log($"系统托盘触发: 返回正常模式");
         if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
         {
             Wallpaper_Services.Instance.Toggle_Wallpaper_Mode();
@@ -81,7 +58,7 @@ public class SystemTray_Services : MonoBehaviour
     }
     private void Quit_Program()
     {
-        Debug.Log("系统托盘触发: 退出");
+        Console_Log("系统托盘触发: 退出");
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
@@ -89,4 +66,6 @@ public class SystemTray_Services : MonoBehaviour
         Application.Quit();
 #endif
     }
+
+    private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("SystemTray Services", message, loglevel, logtype); }
 }
