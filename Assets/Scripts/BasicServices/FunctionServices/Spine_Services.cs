@@ -38,7 +38,7 @@ public class Spine_Services : MonoBehaviour
     [Header("Spine Settings")]
     public string Talk_M_Animation_Name = "Talk_{0}_M";
     public string Talk_A_Animation_Name = "Talk_{0}_A";
-    public float Talk_Mix_To_Empty = 0.1f;
+    public float Talk_Mix_To_Empty = 0.5f;
 
 
     [Header("Core Variable")]
@@ -107,7 +107,7 @@ public class Spine_Services : MonoBehaviour
             skeleton_animation.AnimationState.Data.SkeletonData.FindAnimation(full_talk_a_animation_name).Duration
         );
 
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(duration + Talk_Mix_To_Empty);
 
         skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, Talk_Mix_To_Empty);
         skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, Talk_Mix_To_Empty);
