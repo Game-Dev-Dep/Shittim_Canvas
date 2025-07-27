@@ -25,12 +25,27 @@ public class Config_Services : MonoBehaviour
     public Camera_Config MemoryLobby_Camera_Config = new Camera_Config();
     public Function_Config Global_Function_Config = new Function_Config();
     public WindowFilter_Config Gloabal_WindowFilter_Config = new WindowFilter_Config();
-    
+    public Setting_Config Global_Setting_Config = new Setting_Config();
+
+
+    // Fix for CS0120 and CS0572 errors  
+    // The issue arises because `Setting_Config.Audio` is a nested class, not an instance.  
+    // To fix this, we need to ensure that `Global_Setting_Config.Audio` is properly instantiated and accessed.  
+
     private void Start()
     {
         Console_Log($"开始初始化 Config Services");
 
         Save_Function_Settings_Button.onClick.AddListener(Save_Global_Function_Config_Listener);
+
+        Global_Setting_Config = File_Services.Load_Specific_Type_From_File<Setting_Config>(Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
+        Console_Log(
+            $"读取到的全局设置:\n" +
+            $"音频设置:\n" +
+            $"  全局音量: {Global_Setting_Config.Audio.Global_Sound}\n" +
+            $"  语音音量: {Global_Setting_Config.Audio.Talk_Sound}\n" +
+            $"  音效音量: {Global_Setting_Config.Audio.SFX_Sound}\n" +
+            $"  背景音乐音量: {Global_Setting_Config.Audio.BGM_Sound}");
 
         MemoryLobby_Camera_Config = File_Services.Load_Specific_Type_From_File<Camera_Config>(Path.Combine(File_Services.Config_Files_Folder_Path, "MemoryLobby Camera Config.json"));
         Console_Log($"读取到的摄像机设置:\n" +
@@ -47,13 +62,6 @@ public class Config_Services : MonoBehaviour
                     $"对话: {Global_Function_Config.is_Talk_On}\n" +
                     $"日语对话字幕: {Global_Function_Config.is_Subtitle_JP_On}\n" +
                     $"自定义对话字幕: {Global_Function_Config.is_Subtitle_Custom_On}\n" +
-                    $"全局声音: {Global_Function_Config.is_Global_Sound_On}\n" +
-                    $"语音: {Global_Function_Config.is_Talk_Sound_On}\n" +
-                    $"语音音量: {Global_Function_Config.Talk_Sound}\n" +
-                    $"音效: {Global_Function_Config.is_SFX_Sound_On}\n" +
-                    $"音效音量：{Global_Function_Config.SFX_Sound}\n" +
-                    $"BGM: {Global_Function_Config.is_BGM_Sound_On}\n" +
-                    $"BGM音量: {Global_Function_Config.BGM_Sound}\n" +
                     $"后期处理: {Global_Function_Config.is_Volume_On}\n" +
                     $"开机自启动: {Global_Function_Config.is_AutoStartup_On}\n" +
                     $"默认壁纸模式启动: {Global_Function_Config.is_Auto_Wallpaper_Mode_On}"
@@ -66,6 +74,18 @@ public class Config_Services : MonoBehaviour
                     );
 
         Console_Log($"结束初始化 Config Services");
+    }
+
+    public void Save_Global_Config(Setting_Config setting_config, string file_path)
+    {
+        Console_Log(
+            $"保存的全局设置:\n" +
+            $"音频设置:\n" +
+            $"  全局音量: {Global_Setting_Config.Audio.Global_Sound}\n" +
+            $"  语音音量: {Global_Setting_Config.Audio.Talk_Sound}\n" +
+            $"  音效音量: {Global_Setting_Config.Audio.SFX_Sound}\n" +
+            $"  背景音乐音量: {Global_Setting_Config.Audio.BGM_Sound}");
+        File_Services.Save_Specific_Type_To_File<Setting_Config>(setting_config, file_path);
     }
 
     public void Save_Camera_Config(Camera_Config camera_config, string file_path)
@@ -83,7 +103,6 @@ public class Config_Services : MonoBehaviour
     {
         Spine_Services.Instance.Set_Config();
         Subtitle_Services.Instance.Set_Config();
-        Audio_Services.Instance.Set_Config();
         Volume_Services.Instance.Set_Config(); //这玩意报not exist，但不妨碍build，就先不管了
         Wallpaper_Services.Instance.Set_Config();
         Framerate_Services.Instance.Set_Config();
@@ -98,21 +117,11 @@ public class Config_Services : MonoBehaviour
                     $"对话: {function_config.is_Talk_On}\n" +
                     $"日语对话字幕: {function_config.is_Subtitle_JP_On}\n" +
                     $"自定义对话字幕: {function_config.is_Subtitle_Custom_On}\n" +
-                    $"全局声音: {function_config.is_Global_Sound_On}\n" +
-                    $"语音: {function_config.is_Talk_Sound_On}\n" +
-                    $"语音音量: {function_config.Talk_Sound}\n" +
-                    $"音效: {function_config.is_SFX_Sound_On}\n" +
-                    $"音效音量：{function_config.SFX_Sound}\n" +
-                    $"BGM: {function_config.is_BGM_Sound_On}\n" +
-                    $"BGM音量: {function_config.BGM_Sound}\n" +
                     $"后期处理: {function_config.is_Volume_On}\n" +
                     $"开机自启动: {function_config.is_AutoStartup_On}\n" +
                     $"默认壁纸模式启动: {function_config.is_Auto_Wallpaper_Mode_On}");
         File_Services.Save_Specific_Type_To_File<Function_Config>(function_config, file_path);
     }
-                    // 修了一下上面的参名，在这留个备份（
-                    //$"日语对话字幕: {Global_Function_Config.is_Subtitle_JP_On}\n" +
-                    //$"自定义对话字幕: {Global_Function_Config.is_Subtitle_Custom_On}\n" +
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Config_Services", message, loglevel, logtype); }
 }

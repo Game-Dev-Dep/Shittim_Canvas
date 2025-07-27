@@ -33,44 +33,6 @@ public class Audio_Services : MonoBehaviour
         BGM
     }
 
-    [Header("UI Elements")]
-    [SerializeField]
-    public Button Sound_Toggle_Button;
-    [SerializeField]
-    public RawImage Sound_On_Image;
-    [SerializeField]
-    public RawImage Sound_Off_Image;
-    [SerializeField]
-    public TextMeshProUGUI Talk_Text;
-    [SerializeField]
-    public Slider Talk_Slider;
-    [SerializeField]
-    public Button Talk_Toggle_Button;
-    [SerializeField]
-    public RawImage Talk_On_Image;
-    [SerializeField]
-    public RawImage Talk_Off_Image;
-    [SerializeField]
-    public TextMeshProUGUI SFX_Text;
-    [SerializeField]
-    public Slider SFX_Slider;
-    [SerializeField]
-    public Button SFX_Toggle_Button;
-    [SerializeField]
-    public RawImage SFX_On_Image;
-    [SerializeField]
-    public RawImage SFX_Off_Image;
-    [SerializeField]
-    public TextMeshProUGUI BGM_Text;
-    [SerializeField]
-    public Slider BGM_Slider;
-    [SerializeField]
-    public Button BGM_Toggle_Button;
-    [SerializeField]
-    public RawImage BGM_On_Image;
-    [SerializeField]
-    public RawImage BGM_Off_Image;
-
     [SerializeField]
     public AudioMixerGroup Master_Audio_Mixer_Group;
     [SerializeField]
@@ -88,12 +50,9 @@ public class Audio_Services : MonoBehaviour
     public GameObject BGM_GameObject;
 
     [Header("Core Variables")]
-    public bool is_Global_Sound_On = true;
-    public bool is_Talk_Sound_On = true;
+    public float Global_Sound = 0f;
     public float Talk_Sound = 0f;
-    public bool is_SFX_Sound_On = true;
     public float SFX_Sound = 0f;
-    public bool is_BGM_Sound_On = true;
     public float BGM_Sound = 0f;
     public List<BGMExcel_DB> BGMExcel_DB_list;
 
@@ -101,223 +60,39 @@ public class Audio_Services : MonoBehaviour
     {
         Console_Log("开始加载所有 Audio Services 配置文件");
 
-        is_Global_Sound_On = Config_Services.Instance.Global_Function_Config.is_Global_Sound_On;
-        // 立即应用全局声音状态到音频混音器
-        if (is_Global_Sound_On)
-        {
-            Master_Audio_Mixer_Group.audioMixer.SetFloat("Global_Volume", 0f);
-        }
-        else
-        {
-            Master_Audio_Mixer_Group.audioMixer.SetFloat("Global_Volume", -80f);
-        }
-        Update_Global_Sound_Button_UI();
-
-        is_Talk_Sound_On = Config_Services.Instance.Global_Function_Config.is_Talk_Sound_On;
-        Update_Talk_Sound_Button_UI();
-        Talk_Sound = Config_Services.Instance.Global_Function_Config.Talk_Sound;
-        Talk_Slider_Handler(Talk_Sound);
-
-        is_SFX_Sound_On = Config_Services.Instance.Global_Function_Config.is_SFX_Sound_On;
-        Update_SFX_Sound_Button_UI();
-        SFX_Sound = Config_Services.Instance.Global_Function_Config.SFX_Sound;
-        SFX_Slider_Handler(SFX_Sound);
-
-        is_BGM_Sound_On = Config_Services.Instance.Global_Function_Config.is_BGM_Sound_On;
-        Update_BGM_Sound_Button_UI();
-        BGM_Sound = Config_Services.Instance.Global_Function_Config.BGM_Sound;
-        BGM_Slider_Handler(BGM_Sound);
-
         BGMExcel_DB_list = File_Services.Load_Specific_Type_From_File<List<BGMExcel_DB>>(Path.Combine(File_Services.MX_Files_TableBundles_Folder_Path, "BGMExcel.json"));
         Console_Log($"获取到 {BGMExcel_DB_list.Count} 首 BGM 信息");
 
         Console_Log("结束加载所有 Audio Services 配置文件");
     }
 
-    public void Set_Config()
-    {
-        Config_Services.Instance.Global_Function_Config.is_Global_Sound_On = is_Global_Sound_On;
-        Config_Services.Instance.Global_Function_Config.is_Talk_Sound_On = is_Talk_Sound_On;
-        Config_Services.Instance.Global_Function_Config.Talk_Sound = Talk_Sound;
-        Config_Services.Instance.Global_Function_Config.is_SFX_Sound_On = is_SFX_Sound_On;
-        Config_Services.Instance.Global_Function_Config.SFX_Sound = SFX_Sound;
-        Config_Services.Instance.Global_Function_Config.is_BGM_Sound_On = is_BGM_Sound_On;
-        Config_Services.Instance.Global_Function_Config.BGM_Sound = BGM_Sound;
-    }
-
     private void Start()
     {
         Get_Config();
-        Sound_Toggle_Button.onClick.AddListener(Toggle_Global_Sound);
-
-        Talk_Toggle_Button.onClick.AddListener(Toggle_Talk_Sound);
-        SFX_Toggle_Button.onClick.AddListener(Toggle_SFX_Sound);
-        BGM_Toggle_Button.onClick.AddListener(Toggle_BGM_Sound);
-
-        Talk_Slider.onValueChanged.AddListener(Talk_Slider_Handler);
-        SFX_Slider.onValueChanged.AddListener(SFX_Slider_Handler);
-        BGM_Slider.onValueChanged.AddListener(BGM_Slider_Handler);
     }
 
-    public void Toggle_Global_Sound()
+    public void Global_Sound_Slider_Handler(float value)
     {
-        is_Global_Sound_On = !is_Global_Sound_On;
-        if (is_Global_Sound_On)
-        {
-            Master_Audio_Mixer_Group.audioMixer.SetFloat("Global_Volume", 0f);
-        }
-        else
-        {
-            Master_Audio_Mixer_Group.audioMixer.SetFloat("Global_Volume", -80f);
-        }
-        Update_Global_Sound_Button_UI();
-    }
-
-    private void Update_Global_Sound_Button_UI()
-    {
-        Sound_On_Image.enabled = is_Global_Sound_On;
-        Sound_Off_Image.enabled = !is_Global_Sound_On;
-    }
-
-    public void Toggle_Talk_Sound()
-    {
-        is_Talk_Sound_On = !is_Talk_Sound_On;
-        if (is_Talk_Sound_On)
-        {
-            Talk_Slider_Handler(Talk_Sound);
-        }
-        else
-        {
-            Talk_Slider_Handler(0f);
-        }
-        Update_Talk_Sound_Button_UI();
-    }
-
-    private void Update_Talk_Sound_Button_UI()
-    {
-        Talk_On_Image.enabled = is_Talk_Sound_On;
-        Talk_Off_Image.enabled = !is_Talk_Sound_On;
-    }
-
-
-    public void Toggle_SFX_Sound()
-    {
-        is_SFX_Sound_On = !is_SFX_Sound_On;
-        if (is_SFX_Sound_On)
-        {
-            SFX_Slider_Handler(SFX_Sound);
-        }
-        else
-        {
-            SFX_Slider_Handler(0f);
-        }
-        Update_SFX_Sound_Button_UI();
-    }
-
-    private void Update_SFX_Sound_Button_UI()
-    {
-        SFX_On_Image.enabled = is_SFX_Sound_On;
-        SFX_Off_Image.enabled = !is_SFX_Sound_On;
-    }
-
-    public void Toggle_BGM_Sound()
-    {
-        is_BGM_Sound_On = !is_BGM_Sound_On;
-        if (is_BGM_Sound_On)
-        {
-            BGM_Slider_Handler(BGM_Sound);
-        }
-        else
-        {
-            BGM_Slider_Handler(0f);
-        }
-        Update_BGM_Sound_Button_UI();
-    }
-
-    private void Update_BGM_Sound_Button_UI()
-    {
-        BGM_On_Image.enabled = is_BGM_Sound_On;
-        BGM_Off_Image.enabled = !is_BGM_Sound_On;
+        Global_Sound = value;
+        Master_Audio_Mixer_Group.audioMixer.SetFloat("Global_Volume", Get_Decibels(value, -80, 0));
     }
 
     public void Talk_Slider_Handler(float value)
     {
-        if (is_Talk_Sound_On)
-        {
-            Talk_Slider.interactable = true;
-            Talk_Sound = value;
-            Talk_Slider.value = value;
-            // 应用音量到音频混音器
-            Talk_Audio_Mixer_Group.audioMixer.SetFloat("Talk_Volume", Get_Decibels(value, -80, -5));
-        }
-        else
-        {
-            Talk_Slider.interactable = false;
-            Talk_Slider.value = 0;
-            // 当声音关闭时，直接设置音频混音器为静音
-            Talk_Audio_Mixer_Group.audioMixer.SetFloat("Talk_Volume", -80f);
-        }
-        
-        Update_Talk_Text();
-    }
-
-    private void Update_Talk_Text()
-    {
-        if(is_Talk_Sound_On) Talk_Text.SetText((Talk_Sound * 100).ToString("0"));
-        else Talk_Text.SetText("0");
+        Talk_Sound = value;
+        Talk_Audio_Mixer_Group.audioMixer.SetFloat("Talk_Volume", Get_Decibels(value, -80, -5));
     }
 
     public void SFX_Slider_Handler(float value)
     {
-        if (is_SFX_Sound_On)
-        {
-            SFX_Slider.interactable = true;
-            SFX_Sound = value;
-            SFX_Slider.value = value;
-            // 应用音量到音频混音器
-            SFX_Audio_Mixer_Group.audioMixer.SetFloat("SFX_Volume", Get_Decibels(value, -80, -7));
-        }
-        else
-        {
-            SFX_Slider.interactable = false;
-            SFX_Slider.value = 0;
-            // 当声音关闭时，直接设置音频混音器为静音
-            SFX_Audio_Mixer_Group.audioMixer.SetFloat("SFX_Volume", -80f);
-        }
-        
-        Update_SFX_Text();
-    }
-
-    private void Update_SFX_Text()
-    {
-        if (is_SFX_Sound_On) SFX_Text.SetText((SFX_Sound * 100).ToString("0"));
-        else SFX_Text.SetText("0");
+        SFX_Sound = value;
+        SFX_Audio_Mixer_Group.audioMixer.SetFloat("SFX_Volume", Get_Decibels(value, -80, -7));
     }
 
     public void BGM_Slider_Handler(float value)
     {
-        if (is_BGM_Sound_On)
-        {
-            BGM_Slider.interactable = true;
-            BGM_Sound = value;
-            BGM_Slider.value = value;
-            // 应用音量到音频混音器
-            BGM_Audio_Mixer_Group.audioMixer.SetFloat("BGM_Volume", Get_Decibels(value, -80, -25));
-        }
-        else
-        {
-            BGM_Slider.interactable = false;
-            BGM_Slider.value = 0;
-            // 当声音关闭时，直接设置音频混音器为静音
-            BGM_Audio_Mixer_Group.audioMixer.SetFloat("BGM_Volume", -80f);
-        }
-        
-        Update_BGM_Text();
-    }
-    private void Update_BGM_Text()
-    {
-        if (is_BGM_Sound_On) BGM_Text.SetText((BGM_Sound * 100).ToString("0"));
-        else BGM_Text.SetText("0");
+        BGM_Sound = value;
+        BGM_Audio_Mixer_Group.audioMixer.SetFloat("BGM_Volume", Get_Decibels(value, -80, -25));
     }
 
     public static float Get_Decibels(float value, float minDecibel, float maxDecibel)
