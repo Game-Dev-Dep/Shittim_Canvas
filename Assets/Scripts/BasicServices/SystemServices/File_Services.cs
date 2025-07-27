@@ -125,6 +125,11 @@ public class File_Services : MonoBehaviour
     {
         Console_Log($"开始创建默认文件");
 
+        if (!File.Exists(Path.Combine(Config_Files_Folder_Path, "Setting Config.json")))
+        {
+            Save_Default_Type_To_File<Setting_Config>(Path.Combine(Config_Files_Folder_Path, "Setting Config.json"));
+        }
+
         if (!File.Exists(Path.Combine(Config_Files_Folder_Path, "Function Config.json")))
         {
             Save_Default_Type_To_File<Function_Config>(Path.Combine(Config_Files_Folder_Path, "Function Config.json"));
