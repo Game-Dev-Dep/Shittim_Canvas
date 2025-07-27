@@ -27,6 +27,7 @@ public class Recorder_Services : MonoBehaviour
 
 
     public bool is_Record = false;
+    public bool is_Idle = false;
 
     [Header("UI Elements")]
     [SerializeField]
@@ -72,7 +73,7 @@ public class Recorder_Services : MonoBehaviour
 
         Audio_Services.Instance.BGM_Slider_Handler(100);
 
-        Wallpaper_Services.Instance.Clear_HUD();
+        GameObject.Find("Canvas").SetActive(false);
 
         Recorder_InputField.GetComponent<CanvasGroup>().alpha = 0f;
     }
