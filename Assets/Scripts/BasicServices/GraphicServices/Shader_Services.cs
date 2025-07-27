@@ -218,9 +218,9 @@ public class Shader_Services : MonoBehaviour
                         Shader local_shader = Shader.Find(ab_material.shader.name);
                         if (local_shader != null && local_shader != ab_material.shader)
                         {
-                            int shader_property_count = ab_material.shader.GetPropertyCount();
+                            int shader_property_count = local_shader.GetPropertyCount();
                             Console_Log($"  └Material: {ab_material.name} 的 Shader: {ab_material.shader.name} 存在本地替换文件，有 {shader_property_count} 个字段", Debug_Services.LogLevel.Core);
-                            Console_Log($"  └ABShader: {ab_material.shader.name} 替换为本地Shader: {local_shader.name}", Debug_Services.LogLevel.Core);
+                            Console_Log($"  └ABShader: {ab_material.shader.name} 替换为本地Shader: {local_shader.name}, 有 {local_shader.GetPropertyCount()} 个字段", Debug_Services.LogLevel.Core);
 
                             int ab_render_queue = ab_material.renderQueue;
                             ab_material.shader = local_shader;
@@ -229,7 +229,7 @@ public class Shader_Services : MonoBehaviour
                             
                             for (int j = 0; j < shader_property_count; j++)
                             {
-                                string shader_property_name = ab_material.shader.GetPropertyName(j);
+                                string shader_property_name = ab_material.shader.GetPropertyName(j) ?? "";
                                 ShaderPropertyType propertyType = ab_material.shader.GetPropertyType(j);
                                 if (propertyType == ShaderPropertyType.Texture && ab_material.GetTexture(shader_property_name) != null)
                                 {
