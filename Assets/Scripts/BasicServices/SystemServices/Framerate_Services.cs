@@ -18,17 +18,6 @@ public class Framerate_Services : MonoBehaviour
         }
     }
 
-    [Header("UI Elements")]
-    [SerializeField]
-    public Button VSync_Toggle_Button;
-    [SerializeField]
-    public RawImage VSync_On_Image;
-    [SerializeField]
-    public RawImage VSync_Off_Image;
-    [SerializeField]
-    public TMP_InputField Framerate_InputField;
-    private TMP_Text Framerate_InputField_Placeholder_Text;
-
     [Header("Core Variables")]
     public bool is_VSync_Mode = true;
     public int Target_Framerate = 120;
@@ -37,41 +26,18 @@ public class Framerate_Services : MonoBehaviour
     {
         Console_Log("开始初始化 Framerate Services");
 
-        // 从配置加载VSync设置
         Get_Config();
-
-        VSync_Toggle_Button.onClick.AddListener(Toggle_VSync_Mode);
-
-        Framerate_InputField.onEndEdit.AddListener(Set_Target_Framerate_Listener);
-        Framerate_InputField.contentType = TMP_InputField.ContentType.IntegerNumber;
-        Framerate_InputField_Placeholder_Text = Framerate_InputField.placeholder as TMP_Text;
-
-        Update_Button_UI();
 
         Console_Log("结束初始化 Framerate Services");
     }
 
     private void Get_Config()
     {
-        if (Config_Services.Instance != null)
-        {
-            is_VSync_Mode = Config_Services.Instance.Global_Function_Config.is_VSync_Mode;
-            Target_Framerate = Config_Services.Instance.Global_Function_Config.Target_Framerate;
-        }
-        else
-        {
-            Console_Log("Config_Services.Instance 未初始化，使用默认VSync设置", Debug_Services.LogLevel.Debug, LogType.Warning);
-            // 使用默认值，这些value已经在字段声明中设置了，应该不会出啥问题
-        }
+        is_VSync_Mode = Config_Services.Instance.Global_Setting_Config.Graphic.Wallpaper_Mode_Refresh_Type == 0 ? true : false;
+        Target_Framerate = Config_Services.Instance.Global_Setting_Config.Graphic.Wallpaper_Mode_Framerate;
         
         // 应用加载的设置
         Apply_VSync_Settings();
-    }
-
-    public void Set_Config()
-    {
-        Config_Services.Instance.Global_Function_Config.is_VSync_Mode = is_VSync_Mode;
-        Config_Services.Instance.Global_Function_Config.Target_Framerate = Target_Framerate;
     }
 
     public void Toggle_VSync_Mode()
@@ -81,7 +47,6 @@ public class Framerate_Services : MonoBehaviour
         is_VSync_Mode = !is_VSync_Mode;
 
         Apply_VSync_Settings();
-        Update_Button_UI();
     }
 
     public void Apply_VSync_Settings()
@@ -113,12 +78,10 @@ public class Framerate_Services : MonoBehaviour
                 Console_Log($"目标帧率 {input_framerate} 为合法的非负整数");
                 if (!is_temp_change) Target_Framerate = input_framerate;
                 Application.targetFrameRate = input_framerate;
-                Update_InputField_UI();
             }
             else
             {
                 Console_Log($"目标帧率 {input_framerate} 不为合法的非负整数");
-                Framerate_InputField.text = Target_Framerate.ToString();
             }
 
             Console_Log("结束设置目标帧率");
@@ -126,28 +89,6 @@ public class Framerate_Services : MonoBehaviour
         else
         {
             Console_Log("当前为VSync模式，不能指定帧率");
-        }
-    }
-
-    public void Update_Button_UI()
-    {
-        VSync_On_Image.enabled = is_VSync_Mode;
-        VSync_Off_Image.enabled = !is_VSync_Mode;
-        Update_InputField_UI();
-    }
-
-    public void Update_InputField_UI()
-    {
-        Framerate_InputField.text = "";
-        if (is_VSync_Mode)
-        {
-            Framerate_InputField_Placeholder_Text.SetText("VSync");
-            Framerate_InputField.GetComponent<TMP_InputField>().enabled = false;
-        }
-        else
-        {
-            Framerate_InputField_Placeholder_Text.SetText(Target_Framerate.ToString());
-            Framerate_InputField.GetComponent<TMP_InputField>().enabled = true;
         }
     }
 

@@ -20,13 +20,6 @@ public class AutoStartup_Services : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    public Button AutoStartup_Toggle_Button;
-    [SerializeField]
-    public RawImage AutoStartup_On_Icon;
-    [SerializeField]
-    public RawImage AutoStartup_Off_Icon;
-
     private bool is_AutoStartup_On = false;
 
     private const string REGISTRY_KEY = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
@@ -34,13 +27,7 @@ public class AutoStartup_Services : MonoBehaviour
 
     private void Get_Config()
     {
-        is_AutoStartup_On = Config_Services.Instance.Global_Function_Config.is_AutoStartup_On;
-        Update_AutoStartup_Button_UI();
-    }
-
-    public void Set_Config()
-    {
-        Config_Services.Instance.Global_Function_Config.is_AutoStartup_On = is_AutoStartup_On;
+        is_AutoStartup_On = Config_Services.Instance.Global_Setting_Config.General.Auto_Startup == 0 ? true : false;
     }
 
     void Start()
@@ -48,31 +35,20 @@ public class AutoStartup_Services : MonoBehaviour
         Console_Log("开始初始化 AutoStartup Services");
 
         Get_Config();
-        Update_AutoStartup_Button_UI();
-        AutoStartup_Toggle_Button.onClick.AddListener(Toggle_AutoStartup);
 
         Console_Log("结束初始化 AutoStartup Services");
     }
 
-    private void Toggle_AutoStartup()
+    public void Enable_AutoStartup()
     {
         try
         {
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(REGISTRY_KEY, true))
             {
-                if (!is_AutoStartup_On)
-                {
-                    string appPath = Process.GetCurrentProcess().MainModule.FileName;
-                    key.SetValue(APP_NAME, "\"" + appPath + "\"");
-                    is_AutoStartup_On = true;
-                    Console_Log("已启用注册表自启动");
-                }
-                else
-                {
-                    key.DeleteValue(APP_NAME, false);
-                    is_AutoStartup_On = false;
-                    Console_Log("已禁用注册表自启动");
-                }
+                string appPath = Process.GetCurrentProcess().MainModule.FileName;
+                key.SetValue(APP_NAME, "\"" + appPath + "\"");
+                is_AutoStartup_On = true;
+                Console_Log("已启用注册表自启动");
             }
         }
         catch (Exception e)
@@ -80,15 +56,27 @@ public class AutoStartup_Services : MonoBehaviour
             is_AutoStartup_On = false;
             Console_Log("注册表操作失败: " + e.Message);
         }
-
-        Update_AutoStartup_Button_UI();
     }
 
-    private void Update_AutoStartup_Button_UI()
+    public void Disable_AutoStartup()
     {
-        AutoStartup_On_Icon.enabled = is_AutoStartup_On;
-        AutoStartup_Off_Icon.enabled = !is_AutoStartup_On;
+        try
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(REGISTRY_KEY, true))
+            {
+                key.DeleteValue(APP_NAME, false);
+                is_AutoStartup_On = false;
+                Console_Log("已禁用注册表自启动");
+            }
+        }
+        catch (Exception e)
+        {
+            is_AutoStartup_On = false;
+            Console_Log("注册表操作失败: " + e.Message);
+        }
     }
+
+
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("AutoStartup_Services", message, loglevel, logtype); }
 }

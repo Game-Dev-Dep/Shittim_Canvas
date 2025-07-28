@@ -24,18 +24,18 @@ public class Wallpaper_Services : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField]
     public Button Wallpaper_Mode_Toggle_Button;
-    [SerializeField]
-    public Button Auto_Wallpaper_Mode_Toggle_Button;
+    //[SerializeField]
+    //public Button Auto_Wallpaper_Mode_Toggle_Button;
     [SerializeField]
     public GameObject Wallpaper_Area;
     [SerializeField]
     public GameObject Function_Area;
     [SerializeField]
     public GameObject Status_Area;
-    [SerializeField]
-    public RawImage Auto_Wallpaper_Mode_On_Icon;
-    [SerializeField]
-    public RawImage Auto_Wallpaper_Mode_Off_Icon;
+    //[SerializeField]
+    //public RawImage Auto_Wallpaper_Mode_On_Icon;
+    //[SerializeField]
+    //public RawImage Auto_Wallpaper_Mode_Off_Icon;
 
 
 
@@ -52,13 +52,7 @@ public class Wallpaper_Services : MonoBehaviour
 
     private void Get_Config()
     {
-        is_Auto_Wallpaper_Mode_On = Config_Services.Instance.Global_Function_Config.is_Auto_Wallpaper_Mode_On;
-        Update_Auto_Wallpaper_Mode_Button_UI();
-    }
-
-    public void Set_Config()
-    {
-        Config_Services.Instance.Global_Function_Config.is_Auto_Wallpaper_Mode_On = is_Auto_Wallpaper_Mode_On;
+        is_Auto_Wallpaper_Mode_On = Config_Services.Instance.Global_Setting_Config.General.Auto_Wallpaper_Mode == 0 ? true : false;
     }
 
     private void Start()
@@ -67,7 +61,6 @@ public class Wallpaper_Services : MonoBehaviour
 
         Get_Config();
         Wallpaper_Mode_Toggle_Button.onClick.AddListener(Toggle_Wallpaper_Mode);
-        Auto_Wallpaper_Mode_Toggle_Button.onClick.AddListener(Toggle_Auto_Wallpaper_Mode);
 
 #if !UNITY_EDITOR
 
@@ -219,23 +212,9 @@ public class Wallpaper_Services : MonoBehaviour
             Console_Log($"恢复VSync设置: VSync={saved_VSync_Mode}, 目标帧率={saved_Target_Framerate}");
             Framerate_Services.Instance.is_VSync_Mode = saved_VSync_Mode;
             Framerate_Services.Instance.Target_Framerate = saved_Target_Framerate;
-            Framerate_Services.Instance.Apply_VSync_Settings();
-            Framerate_Services.Instance.Update_Button_UI();
         }
 
         Console_Log("成功退回编辑模式");
-    }
-
-    private void Toggle_Auto_Wallpaper_Mode()
-    {
-        is_Auto_Wallpaper_Mode_On = !is_Auto_Wallpaper_Mode_On;
-        Update_Auto_Wallpaper_Mode_Button_UI();
-    }
-
-    public void Update_Auto_Wallpaper_Mode_Button_UI()
-    {
-        Auto_Wallpaper_Mode_On_Icon.enabled = is_Auto_Wallpaper_Mode_On;
-        Auto_Wallpaper_Mode_Off_Icon.enabled = !is_Auto_Wallpaper_Mode_On;
     }
 
     public void Clear_HUD()

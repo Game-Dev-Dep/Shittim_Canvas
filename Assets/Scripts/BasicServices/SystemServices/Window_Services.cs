@@ -32,8 +32,8 @@ public class Window_Services : MonoBehaviour
     public RawImage Fullscreen_Mode_On_Image;
     [SerializeField]
     public RawImage Fullscreen_Mode_Off_Image;
-    [SerializeField]
-    public TextMeshProUGUI Handle_Status_Text;
+    //[SerializeField]
+    //public TextMeshProUGUI Handle_Status_Text;
     [SerializeField]
     public Image Cover_Status_Image;
     [SerializeField]
@@ -146,11 +146,11 @@ public class Window_Services : MonoBehaviour
         Cover_Status_Text.SetText("");
         Cover_Status_Text.gameObject.SetActive(false);
 
-        Handle_Status_Text.SetText(
-            $"Program Manager: {Program_Manager_Handle.ToString("X8")}\n" +
-            $"WorkerW: {WorkerW_Handle.ToString("X8")}\n" +
-            $"Shittim Canvas: {Unity_Handle.ToString("X8")}"
-        );
+        //Handle_Status_Text.SetText(
+        //    $"Program Manager: {Program_Manager_Handle.ToString("X8")}\n" +
+        //    $"WorkerW: {WorkerW_Handle.ToString("X8")}\n" +
+        //    $"Shittim Canvas: {Unity_Handle.ToString("X8")}"
+        //);
 
         StartCoroutine(Get_Cover_Window_Coroutine());
 
@@ -450,8 +450,6 @@ public class Window_Services : MonoBehaviour
                             if (Framerate_Services.Instance.is_VSync_Mode)
                             {
                                 Framerate_Services.Instance.Toggle_VSync_Mode();
-                                Framerate_Services.Instance.Update_Button_UI();
-                                Framerate_Services.Instance.Update_InputField_UI();
 
                                 last_is_VSync_Mode = true;
                             }
@@ -472,8 +470,6 @@ public class Window_Services : MonoBehaviour
                                 {
                                     Framerate_Services.Instance.is_VSync_Mode = true;
                                     Framerate_Services.Instance.Apply_VSync_Settings();
-                                    Framerate_Services.Instance.Update_Button_UI();
-                                    Framerate_Services.Instance.Update_InputField_UI();
 
                                     last_is_VSync_Mode = false;
                                 }
@@ -499,8 +495,6 @@ public class Window_Services : MonoBehaviour
                                 {
                                     Framerate_Services.Instance.is_VSync_Mode = true;
                                     Framerate_Services.Instance.Apply_VSync_Settings();
-                                    Framerate_Services.Instance.Update_Button_UI();
-                                    Framerate_Services.Instance.Update_InputField_UI();
 
                                     last_is_VSync_Mode = false;
                                 }
@@ -530,8 +524,6 @@ public class Window_Services : MonoBehaviour
                     {
                         Framerate_Services.Instance.is_VSync_Mode = true;
                         Framerate_Services.Instance.Apply_VSync_Settings();
-                        Framerate_Services.Instance.Update_Button_UI();
-                        Framerate_Services.Instance.Update_InputField_UI();
 
                         last_is_VSync_Mode = false;
                     }

@@ -20,24 +20,24 @@ public class Version_Services : MonoBehaviour
         }
     }
 
-    [Header("UI Elements")]
-    [SerializeField]
-    public TextMeshProUGUI Version_Text;
+    //[Header("UI Elements")]
+    //[SerializeField]
+    //public TextMeshProUGUI Version_Text;
     
-    // 可以手动在Unity的Service里面设置Version_Text，比如Insider Preview啥的，如果不填就直接从Unity读了
-    private TextMeshProUGUI Display_Text
-    {
-        get
-        {
-            if (Version_Text != null)
-                return Version_Text;
+    //// 可以手动在Unity的Service里面设置Version_Text，比如Insider Preview啥的，如果不填就直接从Unity读了
+    //private TextMeshProUGUI Display_Text
+    //{
+    //    get
+    //    {
+    //        if (Version_Text != null)
+    //            return Version_Text;
             
-            if (Window_Services.Instance != null && Window_Services.Instance.Handle_Status_Text != null)
-                return Window_Services.Instance.Handle_Status_Text;
+    //        if (Window_Services.Instance != null && Window_Services.Instance.Handle_Status_Text != null)
+    //            return Window_Services.Instance.Handle_Status_Text;
                 
-            return null;
-        }
-    }
+    //        return null;
+    //    }
+    //}
 
     [Header("Custom Version Info (自定义版本信息)")]
     [SerializeField]
@@ -59,23 +59,23 @@ public class Version_Services : MonoBehaviour
         Initialize_Version_Info();
         
         // 延迟更新UI，让Window_Services先初始化
-        StartCoroutine(Update_Version_UI_Delayed());
+        //StartCoroutine(Update_Version_UI_Delayed());
         
         Console_Log("结束初始化 Version Services");
     }
     
-    private System.Collections.IEnumerator Update_Version_UI_Delayed()
-    {
-        // 等好帧
-        yield return null;
+    //private IEnumerator Update_Version_UI_Delayed()
+    //{
+    //    // 等好帧
+    //    yield return null;
     
-        while (Window_Services.Instance == null)
-        {
-            yield return null;
-        }
+    //    while (Window_Services.Instance == null)
+    //    {
+    //        yield return null;
+    //    }
         
-        Update_Version_UI();
-    }
+    //    //Update_Version_UI();
+    //}
 
     private void Initialize_Version_Info()
     {
@@ -113,30 +113,30 @@ public class Version_Services : MonoBehaviour
         return DateTime.Now.ToString("yyyy-MM-dd HH:mm");
     }
 
-    public void Update_Version_UI()
-    {
-        if (Display_Text != null)
-        {
-            // 如果使用的是Handle_Status_Text，则保留原有的窗口句柄信息，并在顶部添加版本信息
-            if (Display_Text == Window_Services.Instance?.Handle_Status_Text)
-            {
-                string originalText = Display_Text.text;
-                string versionInfo = $"v{Version_String} ({Build_Time_String})\n";
-                string displayText = versionInfo + originalText;
-                Display_Text.SetText(displayText);
-            }
-            else
-            {
-                // 使用独立的版本文本组件
-                string displayText = $"v{Version_String}\n{Build_Time_String}";
-                Display_Text.SetText(displayText);
-            }
-        }
-        else
-        {
-            Console_Log("Display_Text UI元素未设置", Debug_Services.LogLevel.Debug, LogType.Warning);
-        }
-    }
+    //public void Update_Version_UI()
+    //{
+    //    if (Display_Text != null)
+    //    {
+    //        // 如果使用的是Handle_Status_Text，则保留原有的窗口句柄信息，并在顶部添加版本信息
+    //        if (Display_Text == Window_Services.Instance?.Handle_Status_Text)
+    //        {
+    //            string originalText = Display_Text.text;
+    //            string versionInfo = $"v{Version_String} ({Build_Time_String})\n";
+    //            string displayText = versionInfo + originalText;
+    //            Display_Text.SetText(displayText);
+    //        }
+    //        else
+    //        {
+    //            // 使用独立的版本文本组件
+    //            string displayText = $"v{Version_String}\n{Build_Time_String}";
+    //            Display_Text.SetText(displayText);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Console_Log("Display_Text UI元素未设置", Debug_Services.LogLevel.Debug, LogType.Warning);
+    //    }
+    //}
 
     public string Get_Full_Version_Info()
     {
@@ -154,7 +154,7 @@ public class Version_Services : MonoBehaviour
         
         // 重新初始化版本信息
         Initialize_Version_Info();
-        Update_Version_UI();
+        //Update_Version_UI();
         
         Console_Log($"版本: {version}, 构建时间: {buildTime ?? "未设置"}");
     }
@@ -166,7 +166,7 @@ public class Version_Services : MonoBehaviour
         custom_Build_Time_String = null;
         
         Initialize_Version_Info();
-        Update_Version_UI();
+        //Update_Version_UI();
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) 

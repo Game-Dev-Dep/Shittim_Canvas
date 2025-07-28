@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
@@ -47,21 +48,22 @@ public class Setting_Services : MonoBehaviour
     private void Get_Setting_Config()
     {
         setting_config = Config_Services.Instance.Global_Setting_Config;
+
+        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[setting_config.General.Language];
+
+        setting_config.About.Version = Version_Services.Instance.Version_String;
+        setting_config.About.Build_Date = Version_Services.Instance.Build_Time_String;
     }
 
     public void Save_Setting_Config()
     {
-
-        setting_config.Audio.Global_Sound = Audio_Services.Instance.Global_Sound;
-        setting_config.Audio.Talk_Sound = Audio_Services.Instance.Talk_Sound;
-        setting_config.Audio.SFX_Sound = Audio_Services.Instance.SFX_Sound;
-        setting_config.Audio.BGM_Sound = Audio_Services.Instance.BGM_Sound;
-
         Config_Services.Instance.Save_Global_Config(setting_config, Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
     }
 
     void Start()
     {
+        Console_Log("开始初始化 Setting Services");
+
         Get_Detail_Option_UI_Parameters();
 
         Setting_Toggle_Button.onClick.AddListener(Toggle_Setting_Panel);
@@ -89,7 +91,45 @@ public class Setting_Services : MonoBehaviour
                     Dropdown_Callback = (value) => {
                         setting_config.General.Language = value;
                         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[value];
-                        Save_Setting_Config();
+                        Setting_Contents[Setting_Option_Type.General][0].Dropdown_Value = value;
+                    }
+                },
+                new Setting_Detail_Option
+                {
+                    Title = "开机自启动",
+                    Description = "设置 Shittim Canvas 是否在开机时自动启动",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Toggle,
+                    ToggleGroup_Value = setting_config.General.Auto_Startup,
+                    ToggleGroup_Options = setting_config.General.Auto_Startup_List,
+                    Toggle_Callback = (value) => {
+                        if (value)
+                        {
+                            setting_config.General.Auto_Startup = int.Parse(Setting_Contents[Setting_Option_Type.General][1].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][1].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][1].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            if(Setting_Contents[Setting_Option_Type.General][1].ToggleGroup_Value == 0)
+                            {
+                                AutoStartup_Services.Instance.Enable_AutoStartup();
+                            }
+                            else
+                            {
+                                AutoStartup_Services.Instance.Disable_AutoStartup();
+                            }
+                        }
+                    }
+                },
+                new Setting_Detail_Option
+                {
+                    Title = "启动进入壁纸模式",
+                    Description = "设置 Shittim Canvas 是否在启动时自动进入壁纸模式",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Toggle,
+                    ToggleGroup_Value = setting_config.General.Auto_Wallpaper_Mode,
+                    ToggleGroup_Options = setting_config.General.Auto_Wallpaper_Mode_List,
+                    Toggle_Callback = (value) => {
+                        if (value)
+                        {
+                            setting_config.General.Auto_Wallpaper_Mode = int.Parse(Setting_Contents[Setting_Option_Type.General][2].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][2].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][2].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                        }
                     }
                 }
             }
@@ -106,6 +146,9 @@ public class Setting_Services : MonoBehaviour
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Audio.Global_Sound,
                     Slider_Callback = (value) => {
+                        setting_config.Audio.Global_Sound = value;
+                        Setting_Contents[Setting_Option_Type.Audio][0].Slider_Value = value;
+                        Setting_Contents[Setting_Option_Type.Audio][0].Text_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][0].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][0].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][0].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][0].Slider_Text_Max_Value):F0} %";
                         Audio_Services.Instance.Global_Sound_Slider_Handler(value);
                     }
                 },
@@ -116,6 +159,9 @@ public class Setting_Services : MonoBehaviour
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Audio.Talk_Sound,
                     Slider_Callback = (value) => {
+                        setting_config.Audio.Talk_Sound = value;
+                        Setting_Contents[Setting_Option_Type.Audio][1].Slider_Value = value;
+                        Setting_Contents[Setting_Option_Type.Audio][1].Text_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][1].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][1].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][1].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][1].Slider_Text_Max_Value):F0} %";
                         Audio_Services.Instance.Talk_Slider_Handler(value);
                     }
                 },
@@ -126,6 +172,9 @@ public class Setting_Services : MonoBehaviour
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Audio.SFX_Sound,
                     Slider_Callback = (value) => {
+                        setting_config.Audio.SFX_Sound = value;
+                        Setting_Contents[Setting_Option_Type.Audio][2].Slider_Value = value;
+                        Setting_Contents[Setting_Option_Type.Audio][2].Text_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][2].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][2].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][2].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][2].Slider_Text_Max_Value):F0} %";
                         Audio_Services.Instance.SFX_Slider_Handler(value);
                     }
                 },
@@ -136,9 +185,103 @@ public class Setting_Services : MonoBehaviour
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Audio.BGM_Sound,
                     Slider_Callback = (value) => {
+                        setting_config.Audio.BGM_Sound = value;
+                        Setting_Contents[Setting_Option_Type.Audio][3].Slider_Value = value;
+                        Setting_Contents[Setting_Option_Type.Audio][3].Text_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][3].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][3].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][3].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][3].Slider_Text_Max_Value):F0} %";
                         Audio_Services.Instance.BGM_Slider_Handler(value);
                     }
                 },
+            }
+        );
+
+        Setting_Contents.Add(
+            Setting_Option_Type.Graphic,
+            new List<Setting_Detail_Option>()
+            {
+                new Setting_Detail_Option
+                {
+                    Title = "编辑模式分辨率",
+                    Description = "在编辑模式下的窗口分辨率 (请使用 '宽度x高度' 的格式，例如 '1920x1080')",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Input,
+                    Input_Value = setting_config.Graphic.Editor_Mode_Resolution_Width + "x" + setting_config.Graphic.Editor_Mode_Resolution_Height,
+                    Input_Callback = (value) => {
+                        string[] resolution = value.Split('x');
+                        if (resolution.Length == 2 && int.TryParse(resolution[0], out int width) && int.TryParse(resolution[1], out int height))
+                        {
+                            setting_config.Graphic.Editor_Mode_Resolution_Width = width;
+                            setting_config.Graphic.Editor_Mode_Resolution_Height = height;
+                            Setting_Contents[Setting_Option_Type.Graphic][0].Input_Value = $"{width}x{height}";
+                            Setting_Contents[Setting_Option_Type.Graphic][0].InputField_Component.text = $"";
+                            (Setting_Contents[Setting_Option_Type.Graphic][0].InputField_Component.placeholder as TMP_Text).text = $"{width}x{height}";
+
+                            Window_Services.Instance.Edit_Mode_Height = height;
+                            Window_Services.Instance.Edit_Mode_Width = width;
+
+                            Screen.SetResolution(width, height, FullScreenMode.Windowed);
+                        }
+                        else
+                        {
+                            Console_Log("无效的分辨率格式");
+                        }
+                    }
+                },
+                new Setting_Detail_Option
+                {
+                    Title = "编辑模式 UI 缩放比例",
+                    Description = "在壁纸模式下的窗口分辨率",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
+                    Slider_Value = setting_config.Graphic.Editor_Mode_UI_Scale,
+                    Slider_Min_Value = 0.5f,
+                    Slider_Max_Value = 2.5f,
+                    Slider_Callback = (value) => {
+                        setting_config.Graphic.Editor_Mode_UI_Scale = value;
+                        GameObject.Find("Canvas").GetComponent<CanvasScaler>().scaleFactor = value;
+                        Setting_Contents[Setting_Option_Type.Graphic][1].Text_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Graphic][1].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Graphic][1].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Graphic][1].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Graphic][1].Slider_Text_Max_Value):F0} %";
+                    }
+                },
+                new Setting_Detail_Option
+                {
+                    Title = "壁纸模式显示策略",
+                    Description = "在壁纸模式下的显示策略",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Toggle,
+                    ToggleGroup_Value = setting_config.Graphic.Wallpaper_Mode_Refresh_Type,
+                    ToggleGroup_Options = setting_config.Graphic.Wallpaper_Mode_Refresh_Type_List,
+                    Toggle_Callback = (value) => {
+                        if (value)
+                        {
+                            setting_config.Graphic.Wallpaper_Mode_Refresh_Type = int.Parse(Setting_Contents[Setting_Option_Type.Graphic][2].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            if(setting_config.Graphic.Wallpaper_Mode_Refresh_Type == 0)
+                            {
+                                Framerate_Services.Instance.is_VSync_Mode = true;
+                            }
+                            else
+                            {
+                                Framerate_Services.Instance.is_VSync_Mode = false;
+                            }
+                            Framerate_Services.Instance.Apply_VSync_Settings();
+                        }
+                    }
+                },
+                new Setting_Detail_Option
+                {
+                    Title = "壁纸模式锁帧帧率",
+                    Description = "壁纸模式下锁帧时的最大帧率",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Input,
+                    Input_Value = setting_config.Graphic.Wallpaper_Mode_Framerate.ToString(),
+                    Input_Callback = (value) => {
+                        setting_config.Graphic.Wallpaper_Mode_Framerate = int.Parse(value);
+                        Setting_Contents[Setting_Option_Type.Graphic][3].Input_Value = value;
+                        Setting_Contents[Setting_Option_Type.Graphic][3].InputField_Component.text = "";
+                        (Setting_Contents[Setting_Option_Type.Graphic][3].InputField_Component.placeholder as TMP_Text).text = value;
+
+                        Framerate_Services.Instance.Target_Framerate = int.Parse(value);
+
+                        if (!Framerate_Services.Instance.is_VSync_Mode)
+                        {
+                            Framerate_Services.Instance.Apply_VSync_Settings();
+                        }
+                    }
+                }
             }
         );
 
@@ -171,6 +314,8 @@ public class Setting_Services : MonoBehaviour
         );
 
         Update_Setting_Content_UI();
+
+        Console_Log("结束初始化 Setting Services");
     }
 
     void Toggle_Setting_Panel()
@@ -190,6 +335,7 @@ public class Setting_Services : MonoBehaviour
     {
         is_Setting_On = true;
         Setting_Root_GameObject.SetActive(is_Setting_On);
+        Save_Setting_Config();
     }
 
     void Hide_Setting_Panel()
@@ -257,11 +403,6 @@ public class Setting_Services : MonoBehaviour
         Setting_Detail_Option_Spacing = Setting_Content_GameObject.GetComponent<VerticalLayoutGroup>().spacing;
     }
 
-    void Init_Setting_Content()
-    {
-
-    }
-
     void Update_Setting_Content_UI()
     {
         Destroy_Setting_Content_UI();
@@ -272,6 +413,9 @@ public class Setting_Services : MonoBehaviour
                 break;
             case Setting_Option_Type.Audio:
                 Create_Setting_Detail_Option_UI(Setting_Contents[Setting_Option_Type.Audio]);
+                break;
+            case Setting_Option_Type.Graphic:
+                Create_Setting_Detail_Option_UI(Setting_Contents[Setting_Option_Type.Graphic]);
                 break;
             case Setting_Option_Type.About:
                 Create_Setting_Detail_Option_UI(Setting_Contents[Setting_Option_Type.About]);
@@ -300,38 +444,92 @@ public class Setting_Services : MonoBehaviour
             {
                 case Setting_Detail_Option_Type.Toggle:
                     // 设置Toggle相关UI
-                    new_detail_option.transform.Find("[Setting] Detail Option Toggle Group").gameObject.SetActive(true);
+                    setting_detail_option.Setting_Detail_Option_GameObject = new_detail_option.transform.Find("[Setting] Detail Option Toggle Group").gameObject;
+                    setting_detail_option.Setting_Detail_Option_GameObject.SetActive(true);
+                    setting_detail_option.ToggleGroup_Component = setting_detail_option.Setting_Detail_Option_GameObject.GetComponent<ToggleGroup>();
+
+                    int Toggle_Num = setting_detail_option.ToggleGroup_Options.Count;
+
+                    int Toggle_Index = setting_detail_option.ToggleGroup_Value;
+                    Console_Log(Toggle_Index.ToString());
+
+                    for (int i = 0; i < Toggle_Num; i++)
+                    {
+                        GameObject toggle_option = Instantiate(setting_detail_option.Setting_Detail_Option_GameObject.transform.Find($"[Setting] Detail Option Toggle Template").gameObject, setting_detail_option.Setting_Detail_Option_GameObject.transform);
+                        toggle_option.SetActive(true);
+
+                        toggle_option.gameObject.name = i.ToString();
+
+                        Toggle toggle_component = toggle_option.GetComponent<Toggle>();
+
+                        TextMeshProUGUI toggle_text = toggle_option.transform.Find("[Setting] Detail Option Text").GetComponent<TextMeshProUGUI>();
+                        toggle_text.text = setting_detail_option.ToggleGroup_Options[i];
+
+                        if (setting_detail_option.Toggle_Callback != null)
+                        {
+                            toggle_component.onValueChanged.AddListener((value) => setting_detail_option.Toggle_Callback(value));
+                        }
+                    }
+
+                    setting_detail_option.ToggleGroup_Component.SetAllTogglesOff();
+                    for (int i = 0; i < Toggle_Num; i++)
+                    {
+                        if(i == Toggle_Index) setting_detail_option.Setting_Detail_Option_GameObject.transform.Find($"{i}").GetComponent<Toggle>().isOn = true;
+                        else setting_detail_option.Setting_Detail_Option_GameObject.transform.Find($"{i}").GetComponent<Toggle>().isOn = false;
+                    }
                     break;
+
                 case Setting_Detail_Option_Type.Slider:
                     // 设置Slider相关UI
                     setting_detail_option.Setting_Detail_Option_GameObject = new_detail_option.transform.Find("[Setting] Detail Option Slider Group").gameObject;
                     setting_detail_option.Setting_Detail_Option_GameObject.SetActive(true);
                     setting_detail_option.Slider_Component = setting_detail_option.Setting_Detail_Option_GameObject.transform.Find("[Setting] Detail Option Slider").GetComponent<Slider>();
+                    setting_detail_option.Text_Component = setting_detail_option.Setting_Detail_Option_GameObject.transform.Find("[Setting] Detail Option Slider Text").GetComponent<TextMeshProUGUI>();
+
                     setting_detail_option.Slider_Component.value = setting_detail_option.Slider_Value;
                     setting_detail_option.Slider_Component.minValue = setting_detail_option.Slider_Min_Value;
                     setting_detail_option.Slider_Component.maxValue = setting_detail_option.Slider_Max_Value;
+
+                    setting_detail_option.Text_Component.text = $"{Value_Map(setting_detail_option.Slider_Component.value, setting_detail_option.Slider_Min_Value, setting_detail_option.Slider_Max_Value, setting_detail_option.Slider_Text_Min_Value, setting_detail_option.Slider_Text_Max_Value):F0} %";
+
                     if (setting_detail_option.Slider_Callback != null)
                     {
                         setting_detail_option.Slider_Component.onValueChanged.AddListener((value) => setting_detail_option.Slider_Callback(value));
                     }
                     break;
+
                 case Setting_Detail_Option_Type.Input:
                     // 设置Input相关UI
-                    new_detail_option.transform.Find("[Setting] Detail Option Input Group").gameObject.SetActive(true);
+                    setting_detail_option.Setting_Detail_Option_GameObject = new_detail_option.transform.Find("[Setting] Detail Option Input Group").gameObject;
+                    setting_detail_option.Setting_Detail_Option_GameObject.SetActive(true);
+                    setting_detail_option.InputField_Component = setting_detail_option.Setting_Detail_Option_GameObject.GetComponent<TMP_InputField>();
+
+                    (setting_detail_option.InputField_Component.placeholder as TMP_Text).text = setting_detail_option.Input_Value;
+
+                    if (setting_detail_option.Input_Callback != null)
+                    {
+                        setting_detail_option.InputField_Component.onEndEdit.AddListener((value) => setting_detail_option.Input_Callback(value));
+                    }
+
                     break;
+
                 case Setting_Detail_Option_Type.Dropdown:
                     // 设置Dropdown相关UI
                     setting_detail_option.Setting_Detail_Option_GameObject = new_detail_option.transform.Find("[Setting] Detail Option Dropdown Group").gameObject;
                     setting_detail_option.Setting_Detail_Option_GameObject.SetActive(true);
                     setting_detail_option.Dropdown_Component = setting_detail_option.Setting_Detail_Option_GameObject.transform.Find("[Setting] Detail Option Dropdown").GetComponent<TMP_Dropdown>();
+
+                    setting_detail_option.Dropdown_Component.value = setting_detail_option.Dropdown_Value;
+
                     setting_detail_option.Dropdown_Component.ClearOptions();
                     setting_detail_option.Dropdown_Component.AddOptions(setting_detail_option.Dropdown_Options);
-                    setting_detail_option.Dropdown_Component.value = setting_detail_option.Dropdown_Value;
+                    
                     if (setting_detail_option.Dropdown_Callback != null)
                     {
                         setting_detail_option.Dropdown_Component.onValueChanged.AddListener((value) => setting_detail_option.Dropdown_Callback(value));
                     }
                     break;
+
                 case Setting_Detail_Option_Type.Text:
                     // 设置Text相关UI
                     setting_detail_option.Setting_Detail_Option_GameObject = new_detail_option.transform.Find("[Setting] Detail Option Text Group").gameObject;
@@ -350,6 +548,15 @@ public class Setting_Services : MonoBehaviour
             if (child != Setting_Detail_Option_Template_GameObject.transform) Destroy(child.gameObject);
         }
     }
+
+    public float Value_Map(float value, float input_min, float input_max, float output_min, float output_max)
+    {
+        value = Math.Clamp(value, input_min, input_max);
+        float input_range = input_max - input_min;
+        float output_range = output_max - output_min;
+        return ((value - input_min) / input_range) * output_range + output_min;
+    }
+
 
     public enum Setting_Option_Type
     {
@@ -377,7 +584,7 @@ public class Setting_Services : MonoBehaviour
 
         public ToggleGroup ToggleGroup_Component;
         public Slider Slider_Component;
-        public InputField InputField_Component;
+        public TMP_InputField InputField_Component;
         public TMP_Dropdown Dropdown_Component;
         public TextMeshProUGUI Text_Component;
 
@@ -387,14 +594,21 @@ public class Setting_Services : MonoBehaviour
         public int Dropdown_Value;
         public string Text_Value;
 
-        public Action<bool> ToggleGroup_Callback;
+        public Action<bool> Toggle_Callback;
         public Action<float> Slider_Callback;
         public Action<string> Input_Callback;
         public Action<int> Dropdown_Callback;
 
+        public List<string> ToggleGroup_Options;
         public float Slider_Min_Value = 0;
         public float Slider_Max_Value = 1;
+        public float Slider_Text_Min_Value = 0;
+        public float Slider_Text_Max_Value = 100;
         public List<string> Dropdown_Options;
     }
+
+
+
+    private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Setting_Services", message, loglevel, logtype); }
 }
 

@@ -156,7 +156,12 @@ public class File_Services : MonoBehaviour
             return default;
         }
         string json = File.ReadAllText(file_path);
-        return JsonConvert.DeserializeObject<T>(json);
+        var settings = new JsonSerializerSettings
+        {
+            // 关键设置：强制替换对象而非合并
+            ObjectCreationHandling = ObjectCreationHandling.Replace
+        };
+        return JsonConvert.DeserializeObject<T>(json, settings );
     }
 
     public static void Save_Default_Type_To_File<T>(string file_path) where T : new()
