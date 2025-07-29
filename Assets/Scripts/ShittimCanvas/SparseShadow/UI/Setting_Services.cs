@@ -53,6 +53,8 @@ public class Setting_Services : MonoBehaviour
 
         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[setting_config.General.Language];
 
+        GameObject.Find("Canvas").GetComponent<CanvasScaler>().scaleFactor = setting_config.Graphic.Editor_Mode_UI_Scale;
+
         setting_config.About.Version = Version_Services.Instance.Version_String;
         setting_config.About.Build_Date = Version_Services.Instance.Build_Time_String;
     }
