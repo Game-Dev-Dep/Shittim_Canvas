@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -269,42 +270,35 @@ public class Wallpaper_Services : MonoBehaviour
     {
         try
         {
-            // 获取Unity窗口句柄
             var unityWindow = Window_Services.Unity_Handle;
-            if (unityWindow == IntPtr.Zero)
-            {
-                return;
-            }
+            if (unityWindow == IntPtr.Zero) return;
 
-            // 获取指定显示器的信息
             var displays = Display.displays;
-            if (displayIndex >= displays.Length)
-            {
-                return;
-            }
+            if (displayIndex >= displays.Length) return;
 
             var targetDisplay = displays[displayIndex];
             
-            // 计算目标显示器的位置
-            int targetX = 0;
-            int targetY = 0;
+            // 用Win32 API拿实际位置
+            var monitorInfo = new Win32Wrapper.MONITORINFOEX { cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(Win32Wrapper.MONITORINFOEX)) };
+            var monitorHandles = new List<IntPtr>();
             
-            // 根据显示器索引计算位置
-            for (int i = 0; i < displayIndex; i++)
+            Win32Wrapper.EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, (IntPtr hMonitor, IntPtr hdcMonitor, ref Win32Wrapper.RECT lprcMonitor, IntPtr dwData) => {
+                monitorHandles.Add(hMonitor);
+                return true;
+            }, IntPtr.Zero);
+
+            if (displayIndex < monitorHandles.Count && Win32Wrapper.GetMonitorInfo(monitorHandles[displayIndex], ref monitorInfo))
             {
-                targetX += displays[i].systemWidth;
+                Win32Wrapper.SetWindowPos(
+                    unityWindow,
+                    IntPtr.Zero,
+                    monitorInfo.rcMonitor.Left,
+                    monitorInfo.rcMonitor.Top,
+                    targetDisplay.systemWidth,
+                    targetDisplay.systemHeight,
+                    Win32Wrapper.SetWindowPosFlags.NoZOrder | Win32Wrapper.SetWindowPosFlags.NoActivate
+                );
             }
-            
-            // 使用Win32 API移动窗口
-            Win32Wrapper.SetWindowPos(
-                unityWindow,
-                IntPtr.Zero,
-                targetX,
-                targetY,
-                targetDisplay.systemWidth,
-                targetDisplay.systemHeight,
-                Win32Wrapper.SetWindowPosFlags.NoZOrder | Win32Wrapper.SetWindowPosFlags.NoActivate
-            );
         }
         catch (Exception ex)
         {
