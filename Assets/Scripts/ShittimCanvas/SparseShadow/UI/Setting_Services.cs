@@ -62,6 +62,12 @@ public class Setting_Services : MonoBehaviour
     public void Save_Setting_Config()
     {
         Config_Services.Instance.Save_Global_Config(setting_config, Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
+        Toast_Wrapper_Services.ShowToast("toast.settings_saved", 3f);
+    }
+
+    private void Save_Setting_Config_Silent()
+    {
+        Config_Services.Instance.Save_Global_Config(setting_config, Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
     }
 
     void Start()
@@ -343,7 +349,7 @@ public class Setting_Services : MonoBehaviour
                     Title_Key = "settings_panel.about.shittim_canvas",
                     Description_Key = "settings_panel.about.shittim_canvas.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Text,
-                    Text_Value = ""
+                    Text_Value = "GitHub: https://github.com/Game-Dev-Dep/Shittim_Canvas"
                 },
                 new Setting_Detail_Option
                 {
@@ -468,7 +474,7 @@ public class Setting_Services : MonoBehaviour
     {
         is_Setting_On = true;
         Setting_Root_GameObject.SetActive(is_Setting_On);
-        Save_Setting_Config();
+        Save_Setting_Config_Silent();
     }
 
     void Hide_Setting_Panel()

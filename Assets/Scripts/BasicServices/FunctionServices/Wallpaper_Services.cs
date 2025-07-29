@@ -129,6 +129,15 @@ public class Wallpaper_Services : MonoBehaviour
     {
         Console_Log("触发进入壁纸模式");
 
+        // 在设置面板打开的时候阻止进入壁纸模式
+        var settingPanel = GameObject.Find("[Setting] Root");
+        if (settingPanel != null && settingPanel.activeSelf)
+        {
+            Console_Log("设置面板已打开，请先关闭设置面板再进入壁纸模式", Debug_Services.LogLevel.Debug, LogType.Warning);
+            Toast_Wrapper_Services.ShowToast("toast.close_settings_first", 3f);
+            return;
+        }
+
         // 保存当前VSync设置
         if (Framerate_Services.Instance != null)
         {
