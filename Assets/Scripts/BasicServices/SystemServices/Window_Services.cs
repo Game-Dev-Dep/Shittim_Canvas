@@ -125,7 +125,7 @@ public class Window_Services : MonoBehaviour
         Device_Screen_Width = Screen.currentResolution.width;
         Device_Screen_Height = Screen.currentResolution.height;
 
-        Edit_Mode_Width = Device_Screen_Width - 50;
+        // Edit_Mode_Width = Device_Screen_Width - 50;
         Edit_Mode_Height = Device_Screen_Height - 200;
 
         Console_Log($"当前屏幕分辨率: {Device_Screen_Width} × {Device_Screen_Height}");
