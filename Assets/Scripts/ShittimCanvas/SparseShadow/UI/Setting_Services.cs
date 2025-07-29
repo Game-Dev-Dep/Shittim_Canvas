@@ -6,6 +6,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 using static Setting_Services;
 
@@ -44,6 +45,7 @@ public class Setting_Services : MonoBehaviour
     public Dictionary<Setting_Option_Type, List<Setting_Detail_Option>> Setting_Contents = new Dictionary<Setting_Option_Type, List<Setting_Detail_Option>>();
 
     private Setting_Config setting_config;
+    private LocalizedString localizedString = new LocalizedString();
 
     private void Get_Setting_Config()
     {
@@ -77,14 +79,28 @@ public class Setting_Services : MonoBehaviour
 
         Get_Setting_Config();
 
+        // 注册语言变更事件
+        LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
+        
+        // 确保当前语言设置正确
+        var currentLocale = LocalizationSettings.SelectedLocale;
+        if (currentLocale != null)
+        {
+            var currentLanguageIndex = LocalizationSettings.AvailableLocales.Locales.IndexOf(currentLocale);
+            if (currentLanguageIndex >= 0 && currentLanguageIndex != setting_config.General.Language)
+            {
+                setting_config.General.Language = currentLanguageIndex;
+            }
+        }
+
         Setting_Contents.Add(
             Setting_Option_Type.General,
             new List<Setting_Detail_Option>()
             {
                 new Setting_Detail_Option
                 {
-                    Title = "语言",
-                    Description = "选择 Shittim Canvas 的语言",
+                    Title_Key = "settings_panel.general.languages",
+                    Description_Key = "settings_panel.general.languages.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Dropdown,
                     Dropdown_Value = setting_config.General.Language,
                     Dropdown_Options = setting_config.General.Language_List,
@@ -92,15 +108,20 @@ public class Setting_Services : MonoBehaviour
                         setting_config.General.Language = value;
                         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[value];
                         Setting_Contents[Setting_Option_Type.General][0].Dropdown_Value = value;
+                        // dropdown校验
+                        if (Setting_Contents[Setting_Option_Type.General][0].Dropdown_Component != null)
+                        {
+                            Setting_Contents[Setting_Option_Type.General][0].Dropdown_Component.value = value;
+                        }
                     }
                 },
                 new Setting_Detail_Option
                 {
-                    Title = "开机自启动",
-                    Description = "设置 Shittim Canvas 是否在开机时自动启动",
+                    Title_Key = "settings_panel.general.auto_start",
+                    Description_Key = "settings_panel.general.auto_start.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Toggle,
                     ToggleGroup_Value = setting_config.General.Auto_Startup,
-                    ToggleGroup_Options = setting_config.General.Auto_Startup_List,
+                    ToggleGroup_Options = new List<string> { "settings_panel.elements.yes_radio", "settings_panel.elements.no_radio" },
                     Toggle_Callback = (value) => {
                         if (value)
                         {
@@ -119,11 +140,11 @@ public class Setting_Services : MonoBehaviour
                 },
                 new Setting_Detail_Option
                 {
-                    Title = "启动进入壁纸模式",
-                    Description = "设置 Shittim Canvas 是否在启动时自动进入壁纸模式",
+                    Title_Key = "settings_panel.general.auto_wallpaper",
+                    Description_Key = "settings_panel.general.auto_wallpaper.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Toggle,
                     ToggleGroup_Value = setting_config.General.Auto_Wallpaper_Mode,
-                    ToggleGroup_Options = setting_config.General.Auto_Wallpaper_Mode_List,
+                    ToggleGroup_Options = new List<string> { "settings_panel.elements.yes_radio", "settings_panel.elements.no_radio" },
                     Toggle_Callback = (value) => {
                         if (value)
                         {
@@ -141,8 +162,8 @@ public class Setting_Services : MonoBehaviour
             {
                 new Setting_Detail_Option
                 {
-                    Title = "总音量",
-                    Description = "调节总的音量",
+                    Title_Key = "settings_panel.audio.main_volume",
+                    Description_Key = "settings_panel.audio.main_volume.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Audio.Global_Sound,
                     Slider_Callback = (value) => {
@@ -154,8 +175,8 @@ public class Setting_Services : MonoBehaviour
                 },
                 new Setting_Detail_Option
                 {
-                    Title = "语音音量",
-                    Description = "调节触发对话时的语音音量",
+                    Title_Key = "settings_panel.audio.voice_volume",
+                    Description_Key = "settings_panel.audio.voice_volume.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Audio.Talk_Sound,
                     Slider_Callback = (value) => {
@@ -167,8 +188,8 @@ public class Setting_Services : MonoBehaviour
                 },
                 new Setting_Detail_Option
                 {
-                    Title = "音效音量",
-                    Description = "调节播放开场动画时的音效音量",
+                    Title_Key = "settings_panel.audio.se_volume",
+                    Description_Key = "settings_panel.audio.se_volume.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Audio.SFX_Sound,
                     Slider_Callback = (value) => {
@@ -180,8 +201,8 @@ public class Setting_Services : MonoBehaviour
                 },
                 new Setting_Detail_Option
                 {
-                    Title = "背景音乐音量",
-                    Description = "调节记忆大厅的背景音乐音量",
+                    Title_Key = "settings_panel.audio.bgm_volume",
+                    Description_Key = "settings_panel.audio.bgm_volume.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Audio.BGM_Sound,
                     Slider_Callback = (value) => {
@@ -200,8 +221,8 @@ public class Setting_Services : MonoBehaviour
             {
                 new Setting_Detail_Option
                 {
-                    Title = "编辑模式分辨率",
-                    Description = "在编辑模式下的窗口分辨率 (请使用 '宽度x高度' 的格式，例如 '1920x1080')",
+                    Title_Key = "settings_panel.graphic.window_size",
+                    Description_Key = "settings_panel.graphic.window_size.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Input,
                     Input_Value = setting_config.Graphic.Editor_Mode_Resolution_Width + "x" + setting_config.Graphic.Editor_Mode_Resolution_Height,
                     Input_Callback = (value) => {
@@ -227,12 +248,12 @@ public class Setting_Services : MonoBehaviour
                 },
                 new Setting_Detail_Option
                 {
-                    Title = "编辑模式 UI 缩放比例",
-                    Description = "在壁纸模式下的窗口分辨率",
+                    Title_Key = "settings_panel.graphic.ui_scale",
+                    Description_Key = "settings_panel.graphic.ui_scale.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Graphic.Editor_Mode_UI_Scale,
                     Slider_Min_Value = 0.5f,
-                    Slider_Max_Value = 2.5f,
+                    Slider_Max_Value = 1.5f,
                     Slider_Callback = (value) => {
                         setting_config.Graphic.Editor_Mode_UI_Scale = value;
                         GameObject.Find("Canvas").GetComponent<CanvasScaler>().scaleFactor = value;
@@ -241,11 +262,11 @@ public class Setting_Services : MonoBehaviour
                 },
                 new Setting_Detail_Option
                 {
-                    Title = "壁纸模式显示策略",
-                    Description = "在壁纸模式下的显示策略",
+                    Title_Key = "settings_panel.graphic.wallpaper_mode_policy",
+                    Description_Key = "settings_panel.graphic.wallpaper_mode_policy.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Toggle,
                     ToggleGroup_Value = setting_config.Graphic.Wallpaper_Mode_Refresh_Type,
-                    ToggleGroup_Options = setting_config.Graphic.Wallpaper_Mode_Refresh_Type_List,
+                    ToggleGroup_Options = new List<string> { "settings_panel.graphic.vsync", "settings_panel.elements.frame_lock_radio" },
                     Toggle_Callback = (value) => {
                         if (value)
                         {
@@ -264,8 +285,8 @@ public class Setting_Services : MonoBehaviour
                 },
                 new Setting_Detail_Option
                 {
-                    Title = "壁纸模式锁帧帧率",
-                    Description = "壁纸模式下锁帧时的最大帧率",
+                    Title_Key = "settings_panel.graphic.vsync",
+                    Description_Key = "settings_panel.graphic.vsync.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Input,
                     Input_Value = setting_config.Graphic.Wallpaper_Mode_Framerate.ToString(),
                     Input_Callback = (value) => {
@@ -291,22 +312,22 @@ public class Setting_Services : MonoBehaviour
             {
                 new Setting_Detail_Option
                 {
-                    Title = "Shittim Canvas",
-                    Description = "Developed By GDD.",
+                    Title_Key = "settings_panel.about.shittim_canvas",
+                    Description_Key = "settings_panel.about.shittim_canvas.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Text,
                     Text_Value = ""
                 },
                 new Setting_Detail_Option
                 {
-                    Title = "构建版本",
-                    Description = "Shittim Canvas 的构建版本",
+                    Title_Key = "settings_panel.about.build_ver",
+                    Description_Key = "settings_panel.about.build_ver.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Text,
                     Text_Value = setting_config.About.Version
                 },
                 new Setting_Detail_Option
                 {
-                    Title = "构建日期",
-                    Description = "Shittim Canvas 的构建版本",
+                    Title_Key = "settings_panel.about.build_date",
+                    Description_Key = "settings_panel.about.build_date.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Text,
                     Text_Value = setting_config.About.Build_Date
                 }
@@ -316,6 +337,32 @@ public class Setting_Services : MonoBehaviour
         Update_Setting_Content_UI();
 
         Console_Log("结束初始化 Setting Services");
+    }
+
+    private void OnDestroy()
+    {
+        // 注销语言变更事件
+        LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
+    }
+
+    private void OnLanguageChanged(Locale locale)
+    {
+        // 语言变更时更新UI
+        if (is_Setting_On)
+        {
+            // 更新当前语言设置
+            var currentLanguageIndex = LocalizationSettings.AvailableLocales.Locales.IndexOf(locale);
+            if (currentLanguageIndex >= 0)
+            {
+                setting_config.General.Language = currentLanguageIndex;
+                if (Setting_Contents.ContainsKey(Setting_Option_Type.General) && Setting_Contents[Setting_Option_Type.General].Count > 0)
+                {
+                    Setting_Contents[Setting_Option_Type.General][0].Dropdown_Value = currentLanguageIndex;
+                }
+                Console_Log($"语言已切换到: {locale.LocaleName} (索引: {currentLanguageIndex})");
+            }
+            Update_Setting_Content_UI();
+        }
     }
 
     void Toggle_Setting_Panel()
@@ -433,11 +480,10 @@ public class Setting_Services : MonoBehaviour
             setting_detail_option.Setting_Detail_Option_GameObject = new_detail_option;
             new_detail_option.SetActive(true);
 
-            // 设置标题和描述
             TextMeshProUGUI title_text = new_detail_option.transform.Find("[Setting] Detail Option Title Text").GetComponent<TextMeshProUGUI>();
-            title_text.text = setting_detail_option.Title;
             TextMeshProUGUI description_text = new_detail_option.transform.Find("[Setting] Detail Option Description Text").GetComponent<TextMeshProUGUI>();
-            description_text.text = setting_detail_option.Description;
+            Localization_Utils.Apply_Localization_To_Text(title_text, setting_detail_option.Title_Key);
+            Localization_Utils.Apply_Localization_To_Text(description_text, setting_detail_option.Description_Key);
 
             // 根据类型设置UI
             switch (setting_detail_option.Setting_Detail_Option_Type)
@@ -463,7 +509,15 @@ public class Setting_Services : MonoBehaviour
                         Toggle toggle_component = toggle_option.GetComponent<Toggle>();
 
                         TextMeshProUGUI toggle_text = toggle_option.transform.Find("[Setting] Detail Option Text").GetComponent<TextMeshProUGUI>();
-                        toggle_text.text = setting_detail_option.ToggleGroup_Options[i];
+                        
+                        if (Localization_Utils.Is_Localization_Key(setting_detail_option.ToggleGroup_Options[i]))
+                        {
+                            Localization_Utils.Apply_Localization_To_Text(toggle_text, setting_detail_option.ToggleGroup_Options[i]);
+                        }
+                        else
+                        {
+                            toggle_text.text = setting_detail_option.ToggleGroup_Options[i];
+                        }
 
                         if (setting_detail_option.Toggle_Callback != null)
                         {
@@ -519,10 +573,12 @@ public class Setting_Services : MonoBehaviour
                     setting_detail_option.Setting_Detail_Option_GameObject.SetActive(true);
                     setting_detail_option.Dropdown_Component = setting_detail_option.Setting_Detail_Option_GameObject.transform.Find("[Setting] Detail Option Dropdown").GetComponent<TMP_Dropdown>();
 
-                    setting_detail_option.Dropdown_Component.value = setting_detail_option.Dropdown_Value;
-
                     setting_detail_option.Dropdown_Component.ClearOptions();
+                    // dropdown不用key
                     setting_detail_option.Dropdown_Component.AddOptions(setting_detail_option.Dropdown_Options);
+                    
+                    // dropdown适配
+                    setting_detail_option.Dropdown_Component.value = setting_detail_option.Dropdown_Value;
                     
                     if (setting_detail_option.Dropdown_Callback != null)
                     {
@@ -558,6 +614,8 @@ public class Setting_Services : MonoBehaviour
     }
 
 
+
+
     public enum Setting_Option_Type
     {
         General,
@@ -577,8 +635,8 @@ public class Setting_Services : MonoBehaviour
 
     public class Setting_Detail_Option
     {
-        public string Title;
-        public string Description;
+        public string Title_Key;
+        public string Description_Key;
         public Setting_Detail_Option_Type Setting_Detail_Option_Type;
         public GameObject Setting_Detail_Option_GameObject;
 

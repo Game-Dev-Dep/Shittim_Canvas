@@ -131,7 +131,7 @@ public class Config_Services : MonoBehaviour
         Subtitle_Services.Instance.Set_Config();
         Volume_Services.Instance.Set_Config();
         Save_Function_Config(Global_Function_Config, Path.Combine(File_Services.Config_Files_Folder_Path, "Function Config.json"));
-        Toast_Wrapper_Services.ShowToast("功能设置已保存！", 3f, "success");
+        Toast_Wrapper_Services.ShowToast("toast.save_function_settings", 3f, "success");
     }
 
     public void Save_Function_Config(Function_Config function_config, string file_path)

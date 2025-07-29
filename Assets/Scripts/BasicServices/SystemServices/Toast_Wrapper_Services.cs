@@ -7,6 +7,10 @@ public static class Toast_Wrapper_Services
 {
     public static void ShowToast(string message, float duration = 3f, string icon = "success")
     {
+        // 检查是否是本地化键值
+        string localizedMessage = Localization_Utils.Is_Localization_Key(message) ? 
+            Localization_Utils.Get_Localized_Text(message) : message;
+
         try
         {
             // 插件提供的 ToastNotification.Show
@@ -16,7 +20,7 @@ public static class Toast_Wrapper_Services
                 var showMethod = toastType.GetMethod("Show", new System.Type[] { typeof(string), typeof(float), typeof(string) });
                 if (showMethod != null)
                 {
-                    showMethod.Invoke(null, new object[] { message, duration, icon });
+                    showMethod.Invoke(null, new object[] { localizedMessage, duration, icon });
                     return;
                 }
             }
@@ -31,19 +35,19 @@ public static class Toast_Wrapper_Services
                     var showMethod = toastComponent.GetType().GetMethod("Show", new System.Type[] { typeof(string), typeof(float), typeof(string) });
                     if (showMethod != null)
                     {
-                        showMethod.Invoke(toastComponent, new object[] { message, duration, icon });
+                        showMethod.Invoke(toastComponent, new object[] { localizedMessage, duration, icon });
                         return;
                     }
                 }
             }
             
             // 如果全炸了就看log罢
-            Debug.Log($"[Toast_Wrapper_Services] {message}");
+            Debug.Log($"[Toast_Wrapper_Services] {localizedMessage}");
         }
         catch (System.Exception ex)
         {
             Debug.LogWarning($"Toast failed: {ex.Message}");
-            Debug.Log($"[Toast_Wrapper_Services] {message}");
+            Debug.Log($"[Toast_Wrapper_Services] {localizedMessage}");
         }
     }
 } 
