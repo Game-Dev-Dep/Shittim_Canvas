@@ -81,6 +81,9 @@ public class Setting_Services : MonoBehaviour
 
         Get_Setting_Config();
 
+        // 初始化显示器选项 - 延迟初始化
+        StartCoroutine(Initialize_Display_Options_Coroutine());
+
         // 注册语言变更事件
         LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
         
@@ -250,6 +253,29 @@ public class Setting_Services : MonoBehaviour
                 },
                 new Setting_Detail_Option
                 {
+                    Title_Key = "settings_panel.graphic.display_monitor",
+                    Description_Key = "settings_panel.graphic.display_monitor.desc",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Dropdown,
+                    Dropdown_Value = setting_config.Graphic.Selected_Display_Monitor_Index,
+                    Dropdown_Options = setting_config.Graphic.Display_Monitor_Options,
+                    Dropdown_Callback = (value) => {
+                        setting_config.Graphic.Selected_Display_Monitor_Index = value;
+                        Setting_Contents[Setting_Option_Type.Graphic][1].Dropdown_Value = value;
+                        if (Setting_Contents[Setting_Option_Type.Graphic][1].Dropdown_Component != null)
+                        {
+                            Setting_Contents[Setting_Option_Type.Graphic][1].Dropdown_Component.value = value;
+                        }
+                        
+                        var displays = Display.displays;
+                        if (value < displays.Length)
+                        {
+                            var selectedDisplay = displays[value];
+                            Console_Log($"选择显示器: 显示器 {value + 1} ({selectedDisplay.systemWidth}x{selectedDisplay.systemHeight})");
+                        }
+                    }
+                },
+                new Setting_Detail_Option
+                {
                     Title_Key = "settings_panel.graphic.ui_scale",
                     Description_Key = "settings_panel.graphic.ui_scale.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
@@ -259,7 +285,7 @@ public class Setting_Services : MonoBehaviour
                     Slider_Callback = (value) => {
                         setting_config.Graphic.Editor_Mode_UI_Scale = value;
                         GameObject.Find("Canvas").GetComponent<CanvasScaler>().scaleFactor = value;
-                        Setting_Contents[Setting_Option_Type.Graphic][1].Text_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Graphic][1].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Graphic][1].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Graphic][1].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Graphic][1].Slider_Text_Max_Value):F0} %";
+                        Setting_Contents[Setting_Option_Type.Graphic][2].Text_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Graphic][2].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Graphic][2].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Graphic][2].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Graphic][2].Slider_Text_Max_Value):F0} %";
                     }
                 },
                 new Setting_Detail_Option
@@ -272,7 +298,7 @@ public class Setting_Services : MonoBehaviour
                     Toggle_Callback = (value) => {
                         if (value)
                         {
-                            setting_config.Graphic.Wallpaper_Mode_Refresh_Type = int.Parse(Setting_Contents[Setting_Option_Type.Graphic][2].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            setting_config.Graphic.Wallpaper_Mode_Refresh_Type = int.Parse(Setting_Contents[Setting_Option_Type.Graphic][3].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
                             if(setting_config.Graphic.Wallpaper_Mode_Refresh_Type == 0)
                             {
                                 Framerate_Services.Instance.is_VSync_Mode = true;
@@ -293,9 +319,9 @@ public class Setting_Services : MonoBehaviour
                     Input_Value = setting_config.Graphic.Wallpaper_Mode_Framerate.ToString(),
                     Input_Callback = (value) => {
                         setting_config.Graphic.Wallpaper_Mode_Framerate = int.Parse(value);
-                        Setting_Contents[Setting_Option_Type.Graphic][3].Input_Value = value;
-                        Setting_Contents[Setting_Option_Type.Graphic][3].InputField_Component.text = "";
-                        (Setting_Contents[Setting_Option_Type.Graphic][3].InputField_Component.placeholder as TMP_Text).text = value;
+                        Setting_Contents[Setting_Option_Type.Graphic][4].Input_Value = value;
+                        Setting_Contents[Setting_Option_Type.Graphic][4].InputField_Component.text = "";
+                        (Setting_Contents[Setting_Option_Type.Graphic][4].InputField_Component.placeholder as TMP_Text).text = value;
 
                         Framerate_Services.Instance.Target_Framerate = int.Parse(value);
 
@@ -363,6 +389,64 @@ public class Setting_Services : MonoBehaviour
                 }
                 Console_Log($"语言已切换到: {locale.LocaleName} (索引: {currentLanguageIndex})");
             }
+            Update_Setting_Content_UI();
+        }
+    }
+
+    private System.Collections.IEnumerator Initialize_Display_Options_Coroutine()
+    {
+        // 直接使用Unity的Screen API获取显示器信息
+        setting_config.Graphic.Display_Monitor_Options = Get_Display_Options_From_Screen();
+        
+        // 确保选中的显示器索引有效
+        if (setting_config.Graphic.Selected_Display_Monitor_Index >= setting_config.Graphic.Display_Monitor_Options.Count)
+        {
+            setting_config.Graphic.Selected_Display_Monitor_Index = 0;
+        }
+        
+        yield break;
+    }
+
+    private List<string> Get_Display_Options_From_Screen()
+    {
+        var options = new List<string>();
+        
+        // 获取所有显示器
+        var displays = Display.displays;
+        
+        for (int i = 0; i < displays.Length; i++)
+        {
+            var display = displays[i];
+            string option = $"Display {i + 1} ({display.systemWidth}x{display.systemHeight})";
+            if (i == 0)
+            {
+                option += " [Main]";
+            }
+            options.Add(option);
+        }
+        
+        // 如果没有检测到显示器，使用默认选项
+        if (options.Count == 0)
+        {
+            options.Add("Main Display");
+        }
+        
+        return options;
+    }
+
+    public void Refresh_Display_Options()
+    {
+        setting_config.Graphic.Display_Monitor_Options = Get_Display_Options_From_Screen();
+        
+        // 确保选中的显示器索引有效
+        if (setting_config.Graphic.Selected_Display_Monitor_Index >= setting_config.Graphic.Display_Monitor_Options.Count)
+        {
+            setting_config.Graphic.Selected_Display_Monitor_Index = 0;
+        }
+        
+        // 如果当前正在显示图形设置，则更新UI
+        if (is_Setting_On && Cur_Setting_Option_Type == Setting_Option_Type.Graphic)
+        {
             Update_Setting_Content_UI();
         }
     }

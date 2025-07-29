@@ -122,8 +122,18 @@ public class Window_Services : MonoBehaviour
 
         Fullscreen_Mode_Toggle_Button.onClick.AddListener(Toggle_Fullscreen_Mode);
 
-        Device_Screen_Width = Screen.currentResolution.width;
-        Device_Screen_Height = Screen.currentResolution.height;
+                                // 使用Unity的Display API获取显示器信息
+                        var displays = Display.displays;
+                        if (displays.Length > 0)
+                        {
+                            Device_Screen_Width = displays[0].systemWidth;
+                            Device_Screen_Height = displays[0].systemHeight;
+                        }
+                        else
+                        {
+                            Device_Screen_Width = Screen.currentResolution.width;
+                            Device_Screen_Height = Screen.currentResolution.height;
+                        }
 
         // Edit_Mode_Width = Device_Screen_Width - 50;
         Edit_Mode_Height = Device_Screen_Height - 200;

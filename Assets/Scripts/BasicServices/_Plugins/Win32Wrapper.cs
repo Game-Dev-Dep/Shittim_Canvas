@@ -701,4 +701,12 @@ public class Win32Wrapper
 
     public const int SW_RESTORE = 9;
     public static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+
+
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    public static extern bool SystemParametersInfo(int nAction, int nParam, ref RECT rc, int nUpdate);
+
+    [DllImport("kernel32.dll")]
+    public static extern int GetLastError();
 }

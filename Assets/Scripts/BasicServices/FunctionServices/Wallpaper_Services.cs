@@ -175,8 +175,25 @@ public class Wallpaper_Services : MonoBehaviour
         // 5. 再次强制显示
         Win32Wrapper.ShowWindow(unityHandle, Win32Wrapper.SW_SHOW);
 
-        Console_Log($"设置壁纸模式分辨率: {Window_Services.Instance.Device_Screen_Width}x{Window_Services.Instance.Device_Screen_Height}");
-        Screen.SetResolution(Window_Services.Instance.Device_Screen_Width, Window_Services.Instance.Device_Screen_Height, FullScreenMode.FullScreenWindow);
+                        // 获取选中的显示器
+                        var displays = Display.displays;
+                        var selectedDisplayIndex = Config_Services.Instance.Global_Setting_Config.Graphic.Selected_Display_Monitor_Index;
+                        
+                        if (selectedDisplayIndex < displays.Length)
+                        {
+                            var selectedDisplay = displays[selectedDisplayIndex];
+                            
+                            // 设置分辨率
+                            Screen.SetResolution(selectedDisplay.systemWidth, selectedDisplay.systemHeight, FullScreenMode.FullScreenWindow);
+                            
+                            // 将窗口移动到指定的显示器
+                            Move_Window_To_Display(selectedDisplayIndex);
+                        }
+                        else
+                        {
+                            // 使用主显示器
+                            Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, FullScreenMode.FullScreenWindow);
+                        }
 
         is_Wallpaper_Mode = true;
 
@@ -248,7 +265,52 @@ public class Wallpaper_Services : MonoBehaviour
         }
     }
 
+    private void Move_Window_To_Display(int displayIndex)
+    {
+        try
+        {
+            // 获取Unity窗口句柄
+            var unityWindow = Window_Services.Unity_Handle;
+            if (unityWindow == IntPtr.Zero)
+            {
+                return;
+            }
 
+            // 获取指定显示器的信息
+            var displays = Display.displays;
+            if (displayIndex >= displays.Length)
+            {
+                return;
+            }
+
+            var targetDisplay = displays[displayIndex];
+            
+            // 计算目标显示器的位置
+            int targetX = 0;
+            int targetY = 0;
+            
+            // 根据显示器索引计算位置
+            for (int i = 0; i < displayIndex; i++)
+            {
+                targetX += displays[i].systemWidth;
+            }
+            
+            // 使用Win32 API移动窗口
+            Win32Wrapper.SetWindowPos(
+                unityWindow,
+                IntPtr.Zero,
+                targetX,
+                targetY,
+                targetDisplay.systemWidth,
+                targetDisplay.systemHeight,
+                Win32Wrapper.SetWindowPosFlags.NoZOrder | Win32Wrapper.SetWindowPosFlags.NoActivate
+            );
+        }
+        catch (Exception ex)
+        {
+            Console_Log($"移动窗口时发生异常: {ex.Message}", Debug_Services.LogLevel.Debug, LogType.Error);
+        }
+    }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Wallpaper_Services", message, loglevel, logtype); }
 }

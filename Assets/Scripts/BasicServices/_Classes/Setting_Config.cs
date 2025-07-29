@@ -50,6 +50,8 @@ public class Setting_Config
             "锁帧"
         };
         public int Wallpaper_Mode_Framerate = 120;
+        public int Selected_Display_Monitor_Index = 0;
+        public List<string> Display_Monitor_Options = new List<string>();
     }
     public class About_Class
     {
