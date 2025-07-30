@@ -197,17 +197,19 @@ public class SpineDragIK : MonoBehaviour
 
 
             Console_Log($"{gameObject.name} 播放结束动画 01: {EndClip.ClipName}");
-            SpineController.SkeletonAnimation.AnimationState.AddEmptyAnimation(Index_Services.Instance.M_Track_Num, 0.1f, 0f);
-            SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, EndClip.ClipName, false, 0.1f);
-            //SpineController.SkeletonAnimation.AnimationState.AddEmptyAnimation(Index_Services.Instance.M_Track_Num, 0.1f, 1f);
+            //SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, 0f);
+            TrackEntry track_entry_01 = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, EndClip.ClipName, false, 0f);
+            SpineController.SkeletonAnimation.AnimationState.AddEmptyAnimation(Index_Services.Instance.M_Track_Num, 0f, 0f);
+            //track_entry_01.MixDuration = 1f;
 
             if (EndClip.SyncPlayClipObjects.Count() != 0 && EndClip.SyncPlayClipObjects.First() != null)
             {
                 SpineClip sync_clip = EndClip.SyncPlayClipObjects[0] as SpineClip;
                 Console_Log($"{gameObject.name} 播放结束动画 02: {sync_clip.ClipName}");
-                SpineController.SkeletonAnimation.AnimationState.AddEmptyAnimation(Index_Services.Instance.A_Track_Num, 0.1f, 0f);
-                SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, false, 0.1f);
-                //SpineController.SkeletonAnimation.AnimationState.AddEmptyAnimation(Index_Services.Instance.A_Track_Num, 0.1f, 1f);
+                //SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, 0f);
+                TrackEntry track_entry_02 = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, false, 0f);
+                SpineController.SkeletonAnimation.AnimationState.AddEmptyAnimation(Index_Services.Instance.A_Track_Num, 0f, 0f);
+                //track_entry_02.MixDuration = 1f;
             }
 
             screenPos = new Vector3(0, 0, 0);
@@ -280,30 +282,35 @@ public class SpineDragIK : MonoBehaviour
             if (IngClip.Loop)
             {
                 Console_Log($"{gameObject.name} 播放进行动画 01: {IngClip.ClipName}");
-                SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, 0.1f);
-                SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, IngClip.ClipName, true, 0.1f);
-                
+                SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, 0);
+                TrackEntry track_entry_01 = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, IngClip.ClipName, true, 0);
+                //track_entry_01.MixDuration = 1f;
+
+
                 if (IngClip.SyncPlayClipObjects.Count() != 0 && IngClip.SyncPlayClipObjects.First() != null)
                 {
                     SpineClip sync_clip = IngClip.SyncPlayClipObjects[0] as SpineClip;
                     Console_Log($"{gameObject.name} 播放进行动画 02: {sync_clip.ClipName}");
-                    SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, 0.1f);
-                    SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, true, 0.1f);
+                    SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, 0);
+                    TrackEntry track_entry_02 = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, true, 0);
+                    //track_entry_02.MixDuration = 1f;
                 }
             }
             else
             {
                 Console_Log($"{gameObject.name} 播放起始动画 01: {IngClip.ClipName}");
-                SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, 0.1f);
-                TrackEntry track_entry = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, IngClip.ClipName, false, 0.1f);
-                track_entry.Complete += OnClipComplete;
+                SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, 0f);
+                TrackEntry track_entry_01 = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, IngClip.ClipName, false, 0f);
+                //track_entry_01.MixDuration = 1f;
+                track_entry_01.Complete += OnClipComplete;
 
                 if (IngClip.SyncPlayClipObjects.Count() != 0 && IngClip.SyncPlayClipObjects.First() != null)
                 {
                     SpineClip sync_clip = IngClip.SyncPlayClipObjects[0] as SpineClip;
                     Console_Log($"{gameObject.name} 播放起始动画 02: {sync_clip.ClipName}");
-                    SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, 0.1f);
-                    SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, true, 0.1f);
+                    SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, 0f);
+                    TrackEntry track_entry_02 = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, false, 0f);
+                    //track_entry_02.MixDuration = 1f;
                 }
             }
             
@@ -321,13 +328,18 @@ public class SpineDragIK : MonoBehaviour
         if (IngClip.NextClipObject != null)
         {
             IngClip = (SpineClip)IngClip.NextClipObject;
-            SpineController.SkeletonAnimation.AnimationState.SetAnimation(Index_Services.Instance.M_Track_Num, IngClip.ClipName, true);
             Console_Log($"{gameObject.name} 播放后续循环动画 01: {IngClip.ClipName}");
+            //SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, 0f);
+            TrackEntry track_entry_01 = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, IngClip.ClipName, true, 0f);
+            //track_entry_01.MixDuration = 1f;
+            
             if (IngClip.SyncPlayClipObjects.Count() != 0 && IngClip.SyncPlayClipObjects.First() != null)
             {
                 SpineClip sync_clip = IngClip.SyncPlayClipObjects[0] as SpineClip;
                 Console_Log($"{gameObject.name} 播放后续循环动画 02: {sync_clip.ClipName}");
-                SpineController.SkeletonAnimation.AnimationState.SetAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, true);
+                //SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, 0f);
+                TrackEntry track_entry_02 = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, true, 0f);
+                //track_entry_02.MixDuration = 1f;
             }
         }
     }

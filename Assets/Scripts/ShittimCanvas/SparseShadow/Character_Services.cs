@@ -31,10 +31,10 @@ public class Character_Services : MonoBehaviour
     private void Start()
     {
         Get_Config();
-#if !UNITY_EDITOR
+//#if !UNITY_EDITOR
         character = gameObject.AddComponent<Character>();
         character.Load_Charachter(Character_Name);
-#endif
+//#endif
     }
 
     public void Switch_Character(string character_name)

@@ -96,11 +96,11 @@ public class Spine_Services : MonoBehaviour
         string full_talk_m_animation_name = string.Format(Talk_M_Animation_Name, index.ToString("D2"));
         string full_talk_a_animation_name = string.Format(Talk_A_Animation_Name, index.ToString("D2"));
 
-        skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, Talk_Mix_To_Empty);
-        skeleton_animation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, full_talk_m_animation_name, false, Talk_Mix_To_Empty);
+        skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, 0f);
+        skeleton_animation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, full_talk_m_animation_name, false, 0f);
 
-        skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, Talk_Mix_To_Empty);
-        skeleton_animation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, full_talk_a_animation_name, false, Talk_Mix_To_Empty);
+        skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, 0f);
+        skeleton_animation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, full_talk_a_animation_name, false, 0f);
 
         float duration = Mathf.Max(
             skeleton_animation.AnimationState.Data.SkeletonData.FindAnimation(full_talk_m_animation_name).Duration,
@@ -109,8 +109,8 @@ public class Spine_Services : MonoBehaviour
 
         yield return new WaitForSeconds(duration + Talk_Mix_To_Empty);
 
-        skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, Talk_Mix_To_Empty);
-        skeleton_animation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, Talk_Mix_To_Empty);
+        skeleton_animation.AnimationState.AddEmptyAnimation(Index_Services.Instance.A_Track_Num, 0f, 0f);
+        skeleton_animation.AnimationState.AddEmptyAnimation(Index_Services.Instance.M_Track_Num, 0f, 0f);
         onComplete?.Invoke();
     }
 }
