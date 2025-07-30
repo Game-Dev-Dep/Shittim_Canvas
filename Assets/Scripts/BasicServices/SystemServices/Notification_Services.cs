@@ -22,6 +22,11 @@ public class Notification_Services : MonoBehaviour
 
     public void Send_Notifiction(string notifiction_message, string notificiton_title = "Shittim_Canvas")
     {
+        // 检查通知开关状态
+        if (!is_Notification_On)
+        {
+            return;
+        }
 
 #if !UNITY_EDITOR
 
@@ -33,7 +38,7 @@ public class Notification_Services : MonoBehaviour
                 TrayIcon.ToolTipIcon.Info,
                 true
             );
-            Console_Log("$已发送通知 {notifiction_message}");
+            Console_Log($"已发送通知 {notifiction_message}");
         }
         catch (Exception ex)
         {
