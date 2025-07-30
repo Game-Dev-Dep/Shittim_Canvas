@@ -440,10 +440,10 @@ public class EnhancedShittimCanvasRenderPass : ScriptableRenderPass
             // 执行渲染
             ExecuteRendering(cmd, desc);
         }
-        catch (System.Exception e)
-        {
-            //Debug.LogError($"[ShittimCanvas] 渲染过程中发生错误: {e.Message}");
-        }
+        //catch (System.Exception e)
+        //{
+        //    //Debug.LogError($"[ShittimCanvas] 渲染过程中发生错误: {e.Message}");
+        //}
         finally
         {
             context.ExecuteCommandBuffer(cmd);
