@@ -18,8 +18,6 @@ public class SystemTray_Services : MonoBehaviour
             ("进入壁纸模式", Enter_Wallpaper_Mode),
             ("返回正常模式", Quit_Wallpaper_Mode),
             (TrayIcon.SEPARATOR, null),
-            ("切换通知开关", Toggle_Notification),
-            (TrayIcon.SEPARATOR, null),
             ("退出", Quit_Program)
         };
 
@@ -29,13 +27,7 @@ public class SystemTray_Services : MonoBehaviour
 #endif
     }
 
-    public void Toggle_Notification()
-    {
-        Notification_Services.Instance.is_Notification_On = !Notification_Services.Instance.is_Notification_On;
-        Console_Log($"系统托盘触发: 切换通知状态为 {Notification_Services.Instance.is_Notification_On}");
 
-        Notification_Services.Instance.Send_Notifiction(Notification_Services.Instance.is_Notification_On ? "通知已开启" : "通知已关闭");
-    }
 
     private void Enter_Wallpaper_Mode()
     {

@@ -57,9 +57,21 @@ public class Setting_Services : MonoBehaviour
 
         setting_config.About.Version = Version_Services.Instance.Version_String;
         setting_config.About.Build_Date = Version_Services.Instance.Build_Time_String;
+        
+        // 同步通知服务状态
+        if (Notification_Services.Instance != null)
+        {
+            Notification_Services.Instance.is_Notification_On = (setting_config.General.Notification_Enabled == 0);
+        }
     }
 
     public void Save_Setting_Config()
+    {
+        Config_Services.Instance.Save_Global_Config(setting_config, Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
+        Toast_Wrapper_Services.ShowToast("toast.settings_saved", 3f);
+    }
+
+    private void Save_Setting_Config_Silent()
     {
         Config_Services.Instance.Save_Global_Config(setting_config, Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
     }
@@ -155,6 +167,27 @@ public class Setting_Services : MonoBehaviour
                         {
                             setting_config.General.Auto_Wallpaper_Mode = int.Parse(Setting_Contents[Setting_Option_Type.General][2].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
                             Setting_Contents[Setting_Option_Type.General][2].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][2].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                        }
+                    }
+                },
+                new Setting_Detail_Option
+                {
+                    Title_Key = "settings_panel.general.notification_enabled",
+                    Description_Key = "settings_panel.general.notification_enabled.desc",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Toggle,
+                    ToggleGroup_Value = setting_config.General.Notification_Enabled,
+                    ToggleGroup_Options = new List<string> { "settings_panel.elements.yes_radio", "settings_panel.elements.no_radio" },
+                    Toggle_Callback = (value) => {
+                        if (value)
+                        {
+                            setting_config.General.Notification_Enabled = int.Parse(Setting_Contents[Setting_Option_Type.General][3].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][3].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][3].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            
+                            // 更新通知服务的状态
+                            if (Notification_Services.Instance != null)
+                            {
+                                Notification_Services.Instance.is_Notification_On = (setting_config.General.Notification_Enabled == 0);
+                            }
                         }
                     }
                 }
@@ -343,7 +376,7 @@ public class Setting_Services : MonoBehaviour
                     Title_Key = "settings_panel.about.shittim_canvas",
                     Description_Key = "settings_panel.about.shittim_canvas.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Text,
-                    Text_Value = ""
+                    Text_Value = "GitHub: https://github.com/Game-Dev-Dep/Shittim_Canvas"
                 },
                 new Setting_Detail_Option
                 {
@@ -468,7 +501,7 @@ public class Setting_Services : MonoBehaviour
     {
         is_Setting_On = true;
         Setting_Root_GameObject.SetActive(is_Setting_On);
-        Save_Setting_Config();
+        Save_Setting_Config_Silent();
     }
 
     void Hide_Setting_Panel()

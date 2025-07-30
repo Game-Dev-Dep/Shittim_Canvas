@@ -101,6 +101,14 @@ public class HideGUI_Services : MonoBehaviour
 
     public void Hide_GUI()
     {
+        // 在设置面板打开的时候阻止隐藏GUI
+        var settingPanel = GameObject.Find("[Setting] Root");
+        if (settingPanel != null && settingPanel.activeSelf)
+        {
+            Console_Log("设置面板已打开，请先关闭设置面板再隐藏GUI", Debug_Services.LogLevel.Debug, LogType.Warning);
+            Toast_Wrapper_Services.ShowToast("toast.close_settings_first", 3f);
+            return;
+        }
         is_GUI_Hidden = true;
         
         if (Wallpaper_Services.Instance != null)

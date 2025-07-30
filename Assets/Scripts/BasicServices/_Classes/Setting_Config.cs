@@ -30,6 +30,12 @@ public class Setting_Config
             "是",
             "否"
         };
+        public int Notification_Enabled = 0;
+        public List<string> Notification_Enabled_List = new List<string>
+        {
+            "开",
+            "关"
+        };
     }
     public class Audio_Class
     {
