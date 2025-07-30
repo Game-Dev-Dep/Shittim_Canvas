@@ -1,14 +1,23 @@
 # 忽略 Unity 默认文件夹
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
 [Bb]uild/
 [Bb]uilds/
+[Ll]ibrary/
 [Ll]ogs/
-[Mm]emoryCaptures/
+[Mm]emory[Cc]aptures/
+[Oo]bj/
+[Tt]emp/
+[Uu]ser[Ss]ettings/
 
 # 忽略 Unity 项目文件
 *.unityproj
+
+# 忽略 Unity 生成的文件
+*.pidb
+*.pidb.meta
+*.pdb
+*.pdb.meta
+*.mdb
+*.mdb.meta
 
 # 忽略 Shittim Canvs 自定义文件夹
 RecordVideos/
@@ -21,9 +30,11 @@ Screenshots/
 *.csproj
 *.sln
 *.suo
+*.svd
 *.user
 *.userprefs
 *.vsconfig
+*.VC.db
 
 # 忽略 Visual Studio Code 配置文件夹
 .vscode/
@@ -37,6 +48,3 @@ Screenshots/
 # 忽略 Unity 可寻址资源的动态
 /Assets/AddressableAssetsData/link.xml
 /Assets/AddressableAssetsData/link.xml.meta
-
-# 忽略 Unity 工作区配置
-/UserSettings/Layouts/default-2021.dwlt
