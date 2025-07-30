@@ -33,6 +33,8 @@ public class Setting_Services : MonoBehaviour
     public Button Setting_Off_Button;
     [SerializeField]
     public Button Setting_Save_Button;
+    [SerializeField]
+    public Button Setting_Reset_Button;
 
     //[Header("UI Settings")]
 
@@ -76,40 +78,19 @@ public class Setting_Services : MonoBehaviour
         Config_Services.Instance.Save_Global_Config(setting_config, Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
     }
 
-    void Start()
+    public void Reset_Setting_Config()
     {
-        Console_Log("开始初始化 Setting Services");
+        setting_config = new Setting_Config();
+        GameObject.Find("Canvas").GetComponent<CanvasScaler>().scaleFactor = setting_config.Graphic.Editor_Mode_UI_Scale;
+        Refresh_Display_Options();
+        Save_Setting_Config();
+        Setting_Contents = new Dictionary<Setting_Option_Type, List<Setting_Detail_Option>>();
+        Init_Setting_Contents();
+        Update_Setting_Content_UI();
+    }
 
-        Get_Detail_Option_UI_Parameters();
-
-        Setting_Toggle_Button.onClick.AddListener(Toggle_Setting_Panel);
-        Setting_Off_Button.onClick.AddListener(Hide_Setting_Panel);
-        Setting_Save_Button.onClick.AddListener(Save_Setting_Config);
-
-        Setting_General_Option_Toggle.onValueChanged.AddListener(Toggle_General_Option);
-        Setting_Audio_Option_Toggle.onValueChanged.AddListener(Toggle_Audio_Option);
-        Setting_Graphic_Option_Toggle.onValueChanged.AddListener(Toggle_Graphic_Option);
-        Setting_About_Option_Toggle.onValueChanged.AddListener(Toggle_About_Option);
-
-        Get_Setting_Config();
-
-        // 初始化显示器选项 - 延迟初始化
-        StartCoroutine(Initialize_Display_Options_Coroutine());
-
-        // 注册语言变更事件
-        LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
-        
-        // 确保当前语言设置正确
-        var currentLocale = LocalizationSettings.SelectedLocale;
-        if (currentLocale != null)
-        {
-            var currentLanguageIndex = LocalizationSettings.AvailableLocales.Locales.IndexOf(currentLocale);
-            if (currentLanguageIndex >= 0 && currentLanguageIndex != setting_config.General.Language)
-            {
-                setting_config.General.Language = currentLanguageIndex;
-            }
-        }
-
+    public void Init_Setting_Contents()
+    {
         Setting_Contents.Add(
             Setting_Option_Type.General,
             new List<Setting_Detail_Option>()
@@ -298,7 +279,7 @@ public class Setting_Services : MonoBehaviour
                         {
                             Setting_Contents[Setting_Option_Type.Graphic][1].Dropdown_Component.value = value;
                         }
-                        
+
                         var displays = Display.displays;
                         if (value < displays.Length)
                         {
@@ -394,6 +375,44 @@ public class Setting_Services : MonoBehaviour
                 }
             }
         );
+    }
+
+    void Start()
+    {
+        Console_Log("开始初始化 Setting Services");
+
+        Get_Detail_Option_UI_Parameters();
+
+        Setting_Toggle_Button.onClick.AddListener(Toggle_Setting_Panel);
+        Setting_Off_Button.onClick.AddListener(Hide_Setting_Panel);
+        Setting_Save_Button.onClick.AddListener(Save_Setting_Config);
+        Setting_Reset_Button.onClick.AddListener(Reset_Setting_Config);
+
+        Setting_General_Option_Toggle.onValueChanged.AddListener(Toggle_General_Option);
+        Setting_Audio_Option_Toggle.onValueChanged.AddListener(Toggle_Audio_Option);
+        Setting_Graphic_Option_Toggle.onValueChanged.AddListener(Toggle_Graphic_Option);
+        Setting_About_Option_Toggle.onValueChanged.AddListener(Toggle_About_Option);
+
+        Get_Setting_Config();
+
+        // 初始化显示器选项 - 延迟初始化
+        StartCoroutine(Initialize_Display_Options_Coroutine());
+
+        // 注册语言变更事件
+        LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
+        
+        // 确保当前语言设置正确
+        var currentLocale = LocalizationSettings.SelectedLocale;
+        if (currentLocale != null)
+        {
+            var currentLanguageIndex = LocalizationSettings.AvailableLocales.Locales.IndexOf(currentLocale);
+            if (currentLanguageIndex >= 0 && currentLanguageIndex != setting_config.General.Language)
+            {
+                setting_config.General.Language = currentLanguageIndex;
+            }
+        }
+
+        Init_Setting_Contents();
 
         Update_Setting_Content_UI();
 
@@ -616,7 +635,6 @@ public class Setting_Services : MonoBehaviour
                     int Toggle_Num = setting_detail_option.ToggleGroup_Options.Count;
 
                     int Toggle_Index = setting_detail_option.ToggleGroup_Value;
-                    Console_Log(Toggle_Index.ToString());
 
                     for (int i = 0; i < Toggle_Num; i++)
                     {
