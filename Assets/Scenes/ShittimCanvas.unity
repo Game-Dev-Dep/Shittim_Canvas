@@ -6665,6 +6665,7 @@ MonoBehaviour:
   Setting_Toggle_Button: {fileID: 1528109875}
   Setting_Off_Button: {fileID: 1462414269}
   Setting_Save_Button: {fileID: 1956700955}
+  Setting_Reset_Button: {fileID: 500391965}
   is_Setting_On: 0
   Setting_Detail_Option_Width: 0
   Setting_Detail_Option_Height: 0
@@ -11141,8 +11142,8 @@ RectTransform:
   m_Father: {fileID: 1399649036}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}

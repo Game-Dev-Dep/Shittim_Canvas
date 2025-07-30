@@ -296,7 +296,7 @@ public class ToastNotification : MonoBehaviour, IPointerEnterHandler, IPointerEx
             {
                 parentRect.anchorMax = new Vector2(0.5f, 1);
                 parentRect.anchorMin = new Vector2(0.5f, 1);
-                parentRect.anchoredPosition = new Vector2(-backgroundSize.x / 2, -backgroundSize.y - margin.y);
+                parentRect.anchoredPosition = new Vector2(-backgroundSize.x, -backgroundSize.y - margin.y);
             }
             else if (messageScreenPosition == MessageScreenPosition.BottomLeft)
             {
