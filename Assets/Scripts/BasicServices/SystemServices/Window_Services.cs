@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Win32Wrapper;
+using static Window_Services;
 
 public class Window_Services : MonoBehaviour
 {
@@ -62,6 +63,7 @@ public class Window_Services : MonoBehaviour
         public bool isVisible;
         public bool isMaximized;
         public RECT rect;
+        public bool isBorderlessFullscreen;
     }
 
     // 系统窗口类名过滤列表
@@ -559,10 +561,10 @@ public class Window_Services : MonoBehaviour
 
         foreach (Window_Info window_info in all_window_info)
         {
-            //Console_Log($"{window_info.title} {window_info.isVisible} {window_info.isMaximized} {Is_System_Window(window_info)}");
-            if (window_info.isVisible && window_info.isMaximized && !Is_System_Window(window_info))
+            //Console_Log($"{window_info.title} {window_info.isVisible} {window_info.isMaximized} {Is_System_Window(window_info)} {window_info.isBorderlessFullscreen} {window_info.rect.Top}");
+            if (window_info.isVisible && (window_info.isMaximized || window_info.isBorderlessFullscreen) && !Is_System_Window(window_info) && !is_Custom_Window(window_info))
             {
-                //Console_Log($"找到最大化窗口: {window_info}");
+                //Console_Log($"找到最大化/全屏窗口: {window_info.title}");
                 return window_info;
             }
         }
@@ -671,7 +673,8 @@ public class Window_Services : MonoBehaviour
             title = Get_Window_Title(hWnd),
             className = Get_Window_Class_Name(hWnd),
             isVisible = is_visible,
-            isMaximized = IsZoomed(hWnd)
+            isMaximized = IsZoomed(hWnd),
+            isBorderlessFullscreen = Is_Window_Borderless_Fullscreen(hWnd)
         };
 
         return window_info;
@@ -728,7 +731,31 @@ public class Window_Services : MonoBehaviour
         return class_name.ToString();
     }
 
-
+    /// <summary>
+    /// 获取窗口无边框
+    /// </summary>
+    private bool Is_Window_Borderless_Fullscreen(IntPtr hWnd)
+    {
+        long style = GetWindowLong(hWnd, -16);
+        bool isborderless = (style & 0x00800000) == 0;
+        GetWindowRect(hWnd, out RECT windowRect);
+        IntPtr monitor = MonitorFromWindow(hWnd, 2);
+        var monitorInfo = new MONITORINFOEX();
+        GetMonitorInfo(monitor, ref monitorInfo);
+        int windowWidth = windowRect.Right - windowRect.Left;
+        int windowHeight = windowRect.Bottom - windowRect.Top;
+        int screenWidth = monitorInfo.rcMonitor.Right - monitorInfo.rcMonitor.Left;
+        int screenHeight = monitorInfo.rcMonitor.Right - monitorInfo.rcMonitor.Left;
+        bool coversScreen =
+            windowRect.Left <= monitorInfo.rcMonitor.Left &&
+            windowRect.Top <= monitorInfo.rcMonitor.Top &&
+            windowRect.Right >= monitorInfo.rcMonitor.Right &&
+            windowRect.Bottom >= monitorInfo.rcMonitor.Bottom;
+        return coversScreen &&
+              windowWidth >= screenWidth &&
+              windowHeight >= screenHeight &&
+              isborderless;
+    }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Window_Services", message, loglevel, logtype); }
 }
