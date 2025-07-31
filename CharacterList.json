@@ -1,0 +1,242 @@
+{
+  "10001": [
+    {
+      "Name": "Aru",
+      "Nicknames": ["Aru", "Ar", "Aru-chan", "阿露"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10002": [
+    {
+      "Name": "Hoshino",
+      "Nicknames": ["Hoshino", "Hoshino-chan", "Hoshino-san"],
+      "School": 5,
+      "Club": 49
+    }
+  ],
+  "10003": [
+    {
+      "Name": "Shiroko",
+      "Nicknames": ["Shiroko", "Shiroko-chan"],
+      "School": 5,
+      "Club": 49
+    }
+  ],
+  "10004": [
+    {
+      "Name": "Serika",
+      "Nicknames": ["Serika", "Serika-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10005": [
+    {
+      "Name": "Nonomi",
+      "Nicknames": ["Nonomi", "Nonomi-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10006": [
+    {
+      "Name": "Ayane",
+      "Nicknames": ["Ayane", "Ayane-chan"],
+      "School": 5,
+      "Club": 49
+    }
+  ],
+  "10007": [
+    {
+      "Name": "Yuuka",
+      "Nicknames": ["Yuuka", "Yuuka-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10008": [
+    {
+      "Name": "Kotori",
+      "Nicknames": ["Kotori", "Kotori-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10009": [
+    {
+      "Name": "Haruka",
+      "Nicknames": ["Haruka", "Haruka-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10010": [
+    {
+      "Name": "Mutsuki",
+      "Nicknames": ["Mutsuki", "Mutsuki-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10011": [
+    {
+      "Name": "Kayoko",
+      "Nicknames": ["Kayoko", "Kayoko-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10012": [
+    {
+      "Name": "Akari",
+      "Nicknames": ["Akari", "Akari-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10013": [
+    {
+      "Name": "Chise",
+      "Nicknames": ["Chise", "Chise-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10014": [
+    {
+      "Name": "Hibiki",
+      "Nicknames": ["Hibiki", "Hibiki-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10015": [
+    {
+      "Name": "Hina",
+      "Nicknames": ["Hina", "Hina-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10016": [
+    {
+      "Name": "Ako",
+      "Nicknames": ["Ako", "Ako-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10017": [
+    {
+      "Name": "Utaha",
+      "Nicknames": ["Utaha", "Utaha-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10018": [
+    {
+      "Name": "Mashiro",
+      "Nicknames": ["Mashiro", "Mashiro-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10019": [
+    {
+      "Name": "Midori",
+      "Nicknames": ["Midori", "Midori-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10020": [
+    {
+      "Name": "Momoi",
+      "Nicknames": ["Momoi", "Momoi-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10021": [
+    {
+      "Name": "Yuzu",
+      "Nicknames": ["Yuzu", "Yuzu-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10022": [
+    {
+      "Name": "Karin",
+      "Nicknames": ["Karin", "Karin-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10023": [
+    {
+      "Name": "Asuna",
+      "Nicknames": ["Asuna", "Asuna-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10024": [
+    {
+      "Name": "Mimori",
+      "Nicknames": ["Mimori", "Mimori-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10025": [
+    {
+      "Name": "Suzumi",
+      "Nicknames": ["Suzumi", "Suzumi-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10026": [
+    {
+      "Name": "Pina",
+      "Nicknames": ["Pina", "Pina-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10027": [
+    {
+      "Name": "Hare",
+      "Nicknames": ["Hare", "Hare-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10028": [
+    {
+      "Name": "Kazusa",
+      "Nicknames": ["Kazusa", "Kazusa-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10029": [
+    {
+      "Name": "Mine",
+      "Nicknames": ["Mine", "Mine-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ],
+  "10030": [
+    {
+      "Name": "Sumire",
+      "Nicknames": ["Sumire", "Sumire-chan"],
+      "School": 6,
+      "Club": 5
+    }
+  ]
+} 

@@ -16,7 +16,11 @@ public class CharacterList_Services : MonoBehaviour
     [SerializeField]
     public TMP_InputField Character_List_Search_BarInputField;
     [SerializeField]
-    public GameObject Character_Portrait_Template;
+    public GameObject Character_Card_Template;
+    [SerializeField]
+    public RawImage Character_Card_Portrait_Image_Template;
+    [SerializeField]
+    public TextMeshProUGUI Character_Card_Name_Text_Template;
     [SerializeField]
     public Button Character_List_Toggle_Button;
     [SerializeField]
@@ -101,20 +105,45 @@ public class CharacterList_Services : MonoBehaviour
 
         foreach (var character in Character_List)
         {
-            GameObject character_portrait_gameobject = Instantiate(Character_Portrait_Template, Character_List_Search_Result_Content_GameObject.transform);
-            character_portrait_gameobject.SetActive(true);
+            // 实例化角色卡片
+            GameObject character_card_gameobject = Instantiate(Character_Card_Template, Character_List_Search_Result_Content_GameObject.transform);
+            character_card_gameobject.SetActive(true);
 
-            RawImage character_portrait_rawimage_component = character_portrait_gameobject.GetComponent<RawImage>();
-            character_portrait_rawimage_component.texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.Student_Lists_Folder_Path,$"Student_Portrait_{character.Value.First().Name}_Collection.png"));
-
-            Button character_portrait_button = character_portrait_gameobject.GetComponent<Button>();
-            character_portrait_button.onClick.AddListener(() =>
+            // 获取卡片内的图片组件
+            RawImage character_portrait_rawimage_component = character_card_gameobject.GetComponentInChildren<RawImage>();
+            if (character_portrait_rawimage_component != null)
             {
-                Character_Select_Handler(character.Key, character.Value.First().Name, character.Value.Count);
-            });
+                character_portrait_rawimage_component.texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.Student_Lists_Folder_Path,$"Student_Portrait_{character.Value.First().Name}_Collection.png"));
+            }
+            else
+            {
+                Console_Log($"未找到角色卡片内的图片组件", Debug_Services.LogLevel.Debug, LogType.Warning);
+            }
 
-            TextMeshProUGUI character_portrait_text_component = character_portrait_gameobject.transform.Find("[Character List] Character Name Text").GetComponent<TextMeshProUGUI>();
-            character_portrait_text_component.text = character.Value.First().Name;
+            // 获取卡片的按钮组件
+            Button character_card_button = character_card_gameobject.GetComponent<Button>();
+            if (character_card_button != null)
+            {
+                character_card_button.onClick.AddListener(() =>
+                {
+                    Character_Select_Handler(character.Key, character.Value.First().Name, character.Value.Count);
+                });
+            }
+            else
+            {
+                Console_Log($"未找到角色卡片的按钮组件", Debug_Services.LogLevel.Debug, LogType.Warning);
+            }
+
+            // 获取卡片内的角色名称文本组件
+            TextMeshProUGUI character_name_text_component = character_card_gameobject.GetComponentInChildren<TextMeshProUGUI>();
+            if (character_name_text_component != null)
+            {
+                character_name_text_component.text = character.Value.First().Name;
+            }
+            else
+            {
+                Console_Log($"未找到角色卡片内的名称文本组件", Debug_Services.LogLevel.Debug, LogType.Warning);
+            }
         }
 
         Console_Log("结束创建角色列表UI");
@@ -124,7 +153,7 @@ public class CharacterList_Services : MonoBehaviour
     {
         foreach (Transform child in Character_List_Search_Result_Content_GameObject.transform)
         {
-            if (child != Character_Portrait_Template.transform) Destroy(child.gameObject);
+            if (child != Character_Card_Template.transform) Destroy(child.gameObject);
         }
     }
 
