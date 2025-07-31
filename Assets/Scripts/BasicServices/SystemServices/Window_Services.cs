@@ -8,7 +8,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Win32Wrapper;
-using static Window_Services;
 
 public class Window_Services : MonoBehaviour
 {
