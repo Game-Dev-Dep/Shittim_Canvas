@@ -752,8 +752,7 @@ public class Window_Services : MonoBehaviour
             windowRect.Bottom >= monitorInfo.rcMonitor.Bottom;
         return coversScreen &&
               windowWidth >= screenWidth &&
-              windowHeight >= screenHeight &&
-              isborderless;
+              windowHeight >= screenHeight;
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Window_Services", message, loglevel, logtype); }
