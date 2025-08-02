@@ -7,6 +7,7 @@ using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR;
 using static Win32Wrapper;
 
 public class Window_Services : MonoBehaviour
@@ -175,8 +176,15 @@ public class Window_Services : MonoBehaviour
         is_Fullscreen_Mode = !is_Fullscreen_Mode;
         if (is_Fullscreen_Mode)
         {
-            Console_Log("切换为全屏模式"); 
-            Screen.SetResolution(Device_Screen_Width, Device_Screen_Height, FullScreenMode.FullScreenWindow);
+            Console_Log("切换为全屏模式");
+            IntPtr monitor = MonitorFromWindow(Unity_Handle, 2);
+            var monitorInfo = new MONITORINFOEX();
+            monitorInfo.cbSize = Marshal.SizeOf(typeof(MONITORINFOEX));
+            GetMonitorInfo(monitor, ref monitorInfo);
+            int The_Screen_Width = monitorInfo.rcMonitor.Right - monitorInfo.rcMonitor.Left;
+            int The_Screen_Height = monitorInfo.rcMonitor.Bottom - monitorInfo.rcMonitor.Top;
+            Console_Log($"分辨率{The_Screen_Width} {The_Screen_Height}");
+            Screen.SetResolution(The_Screen_Width, The_Screen_Height, FullScreenMode.FullScreenWindow);
         }
         else
         {
@@ -740,11 +748,12 @@ public class Window_Services : MonoBehaviour
         GetWindowRect(hWnd, out RECT windowRect);
         IntPtr monitor = MonitorFromWindow(hWnd, 2);
         var monitorInfo = new MONITORINFOEX();
+        monitorInfo.cbSize = Marshal.SizeOf(typeof(MONITORINFOEX));
         GetMonitorInfo(monitor, ref monitorInfo);
         int windowWidth = windowRect.Right - windowRect.Left;
         int windowHeight = windowRect.Bottom - windowRect.Top;
         int screenWidth = monitorInfo.rcMonitor.Right - monitorInfo.rcMonitor.Left;
-        int screenHeight = monitorInfo.rcMonitor.Right - monitorInfo.rcMonitor.Left;
+        int screenHeight = monitorInfo.rcMonitor.Bottom - monitorInfo.rcMonitor.Top;
         bool coversScreen =
             windowRect.Left <= monitorInfo.rcMonitor.Left &&
             windowRect.Top <= monitorInfo.rcMonitor.Top &&
