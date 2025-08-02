@@ -7,7 +7,6 @@ using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.XR;
 using static Win32Wrapper;
 
 public class Window_Services : MonoBehaviour
