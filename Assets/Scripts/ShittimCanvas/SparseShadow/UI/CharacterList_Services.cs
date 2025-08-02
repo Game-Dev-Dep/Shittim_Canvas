@@ -18,10 +18,6 @@ public class CharacterList_Services : MonoBehaviour
     [SerializeField]
     public GameObject Character_Card_Template;
     [SerializeField]
-    public RawImage Character_Card_Portrait_Image_Template;
-    [SerializeField]
-    public TextMeshProUGUI Character_Card_Name_Text_Template;
-    [SerializeField]
     public Button Character_List_Toggle_Button;
     [SerializeField]
     public Button Character_List_Exit_Button;
@@ -40,6 +36,13 @@ public class CharacterList_Services : MonoBehaviour
     public float Character_Portrait_Spacing_Y;
 
     public Dictionary<long, List<Character>> Character_List = new Dictionary<long, List<Character>>();
+    private Dictionary<long, List<Character>> Filtered_Character_List = new Dictionary<long, List<Character>>();
+    private string searchKeyword = "";
+    private float debounceTime = 0.3f; // 增加到300ms防抖，减少搜索频率
+    private Coroutine debounceCoroutine;
+    private List<GameObject> activeCharacterCards = new List<GameObject>(); // 缓存活跃的卡片对象
+    private List<GameObject> cardPool = new List<GameObject>(); // 对象池
+    private int maxPoolSize = 50; // 最大池大小
 
     public bool is_Character_List_On = false;
 
@@ -55,6 +58,12 @@ public class CharacterList_Services : MonoBehaviour
 
         Character_List_Toggle_Button.onClick.AddListener(Toggle_Character_List_Panel);
         Character_List_Exit_Button.onClick.AddListener(Hide_Character_List_Panel);
+
+        // 绑定搜索输入框事件
+        if (Character_List_Search_BarInputField != null)
+        {
+            Character_List_Search_BarInputField.onValueChanged.AddListener(OnSearchValueChanged);
+        }
 
         Get_Charcter_List();
         Get_Detail_Option_UI_Parameters();
@@ -100,14 +109,106 @@ public class CharacterList_Services : MonoBehaviour
     public void Create_Character_List_UI()
     {
         Console_Log("开始创建角色列表UI");
+        UpdateCharacterListDisplay();
+        Console_Log("结束创建角色列表UI");
+    }
 
-        Character_List_Search_Result_Content_GameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (Character_Portrait_Height + Character_Portrait_Spacing_X) * ((Character_List.Count / 5) + 1 ) + Character_Portrait_Spacing_X);
+    // 把搜索搬过来了
+    void OnSearchValueChanged(string keyword)
+    {
+        searchKeyword = keyword.ToLower();
+        if (debounceCoroutine != null)
+            StopCoroutine(debounceCoroutine);
+        debounceCoroutine = StartCoroutine(DebounceSearch());
+    }
 
-        foreach (var character in Character_List)
+    IEnumerator DebounceSearch()
+    {
+        yield return new WaitForSeconds(debounceTime);
+        FilterCharacters();
+        UpdateCharacterListDisplay();
+    }
+
+    void FilterCharacters()
+    {
+        if (string.IsNullOrEmpty(searchKeyword))
         {
-            // 实例化角色卡片
-            GameObject character_card_gameobject = Instantiate(Character_Card_Template, Character_List_Search_Result_Content_GameObject.transform);
+            Filtered_Character_List = new Dictionary<long, List<Character>>(Character_List);
+        }
+        else
+        {
+            // 过滤逻辑，支持精确匹配、前缀匹配和模糊匹配
+            Filtered_Character_List = new Dictionary<long, List<Character>>();
+            
+            foreach (var character in Character_List)
+            {
+                string characterName = character.Value.First().Name.ToLower();
+                
+                // 精确匹配
+                if (characterName == searchKeyword)
+                {
+                    Filtered_Character_List.Add(character.Key, character.Value);
+                    continue;
+                }
+                
+                // 前缀匹配
+                if (characterName.StartsWith(searchKeyword))
+                {
+                    Filtered_Character_List.Add(character.Key, character.Value);
+                    continue;
+                }
+                
+                // 模糊匹配
+                if (characterName.Contains(searchKeyword))
+                {
+                    Filtered_Character_List.Add(character.Key, character.Value);
+                    continue;
+                }
+                
+                // 昵称匹配
+                bool nicknameMatch = character.Value.First().Nicknames.Any(nickname => 
+                    nickname.ToLower() == searchKeyword || 
+                    nickname.ToLower().StartsWith(searchKeyword) || 
+                    nickname.ToLower().Contains(searchKeyword));
+                
+                if (nicknameMatch)
+                {
+                    Filtered_Character_List.Add(character.Key, character.Value);
+                }
+            }
+        }
+        
+        Console_Log($"搜索关键词: '{searchKeyword}', 找到 {Filtered_Character_List.Count} 个角色");
+    }
+
+    void UpdateCharacterListDisplay()
+    {
+        // 使用过滤后的角色列表
+        var characterListToUse = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
+        
+        // 回收现有的卡片到对象池
+        ReturnCardsToPool();
+
+        // 强制布局更新，确保GridLayoutGroup重置
+        StartCoroutine(ForceLayoutUpdate());
+
+        // 创建新的卡片
+        foreach (var character in characterListToUse)
+        {
+            GameObject character_card_gameobject = GetCardFromPool();
+            character_card_gameobject.transform.SetParent(Character_List_Search_Result_Content_GameObject.transform);
             character_card_gameobject.SetActive(true);
+
+            // 重置RectTransform属性，防止对象池中的对象保留之前的尺寸
+            RectTransform cardRect = character_card_gameobject.GetComponent<RectTransform>();
+            if (cardRect != null)
+            {
+                cardRect.localScale = Vector3.one;
+                cardRect.sizeDelta = new Vector2(Character_Portrait_Width, Character_Portrait_Height);
+                cardRect.anchoredPosition = Vector2.zero;
+            }
+            
+            activeCharacterCards.Add(character_card_gameobject);
 
             // 获取卡片内的图片组件
             RawImage character_portrait_rawimage_component = character_card_gameobject.GetComponentInChildren<RawImage>();
@@ -115,23 +216,16 @@ public class CharacterList_Services : MonoBehaviour
             {
                 character_portrait_rawimage_component.texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.Student_Lists_Folder_Path,$"Student_Portrait_{character.Value.First().Name}_Collection.png"));
             }
-            else
-            {
-                Console_Log($"未找到角色卡片内的图片组件", Debug_Services.LogLevel.Debug, LogType.Warning);
-            }
 
             // 获取卡片的按钮组件
             Button character_card_button = character_card_gameobject.GetComponent<Button>();
             if (character_card_button != null)
             {
+                character_card_button.onClick.RemoveAllListeners(); // 清除之前的监听器
                 character_card_button.onClick.AddListener(() =>
                 {
                     Character_Select_Handler(character.Key, character.Value.First().Name, character.Value.Count);
                 });
-            }
-            else
-            {
-                Console_Log($"未找到角色卡片的按钮组件", Debug_Services.LogLevel.Debug, LogType.Warning);
             }
 
             // 获取卡片内的角色名称文本组件
@@ -140,21 +234,95 @@ public class CharacterList_Services : MonoBehaviour
             {
                 character_name_text_component.text = character.Value.First().Name;
             }
-            else
-            {
-                Console_Log($"未找到角色卡片内的名称文本组件", Debug_Services.LogLevel.Debug, LogType.Warning);
-            }
         }
 
-        Console_Log("结束创建角色列表UI");
+        // 调整内容区域大小
+        Character_List_Search_Result_Content_GameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (Character_Portrait_Height + Character_Portrait_Spacing_X) * ((characterListToUse.Count / 5) + 1 ) + Character_Portrait_Spacing_X);
+    }
+
+    GameObject GetCardFromPool()
+    {
+        if (cardPool.Count > 0)
+        {
+            GameObject card = cardPool[cardPool.Count - 1];
+            cardPool.RemoveAt(cardPool.Count - 1);
+            
+            RectTransform cardRect = card.GetComponent<RectTransform>();
+            if (cardRect != null)
+            {
+                cardRect.localScale = Vector3.one;
+                cardRect.sizeDelta = new Vector2(Character_Portrait_Width, Character_Portrait_Height);
+                cardRect.anchoredPosition = Vector2.zero;
+            }
+            
+            return card;
+        }
+        else
+        {
+            GameObject newCard = Instantiate(Character_Card_Template);
+            
+            RectTransform cardRect = newCard.GetComponent<RectTransform>();
+            if (cardRect != null)
+            {
+                cardRect.localScale = Vector3.one;
+                cardRect.sizeDelta = new Vector2(Character_Portrait_Width, Character_Portrait_Height);
+                cardRect.anchoredPosition = Vector2.zero;
+            }
+            
+            return newCard;
+        }
+    }
+
+    void ReturnCardsToPool()
+    {
+        foreach (var card in activeCharacterCards)
+        {
+            if (card != null)
+            {
+                card.SetActive(false);
+                card.transform.SetParent(null);
+                
+                RectTransform cardRect = card.GetComponent<RectTransform>();
+                if (cardRect != null)
+                {
+                    cardRect.localScale = Vector3.one;
+                    cardRect.sizeDelta = new Vector2(Character_Portrait_Width, Character_Portrait_Height);
+                    cardRect.anchoredPosition = Vector2.zero;
+                }
+                
+                if (cardPool.Count < maxPoolSize)
+                {
+                    cardPool.Add(card);
+                }
+                else
+                {
+                    Destroy(card);
+                }
+            }
+        }
+        activeCharacterCards.Clear();
+    }
+
+    IEnumerator ForceLayoutUpdate()
+    {
+        yield return null;
+        
+        Canvas.ForceUpdateCanvases();
+
+        GridLayoutGroup gridLayout = Character_List_Search_Result_Content_GameObject.GetComponent<GridLayoutGroup>();
+        if (gridLayout != null)
+        {
+            gridLayout.enabled = false;
+            yield return null;
+            gridLayout.enabled = true;
+        }
+
+        Canvas.ForceUpdateCanvases();
     }
 
     void Destroy_Setting_Content_UI()
     {
-        foreach (Transform child in Character_List_Search_Result_Content_GameObject.transform)
-        {
-            if (child != Character_Card_Template.transform) Destroy(child.gameObject);
-        }
+        ReturnCardsToPool();
     }
 
     private void Character_Select_Handler(long character_id, string character_name, int character_num)
