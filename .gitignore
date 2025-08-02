@@ -39,6 +39,9 @@ Screenshots/
 # 忽略 Visual Studio Code 配置文件夹
 .vscode/
 
+# 忽略 Rider 配置文件夹
+.idea/
+
 # 保留资产 .meta 文件
 !*/**/*.meta
 
