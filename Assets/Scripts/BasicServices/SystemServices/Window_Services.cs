@@ -183,7 +183,7 @@ public class Window_Services : MonoBehaviour
             GetMonitorInfo(monitor, ref monitorInfo);
             int The_Screen_Width = monitorInfo.rcMonitor.Right - monitorInfo.rcMonitor.Left;
             int The_Screen_Height = monitorInfo.rcMonitor.Bottom - monitorInfo.rcMonitor.Top;
-            Console_Log($"分辨率{The_Screen_Width} {The_Screen_Height}");
+            //Console_Log($"分辨率 {The_Screen_Width} {The_Screen_Height}");
             Screen.SetResolution(The_Screen_Width, The_Screen_Height, FullScreenMode.FullScreenWindow);
         }
         else
