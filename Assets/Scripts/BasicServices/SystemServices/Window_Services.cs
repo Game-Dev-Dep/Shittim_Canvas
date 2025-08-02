@@ -183,8 +183,17 @@ public class Window_Services : MonoBehaviour
             GetMonitorInfo(monitor, ref monitorInfo);
             int The_Screen_Width = monitorInfo.rcMonitor.Right - monitorInfo.rcMonitor.Left;
             int The_Screen_Height = monitorInfo.rcMonitor.Bottom - monitorInfo.rcMonitor.Top;
-            //Console_Log($"分辨率 {The_Screen_Width} {The_Screen_Height}");
-            Screen.SetResolution(The_Screen_Width, The_Screen_Height, FullScreenMode.FullScreenWindow);
+            //The_Screen_Width = 1;
+            //The_Screen_Height = 1;
+            if (The_Screen_Width <= 1280 || The_Screen_Height <= 720)
+            {
+                Console_Log($"获取分辨率 {The_Screen_Width} {The_Screen_Height} 小于最小分辨率1280x720");
+                Screen.SetResolution(Device_Screen_Width, Device_Screen_Height, FullScreenMode.FullScreenWindow);
+            }
+            else
+            {
+                Screen.SetResolution(The_Screen_Width, The_Screen_Height, FullScreenMode.FullScreenWindow);
+            }
         }
         else
         {
