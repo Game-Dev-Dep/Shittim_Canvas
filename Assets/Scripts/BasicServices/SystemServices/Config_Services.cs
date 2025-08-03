@@ -1,6 +1,7 @@
 using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
+using Spine;
 using UnityEngine.UI;
 
 public class Config_Services : MonoBehaviour
@@ -26,11 +27,12 @@ public class Config_Services : MonoBehaviour
     public Function_Config Global_Function_Config = new Function_Config();
     public WindowFilter_Config Gloabal_WindowFilter_Config = new WindowFilter_Config();
     public Setting_Config Global_Setting_Config = new Setting_Config();
+    public Favorite_Config Global_Favorite_Config = new Favorite_Config();
 
 
-    // Fix for CS0120 and CS0572 errors  
-    // The issue arises because `Setting_Config.Audio` is a nested class, not an instance.  
-    // To fix this, we need to ensure that `Global_Setting_Config.Audio` is properly instantiated and accessed.  
+    // Fix for CS0120 and CS0572 errors
+    // The issue arises because `Setting_Config.Audio` is a nested class, not an instance.
+    // To fix this, we need to ensure that `Global_Setting_Config.Audio` is properly instantiated and accessed.
 
     private void Start()
     {
@@ -84,10 +86,17 @@ public class Config_Services : MonoBehaviour
                     $"窗口类名个数: {Gloabal_WindowFilter_Config.Class_Names.Count}"
                     );
 
+        Global_Favorite_Config = File_Services.Load_Specific_Type_From_File<Favorite_Config>(Path.Combine(File_Services.Config_Files_Folder_Path, "Favorite Config.json"));
+        Console_Log(
+            "读取到的收藏设置:\n" +
+            $"收藏的个数: {Global_Favorite_Config.Character_Names.Count}\n" +
+            $"收藏的内容: {JsonConvert.SerializeObject(Global_Favorite_Config.Character_Names.ToArray())}\n"
+        );
+
         Console_Log($"结束初始化 Config Services");
     }
 
-    public void Save_Global_Config(Setting_Config setting_config, string file_path)
+    public void Save_Setting_Config(Setting_Config setting_config, string file_path)
     {
         Console_Log
         (
@@ -143,6 +152,17 @@ public class Config_Services : MonoBehaviour
                     $"自定义对话字幕: {function_config.is_Subtitle_Custom_On}\n" +
                     $"后期处理: {function_config.is_Volume_On}\n");
         File_Services.Save_Specific_Type_To_File<Function_Config>(function_config, file_path);
+    }
+
+    public void Save_Favorite_Config(Favorite_Config favorite_config, string file_path)
+    {
+        Console_Log
+        (
+            "保存的收藏设置:\n" +
+            $"收藏的个数: {favorite_config.Character_Names.Count}\n" +
+            $"收藏的内容: {JsonConvert.SerializeObject(favorite_config.Character_Names.ToArray())}\n"
+        );
+        File_Services.Save_Specific_Type_To_File<Favorite_Config>(favorite_config, file_path);
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Config_Services", message, loglevel, logtype); }

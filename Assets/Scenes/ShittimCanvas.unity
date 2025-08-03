@@ -5303,10 +5303,12 @@ MonoBehaviour:
   Previous_Page_Button: {fileID: 1214749102}
   Next_Page_Button: {fileID: 937014408}
   Page_Info_Text: {fileID: 1513833217}
+  Character_Favortie_Button: {fileID: 1690036755}
   Character_Portrait_Width: 0
   Character_Portrait_Height: 0
   Character_Portrait_Spacing_X: 0
   Character_Portrait_Spacing_Y: 0
+  is_Favorite_Filter_On: 0
   is_Character_List_On: 0
 --- !u!1 &488608957
 GameObject:
@@ -7776,7 +7778,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1149.8, y: 2.9972}
+  m_AnchoredPosition: {x: 1149.8, y: 2.9971924}
   m_SizeDelta: {x: 20, y: 927.3748}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &710000241
@@ -8045,6 +8047,8 @@ MonoBehaviour:
     is_Subtitle_JP_On: 1
     is_Subtitle_Custom_On: 1
     is_Volume_On: 1
+  Global_Favorite_Config:
+    Character_Names: []
 --- !u!114 &716643200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20333,7 +20337,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1868640356}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

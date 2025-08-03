@@ -35,8 +35,8 @@ public class File_Services : MonoBehaviour
 
     // ===== Student Lists ===== \\
     public static string Student_Lists_Folder_Path => Path.Combine(Root_Folder_Path, "Student Lists");
-    
-    
+
+
     private void Start()
     {
         Console_Log($"开始初始化文件系统");
@@ -82,7 +82,7 @@ public class File_Services : MonoBehaviour
             }
         }
 
-        Console_Log($"结束校验 Student Files 文件夹结构"); 
+        Console_Log($"结束校验 Student Files 文件夹结构");
     }
 
     /// <summary>
@@ -143,6 +143,11 @@ public class File_Services : MonoBehaviour
         if (!File.Exists(Path.Combine(Config_Files_Folder_Path, "WindowFilter Config.json")))
         {
             Save_Default_Type_To_File<WindowFilter_Config>(Path.Combine(Config_Files_Folder_Path, "WindowFilter Config.json"));
+        }
+
+        if (!File.Exists(Path.Combine(Config_Files_Folder_Path, "Favorite Config.json")))
+        {
+            Save_Default_Type_To_File<Favorite_Config>(Path.Combine(Config_Files_Folder_Path, "Favorite Config.json"));
         }
 
         Console_Log($"结束创建默认文件");

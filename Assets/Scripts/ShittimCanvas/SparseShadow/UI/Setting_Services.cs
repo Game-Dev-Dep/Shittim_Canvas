@@ -59,7 +59,7 @@ public class Setting_Services : MonoBehaviour
 
         setting_config.About.Version = Version_Services.Instance.Version_String;
         setting_config.About.Build_Date = Version_Services.Instance.Build_Time_String;
-        
+
         // 同步通知服务状态
         if (Notification_Services.Instance != null)
         {
@@ -69,13 +69,13 @@ public class Setting_Services : MonoBehaviour
 
     public void Save_Setting_Config()
     {
-        Config_Services.Instance.Save_Global_Config(setting_config, Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
+        Config_Services.Instance.Save_Setting_Config(setting_config, Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
         Toast_Wrapper_Services.ShowToast("toast.settings_saved", 3f);
     }
 
     private void Save_Setting_Config_Silent()
     {
-        Config_Services.Instance.Save_Global_Config(setting_config, Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
+        Config_Services.Instance.Save_Setting_Config(setting_config, Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
     }
 
     public void Reset_Setting_Config()
@@ -163,7 +163,7 @@ public class Setting_Services : MonoBehaviour
                         {
                             setting_config.General.Notification_Enabled = int.Parse(Setting_Contents[Setting_Option_Type.General][3].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
                             Setting_Contents[Setting_Option_Type.General][3].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][3].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
-                            
+
                             // 更新通知服务的状态
                             if (Notification_Services.Instance != null)
                             {
@@ -400,7 +400,7 @@ public class Setting_Services : MonoBehaviour
 
         // 注册语言变更事件
         LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
-        
+
         // 确保当前语言设置正确
         var currentLocale = LocalizationSettings.SelectedLocale;
         if (currentLocale != null)
@@ -449,23 +449,23 @@ public class Setting_Services : MonoBehaviour
     {
         // 直接使用Unity的Screen API获取显示器信息
         setting_config.Graphic.Display_Monitor_Options = Get_Display_Options_From_Screen();
-        
+
         // 确保选中的显示器索引有效
         if (setting_config.Graphic.Selected_Display_Monitor_Index >= setting_config.Graphic.Display_Monitor_Options.Count)
         {
             setting_config.Graphic.Selected_Display_Monitor_Index = 0;
         }
-        
+
         yield break;
     }
 
     private List<string> Get_Display_Options_From_Screen()
     {
         var options = new List<string>();
-        
+
         // 获取所有显示器
         var displays = Display.displays;
-        
+
         for (int i = 0; i < displays.Length; i++)
         {
             var display = displays[i];
@@ -476,26 +476,26 @@ public class Setting_Services : MonoBehaviour
             }
             options.Add(option);
         }
-        
+
         // 如果没有检测到显示器，使用默认选项
         if (options.Count == 0)
         {
             options.Add("Main Display");
         }
-        
+
         return options;
     }
 
     public void Refresh_Display_Options()
     {
         setting_config.Graphic.Display_Monitor_Options = Get_Display_Options_From_Screen();
-        
+
         // 确保选中的显示器索引有效
         if (setting_config.Graphic.Selected_Display_Monitor_Index >= setting_config.Graphic.Display_Monitor_Options.Count)
         {
             setting_config.Graphic.Selected_Display_Monitor_Index = 0;
         }
-        
+
         // 如果当前正在显示图形设置，则更新UI
         if (is_Setting_On && Cur_Setting_Option_Type == Setting_Option_Type.Graphic)
         {
@@ -646,7 +646,7 @@ public class Setting_Services : MonoBehaviour
                         Toggle toggle_component = toggle_option.GetComponent<Toggle>();
 
                         TextMeshProUGUI toggle_text = toggle_option.transform.Find("[Setting] Detail Option Text").GetComponent<TextMeshProUGUI>();
-                        
+
                         if (Localization_Utils.Is_Localization_Key(setting_detail_option.ToggleGroup_Options[i]))
                         {
                             Localization_Utils.Apply_Localization_To_Text(toggle_text, setting_detail_option.ToggleGroup_Options[i]);
@@ -713,10 +713,10 @@ public class Setting_Services : MonoBehaviour
                     setting_detail_option.Dropdown_Component.ClearOptions();
                     // dropdown不用key
                     setting_detail_option.Dropdown_Component.AddOptions(setting_detail_option.Dropdown_Options);
-                    
+
                     // dropdown适配
                     setting_detail_option.Dropdown_Component.value = setting_detail_option.Dropdown_Value;
-                    
+
                     if (setting_detail_option.Dropdown_Callback != null)
                     {
                         setting_detail_option.Dropdown_Component.onValueChanged.AddListener((value) => setting_detail_option.Dropdown_Callback(value));
