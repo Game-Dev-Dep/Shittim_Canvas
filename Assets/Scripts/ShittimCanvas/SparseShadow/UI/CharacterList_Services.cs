@@ -40,7 +40,11 @@ public class CharacterList_Services : MonoBehaviour
     [SerializeField]
     public TextMeshProUGUI Page_Info_Text;
     [SerializeField]
-    public Button Character_Favortie_Button;
+    public ToggleGroup Character_Filter_ToggleGroup;
+    [SerializeField]
+    public Toggle All_Characters_Toggle;
+    [SerializeField]
+    public Toggle Favorite_Characters_Toggle;
 
     public float Character_Portrait_Width;
     public float Character_Portrait_Height;
@@ -107,7 +111,16 @@ public class CharacterList_Services : MonoBehaviour
 
         Character_List_Toggle_Button.onClick.AddListener(Toggle_Character_List_Panel);
         Character_List_Exit_Button.onClick.AddListener(Hide_Character_List_Panel);
-        Character_Favortie_Button.onClick.AddListener(Toggle_Favorite_Filter);
+
+        // 绑定Toggle事件
+        if (All_Characters_Toggle != null)
+        {
+            All_Characters_Toggle.onValueChanged.AddListener((isOn) => OnToggleValueChanged(All_Characters_Toggle, isOn));
+        }
+        if (Favorite_Characters_Toggle != null)
+        {
+            Favorite_Characters_Toggle.onValueChanged.AddListener((isOn) => OnToggleValueChanged(Favorite_Characters_Toggle, isOn));
+        }
 
         // 绑定搜索输入框事件
         if (Character_List_Search_BarInputField != null)
@@ -137,6 +150,17 @@ public class CharacterList_Services : MonoBehaviour
         Get_Charcter_List();
         Get_Detail_Option_UI_Parameters();
 
+        // 初始化Toggle Group状态
+        if (Character_Filter_ToggleGroup != null)
+        {
+            // 默认选择"全部"选项
+            if (All_Characters_Toggle != null)
+            {
+                All_Characters_Toggle.isOn = true;
+            }
+            is_Favorite_Filter_On = false;
+        }
+
         // Onchange调用
         LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
 
@@ -160,6 +184,20 @@ public class CharacterList_Services : MonoBehaviour
     {
         is_Character_List_On = true;
         Character_List_Root_GameObject.SetActive(is_Character_List_On);
+        
+        // 确保Toggle Group状态与当前过滤状态同步
+        if (Character_Filter_ToggleGroup != null)
+        {
+            if (is_Favorite_Filter_On)
+            {
+                if (Favorite_Characters_Toggle != null) Favorite_Characters_Toggle.isOn = true;
+            }
+            else
+            {
+                if (All_Characters_Toggle != null) All_Characters_Toggle.isOn = true;
+            }
+        }
+        
         Create_Character_List_UI();
     }
 
@@ -170,12 +208,26 @@ public class CharacterList_Services : MonoBehaviour
         Destroy_Chracter_List_UI();
     }
 
-    void Toggle_Favorite_Filter()
+    void OnToggleValueChanged(Toggle toggle, bool isOn)
     {
-        //if (!string.IsNullOrEmpty(searchKeyword)) return;
+        if (toggle == null || !isOn) return; // 只处理被选中的Toggle
 
-        is_Favorite_Filter_On = !is_Favorite_Filter_On;
+        // 根据选中的Toggle设置收藏过滤状态
+        if (toggle == All_Characters_Toggle)
+        {
+            is_Favorite_Filter_On = false;
+        }
+        else if (toggle == Favorite_Characters_Toggle)
+        {
+            is_Favorite_Filter_On = true;
+        }
 
+        Console_Log($"Toggle 切换: {toggle.name}, 收藏过滤状态: {is_Favorite_Filter_On}");
+
+        // 重置页码，因为过滤条件改变后当前页码可能超出新的最大页数
+        currentPage = 0;
+
+        // 重新创建UI以应用过滤
         Destroy_Chracter_List_UI();
         Create_Character_List_UI();
     }
@@ -220,6 +272,8 @@ public class CharacterList_Services : MonoBehaviour
     void OnNextPage()
     {
         var characterListToUse = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
+        if (is_Favorite_Filter_On) characterListToUse = Favorite_Filter(characterListToUse);
+        
         int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
 
         if (currentPage < maxPage)
@@ -235,6 +289,8 @@ public class CharacterList_Services : MonoBehaviour
         if (Page_Info_Text != null)
         {
             var characterListToUse = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
+            if (is_Favorite_Filter_On) characterListToUse = Favorite_Filter(characterListToUse);
+            
             int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
             Page_Info_Text.text = $" {currentPage + 1} / {maxPage + 1} "; //i18n摆了
         }
@@ -248,6 +304,8 @@ public class CharacterList_Services : MonoBehaviour
         if (Next_Page_Button != null)
         {
             var characterListToUse = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
+            if (is_Favorite_Filter_On) characterListToUse = Favorite_Filter(characterListToUse);
+            
             int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
             Next_Page_Button.interactable = currentPage < maxPage;
         }
@@ -373,6 +431,16 @@ public class CharacterList_Services : MonoBehaviour
     private void OnDestroy()
     {
         LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
+        
+        // 清理Toggle事件监听
+        if (All_Characters_Toggle != null)
+        {
+            All_Characters_Toggle.onValueChanged.RemoveAllListeners();
+        }
+        if (Favorite_Characters_Toggle != null)
+        {
+            Favorite_Characters_Toggle.onValueChanged.RemoveAllListeners();
+        }
     }
 
     // 语言切换相关
@@ -748,6 +816,13 @@ public class CharacterList_Services : MonoBehaviour
         }
 
         Save_Favorite_Config();
+
+        // 如果当前在收藏页面，刷新显示
+        if (is_Favorite_Filter_On && is_Character_List_On)
+        {
+            Destroy_Chracter_List_UI();
+            Create_Character_List_UI();
+        }
     }
 
     public void Update_Favorite_Button_UI(bool is_On, GameObject favorite_button)
