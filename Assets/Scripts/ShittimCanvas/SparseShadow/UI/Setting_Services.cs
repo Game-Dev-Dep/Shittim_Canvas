@@ -412,6 +412,11 @@ public class Setting_Services : MonoBehaviour
             }
         }
 
+        Audio_Services.Instance.Global_Sound_Slider_Handler(setting_config.Audio.Global_Sound);
+        Audio_Services.Instance.Talk_Slider_Handler(setting_config.Audio.Talk_Sound);
+        Audio_Services.Instance.SFX_Slider_Handler(setting_config.Audio.SFX_Sound);
+        Audio_Services.Instance.BGM_Slider_Handler(setting_config.Audio.BGM_Sound);
+
         Init_Setting_Contents();
 
         Update_Setting_Content_UI();

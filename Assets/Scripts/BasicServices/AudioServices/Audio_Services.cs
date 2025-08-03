@@ -74,19 +74,19 @@ public class Audio_Services : MonoBehaviour
     public void Global_Sound_Slider_Handler(float value)
     {
         Global_Sound = value;
-        Master_Audio_Mixer_Group.audioMixer.SetFloat("Global_Volume", Get_Decibels(value, -80, 0));
+        Master_Audio_Mixer_Group.audioMixer.SetFloat("Global_Volume", Get_Decibels(value, -80, 15));
     }
 
     public void Talk_Slider_Handler(float value)
     {
         Talk_Sound = value;
-        Talk_Audio_Mixer_Group.audioMixer.SetFloat("Talk_Volume", Get_Decibels(value, -80, -5));
+        Talk_Audio_Mixer_Group.audioMixer.SetFloat("Talk_Volume", Get_Decibels(value, -80, 0));
     }
 
     public void SFX_Slider_Handler(float value)
     {
         SFX_Sound = value;
-        SFX_Audio_Mixer_Group.audioMixer.SetFloat("SFX_Volume", Get_Decibels(value, -80, -7));
+        SFX_Audio_Mixer_Group.audioMixer.SetFloat("SFX_Volume", Get_Decibels(value, -80, -5));
     }
 
     public void BGM_Slider_Handler(float value)
@@ -186,7 +186,7 @@ public class Audio_Services : MonoBehaviour
                 audio_source.outputAudioMixerGroup = SFX_Audio_Mixer_Group;
                 audio_source.clip = audio_source_data.AudioClips[0];
                 audio_source.loop = audio_source_data.Loop;
-                
+
                 break;
 
             case AudioClip_Type.BGM:
