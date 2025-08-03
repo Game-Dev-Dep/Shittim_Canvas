@@ -114,7 +114,7 @@ public class Character : MonoBehaviour
         if (!is_Character_Idle_Mode)
         {
             if (skeleton_animation.AnimationState.GetCurrent(0)?.Animation.Name == "Idle_01") is_Character_Idle_Mode = true;
-            else is_Character_Idle_Mode = false; 
+            else is_Character_Idle_Mode = false;
             Index_Services.Instance.is_Idle_Mode = is_Character_Idle_Mode;
         }
         else
@@ -165,7 +165,7 @@ public class Character : MonoBehaviour
         Init_PlayableDirector();
         Init_TimelineAsset();
         Disable_ChatDialog_GameObject();
-        
+
         Shader_Services.Instance.Replace_Render_Shader(lobby_gameobject_instantiated);
         Shader_Services.Instance.Replace_All_Spine_Shader();
 
@@ -309,7 +309,7 @@ public class Character : MonoBehaviour
         // ===== 加载角色AB包 ===== \\
         foreach (string file_path in Directory.GetFiles(Path.Combine(File_Services.Student_Files_Folder_Path, Character_Name, "Bundles"), "*.bundle", SearchOption.AllDirectories))
         {
-            string file_name = Path.GetFileName(file_path); 
+            string file_name = Path.GetFileName(file_path);
             AssetBundle asset_bundle = AssetBundle.LoadFromFile(file_path);
             if (asset_bundle != null)
             {
@@ -349,6 +349,7 @@ public class Character : MonoBehaviour
                 if (Volume_Services.Instance != null)
                 {
                     Volume_Services.Instance.Volume_Component = volume_component;
+                    Volume_Services.Instance.Volume_Component.enabled = Volume_Services.Instance.is_Volume_On;
                 }
                 volume_component.sharedProfile = volume_profile_array[0];
                 Console_Log($"第一个 Volume Profile 为: {volume_component.sharedProfile.name}", Debug_Services.LogLevel.Core);
