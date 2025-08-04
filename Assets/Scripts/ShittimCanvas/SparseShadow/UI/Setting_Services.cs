@@ -48,6 +48,7 @@ public class Setting_Services : MonoBehaviour
 
     private Setting_Config setting_config;
     private LocalizedString localizedString = new LocalizedString();
+    private int buildVersionClickCount = 0; // 构建版本点击计数器
 
     private void Get_Setting_Config()
     {
@@ -365,7 +366,15 @@ public class Setting_Services : MonoBehaviour
                     Title_Key = "settings_panel.about.build_ver",
                     Description_Key = "settings_panel.about.build_ver.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Text,
-                    Text_Value = setting_config.About.Version
+                    Text_Value = setting_config.About.Version,
+                    Text_Click_Callback = () => {
+                        buildVersionClickCount++;              
+                        if (buildVersionClickCount >= 10)
+                        {
+                            Toast_Wrapper_Services.ShowToast("https://shittimcanvas114514.japerz.com", 5f);
+                            buildVersionClickCount = 0; // Reset计数器
+                        }
+                    }
                 },
                 new Setting_Detail_Option
                 {
@@ -735,6 +744,17 @@ public class Setting_Services : MonoBehaviour
                     setting_detail_option.Setting_Detail_Option_GameObject.SetActive(true);
                     setting_detail_option.Text_Component = setting_detail_option.Setting_Detail_Option_GameObject.transform.Find("[Setting] Detail Option Text").GetComponent<TextMeshProUGUI>();
                     setting_detail_option.Text_Component.text = setting_detail_option.Text_Value;
+                    
+                    // 为Text添加点击事件
+                    if (setting_detail_option.Text_Click_Callback != null)
+                    {
+                        var button = setting_detail_option.Setting_Detail_Option_GameObject.GetComponent<Button>();
+                        if (button == null)
+                        {
+                            button = setting_detail_option.Setting_Detail_Option_GameObject.AddComponent<Button>();
+                        }
+                        button.onClick.AddListener(() => setting_detail_option.Text_Click_Callback());
+                    }
                     break;
             }
         }
@@ -799,6 +819,7 @@ public class Setting_Services : MonoBehaviour
         public Action<float> Slider_Callback;
         public Action<string> Input_Callback;
         public Action<int> Dropdown_Callback;
+        public Action Text_Click_Callback;
 
         public List<string> ToggleGroup_Options;
         public float Slider_Min_Value = 0;
