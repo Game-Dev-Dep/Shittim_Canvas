@@ -80,7 +80,7 @@ public class Audio_Services : MonoBehaviour
     public void Talk_Slider_Handler(float value)
     {
         Talk_Sound = value;
-        Talk_Audio_Mixer_Group.audioMixer.SetFloat("Talk_Volume", Get_Decibels(value, -80, 0));
+        Talk_Audio_Mixer_Group.audioMixer.SetFloat("Talk_Volume", Get_Decibels(value, -80, -10));
     }
 
     public void SFX_Slider_Handler(float value)
@@ -92,7 +92,7 @@ public class Audio_Services : MonoBehaviour
     public void BGM_Slider_Handler(float value)
     {
         BGM_Sound = value;
-        BGM_Audio_Mixer_Group.audioMixer.SetFloat("BGM_Volume", Get_Decibels(value, -80, -25));
+        BGM_Audio_Mixer_Group.audioMixer.SetFloat("BGM_Volume", Get_Decibels(value, -80, -30));
     }
 
     public static float Get_Decibels(float value, float minDecibel, float maxDecibel)
