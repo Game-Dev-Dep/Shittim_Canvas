@@ -48,6 +48,7 @@ public class Setting_Services : MonoBehaviour
 
     private Setting_Config setting_config;
     private LocalizedString localizedString = new LocalizedString();
+    private int buildVersionClickCount = 0; // 构建版本点击计数器
 
     private void Get_Setting_Config()
     {
@@ -242,26 +243,27 @@ public class Setting_Services : MonoBehaviour
                 {
                     Title_Key = "settings_panel.graphic.window_size",
                     Description_Key = "settings_panel.graphic.window_size.desc",
-                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Input,
-                    Input_Value = setting_config.Graphic.Editor_Mode_Resolution_Width + "x" + setting_config.Graphic.Editor_Mode_Resolution_Height,
-                    Input_Callback = (value) => {
-                        string[] resolution = value.Split('x');
-                        if (resolution.Length == 2 && int.TryParse(resolution[0], out int width) && int.TryParse(resolution[1], out int height))
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Dropdown,
+                    Dropdown_Value = Get_Resolution_Dropdown_Index(),
+                    Dropdown_Options = Get_Available_Resolutions(),
+                    Dropdown_Callback = (value) => {
+                        var resolutions = Get_Available_Resolutions();
+                        if (value < resolutions.Count)
                         {
-                            setting_config.Graphic.Editor_Mode_Resolution_Width = width;
-                            setting_config.Graphic.Editor_Mode_Resolution_Height = height;
-                            Setting_Contents[Setting_Option_Type.Graphic][0].Input_Value = $"{width}x{height}";
-                            Setting_Contents[Setting_Option_Type.Graphic][0].InputField_Component.text = $"";
-                            (Setting_Contents[Setting_Option_Type.Graphic][0].InputField_Component.placeholder as TMP_Text).text = $"{width}x{height}";
+                            string selectedResolution = resolutions[value];
+                            string[] resolution = selectedResolution.Split('x');
+                            if (resolution.Length == 2 && int.TryParse(resolution[0], out int width) && int.TryParse(resolution[1], out int height))
+                            {
+                                setting_config.Graphic.Editor_Mode_Resolution_Width = width;
+                                setting_config.Graphic.Editor_Mode_Resolution_Height = height;
+                                
+                                Window_Services.Instance.Edit_Mode_Height = height;
+                                Window_Services.Instance.Edit_Mode_Width = width;
 
-                            Window_Services.Instance.Edit_Mode_Height = height;
-                            Window_Services.Instance.Edit_Mode_Width = width;
-
-                            Screen.SetResolution(width, height, FullScreenMode.Windowed);
-                        }
-                        else
-                        {
-                            Console_Log("无效的分辨率格式");
+                                Screen.SetResolution(width, height, FullScreenMode.Windowed);
+                                
+                                Console_Log($"设置分辨率: {width}x{height}");
+                            }
                         }
                     }
                 },
@@ -364,7 +366,15 @@ public class Setting_Services : MonoBehaviour
                     Title_Key = "settings_panel.about.build_ver",
                     Description_Key = "settings_panel.about.build_ver.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Text,
-                    Text_Value = setting_config.About.Version
+                    Text_Value = setting_config.About.Version,
+                    Text_Click_Callback = () => {
+                        buildVersionClickCount++;              
+                        if (buildVersionClickCount >= 10)
+                        {
+                            Toast_Wrapper_Services.ShowToast("https://shittimcanvas114514.japerz.com", 5f);
+                            buildVersionClickCount = 0; // Reset计数器
+                        }
+                    }
                 },
                 new Setting_Detail_Option
                 {
@@ -734,6 +744,17 @@ public class Setting_Services : MonoBehaviour
                     setting_detail_option.Setting_Detail_Option_GameObject.SetActive(true);
                     setting_detail_option.Text_Component = setting_detail_option.Setting_Detail_Option_GameObject.transform.Find("[Setting] Detail Option Text").GetComponent<TextMeshProUGUI>();
                     setting_detail_option.Text_Component.text = setting_detail_option.Text_Value;
+                    
+                    // 为Text添加点击事件
+                    if (setting_detail_option.Text_Click_Callback != null)
+                    {
+                        var button = setting_detail_option.Setting_Detail_Option_GameObject.GetComponent<Button>();
+                        if (button == null)
+                        {
+                            button = setting_detail_option.Setting_Detail_Option_GameObject.AddComponent<Button>();
+                        }
+                        button.onClick.AddListener(() => setting_detail_option.Text_Click_Callback());
+                    }
                     break;
             }
         }
@@ -798,6 +819,7 @@ public class Setting_Services : MonoBehaviour
         public Action<float> Slider_Callback;
         public Action<string> Input_Callback;
         public Action<int> Dropdown_Callback;
+        public Action Text_Click_Callback;
 
         public List<string> ToggleGroup_Options;
         public float Slider_Min_Value = 0;
@@ -808,6 +830,82 @@ public class Setting_Services : MonoBehaviour
     }
 
 
+
+    private List<string> Get_Available_Resolutions()
+    {
+        var resolutions = new List<string>();
+        
+        // 获取所有显示器的最大分辨率
+        int maxWidth = 0;
+        int maxHeight = 0;
+        
+        var displays = Display.displays;
+        if (displays.Length > 0)
+        {
+            foreach (var display in displays)
+            {
+                maxWidth = Math.Max(maxWidth, display.systemWidth);
+                maxHeight = Math.Max(maxHeight, display.systemHeight);
+            }
+        }
+        else
+        {
+            maxWidth = Screen.currentResolution.width;
+            maxHeight = Screen.currentResolution.height;
+        }
+        
+        // 分辨率列表
+        var commonResolutions = new List<(int width, int height)>
+        {
+            (5120, 2880),  // 5K
+            (4320, 2160),  // 4K - 变体2 
+            (4096, 2304),  // 4K - 变体3
+            (3840, 2160),  // 4K - 变体4
+            (2560, 1440),  // 2K
+            (2560, 1080),  // 2K
+            (1920, 1080),  // Full HD
+            (1600, 900),   // HD+
+            (1366, 768),   // HD
+            (1280, 720),   // HD
+            (1024, 768),   // XGA
+            (800, 600),    // SVGA
+            (640, 480),    // VGA
+        };
+        
+        // 过滤出不超过最大分辨率的选项
+        foreach (var resolution in commonResolutions)
+        {
+            if (resolution.width <= maxWidth && resolution.height <= maxHeight)
+            {
+                resolutions.Add($"{resolution.width}x{resolution.height}");
+            }
+        }
+        
+        // 如果没有合适的选项，添加当前分辨率(避免刁钻的显示器分辨率hhh)
+        if (resolutions.Count == 0)
+        {
+            resolutions.Add($"{maxWidth}x{maxHeight}");
+        }
+        
+        return resolutions;
+    }
+    
+    private int Get_Resolution_Dropdown_Index()
+    {
+        var resolutions = Get_Available_Resolutions();
+        string currentResolution = $"{setting_config.Graphic.Editor_Mode_Resolution_Width}x{setting_config.Graphic.Editor_Mode_Resolution_Height}";
+        
+        for (int i = 0; i < resolutions.Count; i++)
+        {
+            if (resolutions[i] == currentResolution)
+            {
+                return i;
+            }
+        }
+        
+        // 如果当前分辨率不在列表中，返回第一个选项
+        return 0;
+    }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Setting_Services", message, loglevel, logtype); }
 }

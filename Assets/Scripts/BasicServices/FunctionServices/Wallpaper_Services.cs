@@ -256,22 +256,19 @@ public class Wallpaper_Services : MonoBehaviour
         Status_Area.SetActive(!is_Wallpaper_Mode);
 #endif
         
-        // 壁纸模式下隐藏Tooltip，但是保留了窗口模式隐藏GUI的Tooltip
-        var tooltipService = GameObject.Find("Tool Tip Service");
-        if (tooltipService != null)
+        // 壁纸模式下隐藏Tooltip
+        var tooltipServices = FindObjectsOfType<MonoBehaviour>();
+        foreach (var service in tooltipServices)
         {
-            tooltipService.SendMessage("HideTooltip", SendMessageOptions.DontRequireReceiver);
-        }
-        
-        // 直接控制Tooltip区域的显示状态（之前有些情况还是隐藏不了，所以暴力一点）
-        var tooltipArea = GameObject.Find("Tool Tips Area");
-        if (tooltipArea != null)
-        {
-#if UNITY_EDITOR
-            tooltipArea.SetActive(!is_Wallpaper_Mode_Editor);
-#else
-            tooltipArea.SetActive(!is_Wallpaper_Mode);
-#endif
+            if (service.GetType().Name == "Tooltips_Services")
+            {
+                var hideMethod = service.GetType().GetMethod("HideTooltip");
+                if (hideMethod != null)
+                {
+                    hideMethod.Invoke(service, null);
+                    break;
+                }
+            }
         }
     }
 
