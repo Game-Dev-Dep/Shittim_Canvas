@@ -19,6 +19,16 @@
 *.mdb
 *.mdb.meta
 
+# 忽略 Unity AddressableAsset 文件
+[Ss]erverData/
+/[Aa]ssets/AddressableAssetsData/link.xml*
+/[Aa]ssets/AddressableAssetsData/*/*.bin*
+/[Aa]ssets/Addressables_Temp*
+/[Aa]ssets/StreamingAssets/aa*
+
+# 忽略 Unity 字体文件夹
+/[Aa]ssets/Resources/Fonts/Original_Font
+
 # 忽略 Shittim Canvs 自定义文件夹
 RecordVideos/
 Screenshots/
@@ -42,12 +52,11 @@ Screenshots/
 # 忽略 Rider 配置文件夹
 .idea/
 
+# 忽略 Jetbrains Rider 自动生成文件夹
+/[Aa]ssets/Plugins/Editor/JetBrains*
+
+# 忽略 Jetbrains Rider 配置文件
+*.DotSettings.user
+
 # 保留资产 .meta 文件
 !*/**/*.meta
-
-# 忽略 Unity 字体文件夹
-/Assets/Resources/Fonts/Original_Font
-
-# 忽略 Unity 可寻址资源的动态
-/Assets/AddressableAssetsData/link.xml
-/Assets/AddressableAssetsData/link.xml.meta
