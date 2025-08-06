@@ -42,6 +42,7 @@ public class Setting_Config
             "开",
             "关"
         };
+        public bool OOBE_Completed = false;
     }
     public class Audio_Class
     {

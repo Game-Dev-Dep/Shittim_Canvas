@@ -550,7 +550,16 @@ public class Setting_Services : MonoBehaviour
     {
         is_Setting_On = true;
         Setting_Root_GameObject.SetActive(is_Setting_On);
-        Save_Setting_Config_Silent();
+        
+        // 重新获取最新的设置配置，确保OOBE中的语言选择能同步到设置面板
+        Get_Setting_Config();
+        
+        // 清除现有的设置内容，重新初始化
+        Setting_Contents.Clear();
+        Init_Setting_Contents();
+        
+        // 更新UI显示
+        Update_Setting_Content_UI();
     }
 
     void Hide_Setting_Panel()
@@ -568,6 +577,8 @@ public class Setting_Services : MonoBehaviour
         else
         {
             Cur_Setting_Option_Type = Setting_Option_Type.General;
+            // 重新获取最新配置，确保显示正确的值
+            Get_Setting_Config();
             Update_Setting_Content_UI();
         }
     }
@@ -581,6 +592,8 @@ public class Setting_Services : MonoBehaviour
         else
         {
             Cur_Setting_Option_Type = Setting_Option_Type.Audio;
+            // 重新获取最新配置，确保显示正确的值
+            Get_Setting_Config();
             Update_Setting_Content_UI();
         }
     }
@@ -594,6 +607,8 @@ public class Setting_Services : MonoBehaviour
         else
         {
             Cur_Setting_Option_Type = Setting_Option_Type.Graphic;
+            // 重新获取最新配置，确保显示正确的值
+            Get_Setting_Config();
             Update_Setting_Content_UI();
         }
     }
@@ -607,6 +622,8 @@ public class Setting_Services : MonoBehaviour
         else
         {
             Cur_Setting_Option_Type = Setting_Option_Type.About;
+            // 重新获取最新配置，确保显示正确的值
+            Get_Setting_Config();
             Update_Setting_Content_UI();
         }
     }
@@ -621,6 +638,14 @@ public class Setting_Services : MonoBehaviour
     void Update_Setting_Content_UI()
     {
         Destroy_Setting_Content_UI();
+        
+        // 确保设置内容存在且使用最新配置
+        if (!Setting_Contents.ContainsKey(Cur_Setting_Option_Type))
+        {
+            // 如果设置内容不存在，重新初始化
+            Init_Setting_Contents();
+        }
+        
         switch (Cur_Setting_Option_Type)
         {
             case Setting_Option_Type.General:
