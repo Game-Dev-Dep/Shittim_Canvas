@@ -249,11 +249,17 @@ public class Wallpaper_Services : MonoBehaviour
 #if UNITY_EDITOR
         Wallpaper_Area.SetActive(!is_Wallpaper_Mode_Editor);
         Function_Area.SetActive(!is_Wallpaper_Mode_Editor);
-        Status_Area.SetActive(!is_Wallpaper_Mode_Editor);
+        // Status Area 根据设置决定是否在壁纸模式下显示
+        bool shouldShowStatusArea = is_Wallpaper_Mode_Editor && 
+            Config_Services.Instance.Global_Setting_Config.General.Wallpaper_Mode_Status_Area_Enabled == 0;
+        Status_Area.SetActive(shouldShowStatusArea);
 #else
         Wallpaper_Area.SetActive(!is_Wallpaper_Mode);
         Function_Area.SetActive(!is_Wallpaper_Mode);
-        Status_Area.SetActive(!is_Wallpaper_Mode);
+        // Status Area 根据设置决定是否在壁纸模式下显示
+        bool shouldShowStatusArea = is_Wallpaper_Mode && 
+            Config_Services.Instance.Global_Setting_Config.General.Wallpaper_Mode_Status_Area_Enabled == 0;
+        Status_Area.SetActive(shouldShowStatusArea);
 #endif
         
         // 壁纸模式下隐藏Tooltip

@@ -50,6 +50,8 @@ public class Config_Services : MonoBehaviour
             $"  开机启动选项: {JsonConvert.SerializeObject(Global_Setting_Config.General.Auto_Startup_List)}\n" +
             $"  默认壁纸模式选中项: {Global_Setting_Config.General.Auto_Wallpaper_Mode}\n" +
             $"  默认壁纸模式选项: {JsonConvert.SerializeObject(Global_Setting_Config.General.Auto_Wallpaper_Mode_List)}\n" +
+            $"  通知启用选中项: {Global_Setting_Config.General.Notification_Enabled}\n" +
+            $"  壁纸模式状态区域启用选中项: {Global_Setting_Config.General.Wallpaper_Mode_Status_Area_Enabled}\n" +
             $"音频设置:\n" +
             $"  全局音量: {Global_Setting_Config.Audio.Global_Sound}\n" +
             $"  语音音量: {Global_Setting_Config.Audio.Talk_Sound}\n" +
@@ -108,6 +110,8 @@ public class Config_Services : MonoBehaviour
             $"  开机启动选项: {JsonConvert.SerializeObject(Global_Setting_Config.General.Auto_Startup_List)}\n" +
             $"  默认壁纸模式选中项: {Global_Setting_Config.General.Auto_Wallpaper_Mode}\n" +
             $"  默认壁纸模式选项: {JsonConvert.SerializeObject(Global_Setting_Config.General.Auto_Wallpaper_Mode_List)}\n" +
+            $"  通知启用选中项: {Global_Setting_Config.General.Notification_Enabled}\n" +
+            $"  壁纸模式状态区域启用选中项: {Global_Setting_Config.General.Wallpaper_Mode_Status_Area_Enabled}\n" +
             $"音频设置:\n" +
             $"  全局音量: {Global_Setting_Config.Audio.Global_Sound}\n" +
             $"  语音音量: {Global_Setting_Config.Audio.Talk_Sound}\n" +

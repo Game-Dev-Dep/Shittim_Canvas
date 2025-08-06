@@ -141,6 +141,25 @@ public class HideGUI_Services : MonoBehaviour
         {
             Hide_GUI_Button_Container.SetActive(true);
         }
+        
+        // Status Area 根据设置决定是否在壁纸模式下显示
+        if (Wallpaper_Services.Instance != null && Wallpaper_Services.Instance.Status_Area != null)
+        {
+#if UNITY_EDITOR
+            if (Wallpaper_Services.Instance.is_Wallpaper_Mode_Editor)
+            {
+                bool shouldShowStatusArea = Config_Services.Instance.Global_Setting_Config.General.Wallpaper_Mode_Status_Area_Enabled == 0;
+                Wallpaper_Services.Instance.Status_Area.SetActive(shouldShowStatusArea);
+            }
+#else
+            if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
+            {
+                bool shouldShowStatusArea = Config_Services.Instance.Global_Setting_Config.General.Wallpaper_Mode_Status_Area_Enabled == 0;
+                Wallpaper_Services.Instance.Status_Area.SetActive(shouldShowStatusArea);
+            }
+#endif
+        }
+        
         Update_GUI_Image();
         Update_Hide_Button_Visibility();
     }
@@ -170,6 +189,25 @@ public class HideGUI_Services : MonoBehaviour
             Wallpaper_Services.Instance.is_Wallpaper_Mode_Editor = originalWallpaperModeEditor;
 #endif
         }
+        
+        // Status Area 根据设置决定是否在壁纸模式下显示
+        if (Wallpaper_Services.Instance != null && Wallpaper_Services.Instance.Status_Area != null)
+        {
+#if UNITY_EDITOR
+            if (Wallpaper_Services.Instance.is_Wallpaper_Mode_Editor)
+            {
+                bool shouldShowStatusArea = Config_Services.Instance.Global_Setting_Config.General.Wallpaper_Mode_Status_Area_Enabled == 0;
+                Wallpaper_Services.Instance.Status_Area.SetActive(shouldShowStatusArea);
+            }
+#else
+            if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
+            {
+                bool shouldShowStatusArea = Config_Services.Instance.Global_Setting_Config.General.Wallpaper_Mode_Status_Area_Enabled == 0;
+                Wallpaper_Services.Instance.Status_Area.SetActive(shouldShowStatusArea);
+            }
+#endif
+        }
+        
         Update_GUI_Image();
         Update_Hide_Button_Visibility();
     }

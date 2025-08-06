@@ -172,6 +172,21 @@ public class Setting_Services : MonoBehaviour
                             }
                         }
                     }
+                },
+                new Setting_Detail_Option
+                {
+                    Title_Key = "settings_panel.general.wallpaper_mode_status_area_enabled",
+                    Description_Key = "settings_panel.general.wallpaper_mode_status_area_enabled.desc",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Toggle,
+                    ToggleGroup_Value = setting_config.General.Wallpaper_Mode_Status_Area_Enabled,
+                    ToggleGroup_Options = new List<string> { "settings_panel.elements.yes_radio", "settings_panel.elements.no_radio" },
+                    Toggle_Callback = (value) => {
+                        if (value)
+                        {
+                            setting_config.General.Wallpaper_Mode_Status_Area_Enabled = int.Parse(Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                        }
+                    }
                 }
             }
         );
