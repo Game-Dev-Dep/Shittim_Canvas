@@ -172,6 +172,21 @@ public class Setting_Services : MonoBehaviour
                             }
                         }
                     }
+                },
+                new Setting_Detail_Option
+                {
+                    Title_Key = "settings_panel.general.wallpaper_mode_status_area_enabled",
+                    Description_Key = "settings_panel.general.wallpaper_mode_status_area_enabled.desc",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Toggle,
+                    ToggleGroup_Value = setting_config.General.Wallpaper_Mode_Status_Area_Enabled,
+                    ToggleGroup_Options = new List<string> { "settings_panel.elements.yes_radio", "settings_panel.elements.no_radio" },
+                    Toggle_Callback = (value) => {
+                        if (value)
+                        {
+                            setting_config.General.Wallpaper_Mode_Status_Area_Enabled = int.Parse(Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                        }
+                    }
                 }
             }
         );
@@ -535,7 +550,16 @@ public class Setting_Services : MonoBehaviour
     {
         is_Setting_On = true;
         Setting_Root_GameObject.SetActive(is_Setting_On);
-        Save_Setting_Config_Silent();
+        
+        // 重新获取最新的设置配置，确保OOBE中的语言选择能同步到设置面板
+        Get_Setting_Config();
+        
+        // 清除现有的设置内容，重新初始化
+        Setting_Contents.Clear();
+        Init_Setting_Contents();
+        
+        // 更新UI显示
+        Update_Setting_Content_UI();
     }
 
     void Hide_Setting_Panel()
@@ -553,6 +577,8 @@ public class Setting_Services : MonoBehaviour
         else
         {
             Cur_Setting_Option_Type = Setting_Option_Type.General;
+            // 重新获取最新配置，确保显示正确的值
+            Get_Setting_Config();
             Update_Setting_Content_UI();
         }
     }
@@ -566,6 +592,8 @@ public class Setting_Services : MonoBehaviour
         else
         {
             Cur_Setting_Option_Type = Setting_Option_Type.Audio;
+            // 重新获取最新配置，确保显示正确的值
+            Get_Setting_Config();
             Update_Setting_Content_UI();
         }
     }
@@ -579,6 +607,8 @@ public class Setting_Services : MonoBehaviour
         else
         {
             Cur_Setting_Option_Type = Setting_Option_Type.Graphic;
+            // 重新获取最新配置，确保显示正确的值
+            Get_Setting_Config();
             Update_Setting_Content_UI();
         }
     }
@@ -592,6 +622,8 @@ public class Setting_Services : MonoBehaviour
         else
         {
             Cur_Setting_Option_Type = Setting_Option_Type.About;
+            // 重新获取最新配置，确保显示正确的值
+            Get_Setting_Config();
             Update_Setting_Content_UI();
         }
     }
@@ -606,6 +638,14 @@ public class Setting_Services : MonoBehaviour
     void Update_Setting_Content_UI()
     {
         Destroy_Setting_Content_UI();
+        
+        // 确保设置内容存在且使用最新配置
+        if (!Setting_Contents.ContainsKey(Cur_Setting_Option_Type))
+        {
+            // 如果设置内容不存在，重新初始化
+            Init_Setting_Contents();
+        }
+        
         switch (Cur_Setting_Option_Type)
         {
             case Setting_Option_Type.General:

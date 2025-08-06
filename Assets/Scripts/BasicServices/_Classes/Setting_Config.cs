@@ -36,6 +36,13 @@ public class Setting_Config
             "开",
             "关"
         };
+        public int Wallpaper_Mode_Status_Area_Enabled = 0;
+        public List<string> Wallpaper_Mode_Status_Area_Enabled_List = new List<string>
+        {
+            "开",
+            "关"
+        };
+        public bool OOBE_Completed = false;
     }
     public class Audio_Class
     {
