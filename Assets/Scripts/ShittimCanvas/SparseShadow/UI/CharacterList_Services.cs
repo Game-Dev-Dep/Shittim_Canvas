@@ -184,7 +184,7 @@ public class CharacterList_Services : MonoBehaviour
     {
         is_Character_List_On = true;
         Character_List_Root_GameObject.SetActive(is_Character_List_On);
-        
+
         // 确保Toggle Group状态与当前过滤状态同步
         if (Character_Filter_ToggleGroup != null)
         {
@@ -197,7 +197,7 @@ public class CharacterList_Services : MonoBehaviour
                 if (All_Characters_Toggle != null) All_Characters_Toggle.isOn = true;
             }
         }
-        
+
         Create_Character_List_UI();
     }
 
@@ -273,7 +273,7 @@ public class CharacterList_Services : MonoBehaviour
     {
         var characterListToUse = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
         if (is_Favorite_Filter_On) characterListToUse = Favorite_Filter(characterListToUse);
-        
+
         int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
 
         if (currentPage < maxPage)
@@ -290,7 +290,7 @@ public class CharacterList_Services : MonoBehaviour
         {
             var characterListToUse = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
             if (is_Favorite_Filter_On) characterListToUse = Favorite_Filter(characterListToUse);
-            
+
             int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
             Page_Info_Text.text = $" {currentPage + 1} / {maxPage + 1} "; //i18n摆了
         }
@@ -305,7 +305,7 @@ public class CharacterList_Services : MonoBehaviour
         {
             var characterListToUse = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
             if (is_Favorite_Filter_On) characterListToUse = Favorite_Filter(characterListToUse);
-            
+
             int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
             Next_Page_Button.interactable = currentPage < maxPage;
         }
@@ -352,7 +352,7 @@ public class CharacterList_Services : MonoBehaviour
 
             foreach (var character in Character_List)
             {
-                string characterName = character.Value.First().Name.ToLower();
+                string characterName = character.Value.First().DevName.ToLower();
 
                 // 精确匹配
                 if (characterName == searchKeyword)
@@ -431,7 +431,7 @@ public class CharacterList_Services : MonoBehaviour
     private void OnDestroy()
     {
         LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
-        
+
         // 清理Toggle事件监听
         if (All_Characters_Toggle != null)
         {
@@ -527,11 +527,11 @@ public class CharacterList_Services : MonoBehaviour
         // 按名称排序
         if (ascending)
         {
-            sortedList.Sort((a, b) => a.Value.First().Name.CompareTo(b.Value.First().Name));
+            sortedList.Sort((a, b) => a.Value.First().DevName.CompareTo(b.Value.First().DevName));
         }
         else
         {
-            sortedList.Sort((a, b) => b.Value.First().Name.CompareTo(a.Value.First().Name));
+            sortedList.Sort((a, b) => b.Value.First().DevName.CompareTo(a.Value.First().DevName));
         }
 
         // 将排序后的结果重新转换为Dictionary
@@ -561,7 +561,7 @@ public class CharacterList_Services : MonoBehaviour
         Dictionary<long, List<Character>> characterListToUse_New = new Dictionary<long, List<Character>>();
         foreach (var character in characterListToUse)
         {
-            if (favorite_config.Character_Names.Contains(character.Value.First().Name))
+            if (favorite_config.Character_Names.Contains(character.Value.First().DevName))
             {
                 characterListToUse_New.Add(character.Key, character.Value);
             }
@@ -624,7 +624,7 @@ public class CharacterList_Services : MonoBehaviour
             RawImage character_portrait_rawimage_component = character_card_gameobject.GetComponentInChildren<RawImage>();
             if (character_portrait_rawimage_component != null)
             {
-                character_portrait_rawimage_component.texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.Student_Lists_Folder_Path,$"Student_Portrait_{character.First().Name}_Collection.png"));
+                character_portrait_rawimage_component.texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.Student_Lists_Folder_Path,$"Student_Portrait_{character.First().DevName}_Collection.png"));
             }
 
             // 获取卡片的按钮组件
@@ -634,7 +634,7 @@ public class CharacterList_Services : MonoBehaviour
                 character_card_button.onClick.RemoveAllListeners(); // 清除之前的监听器
                 character_card_button.onClick.AddListener(() =>
                 {
-                    Character_Select_Handler(characterKey, character.First().Name, character.Count);
+                    Character_Select_Handler(characterKey, character.First().DevName, character.Count);
                 });
             }
 
@@ -642,12 +642,12 @@ public class CharacterList_Services : MonoBehaviour
             TextMeshProUGUI character_name_text_component = character_card_gameobject.GetComponentInChildren<TextMeshProUGUI>();
             if (character_name_text_component != null)
             {
-                character_name_text_component.text = character.First().Name;
+                character_name_text_component.text = character.First().FullNameTC;
             }
 
             // 收藏按钮
             Button character_favorite_button = character_card_gameobject.transform.Find("[Character List] Favorite Button").GetComponent<Button>();
-            if (favorite_config.Character_Names.Contains(character.First().Name))
+            if (favorite_config.Character_Names.Contains(character.First().DevName))
             {
                 Update_Favorite_Button_UI(true, character_favorite_button.gameObject);
             }
@@ -658,7 +658,7 @@ public class CharacterList_Services : MonoBehaviour
             character_favorite_button.onClick.RemoveAllListeners();
             character_favorite_button.onClick.AddListener(() =>
             {
-                Favorite_Toggle_Handler(character.First().Name, character_favorite_button.gameObject);
+                Favorite_Toggle_Handler(character.First().DevName, character_favorite_button.gameObject);
             });
         }
 
@@ -776,7 +776,7 @@ public class CharacterList_Services : MonoBehaviour
             List<string> character_names = new List<string>();
             foreach (Character character in Character_List[character_id])
             {
-                character_names.Add(character.Name);
+                character_names.Add(character.DevName);
             }
 
             Multi_Lobby_Dropdown.AddOptions(character_names);
@@ -794,8 +794,8 @@ public class CharacterList_Services : MonoBehaviour
 
     private void Multi_Lobby_Select_Handler(int index, long character_id)
     {
-        Console_Log($"已选择角色的变体: {character_id} {(Character_List[character_id].ToArray())[index].Name}");
-        Character_Services.Instance.Switch_Character((Character_List[character_id].ToArray())[index].Name);
+        Console_Log($"已选择角色的变体: {character_id} {(Character_List[character_id].ToArray())[index].DevName}");
+        Character_Services.Instance.Switch_Character((Character_List[character_id].ToArray())[index].DevName);
         Multi_Lobby_Root_GameObject.SetActive(false);
 
         Character_List_Root_GameObject.SetActive(false);
@@ -833,7 +833,11 @@ public class CharacterList_Services : MonoBehaviour
 
     public class Character
     {
-        public string Name = string.Empty;
+        public string DevName = string.Empty;
+        public string FullNameSC = string.Empty;
+        public string FullNameTC = string.Empty;
+        public string FullNameEn = string.Empty;
+        public string FullNameJp = string.Empty;
         public List<string> Nicknames = new List<string>();
         public School Shcool = new School();
         public Club Club = new Club();
