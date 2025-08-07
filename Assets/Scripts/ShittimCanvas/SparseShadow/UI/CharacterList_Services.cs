@@ -45,6 +45,8 @@ public class CharacterList_Services : MonoBehaviour
     public Toggle All_Characters_Toggle;
     [SerializeField]
     public Toggle Favorite_Characters_Toggle;
+    [SerializeField]
+    public GameObject Empty_Result_GameObject;
 
     public float Character_Portrait_Width;
     public float Character_Portrait_Height;
@@ -739,6 +741,13 @@ public class CharacterList_Services : MonoBehaviour
 
         // 更新分页信息
         UpdatePageInfo();
+
+        // 如果没搜索结果，显示我搞的阿罗娜空结果界面
+        if (Empty_Result_GameObject != null)
+        {
+            bool shouldShowEmptyResult = characterListToUse.Count == 0;
+            Empty_Result_GameObject.SetActive(shouldShowEmptyResult);
+        }
     }
 
     GameObject GetCardFromPool()
