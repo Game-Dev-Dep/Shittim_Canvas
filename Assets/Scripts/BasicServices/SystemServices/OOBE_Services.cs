@@ -83,9 +83,24 @@ public class OOBE_Services : MonoBehaviour
     {
         if (Language_Dropdown == null) return;
 
+        if (setting_config.General.Language_List.Count != LocalizationSettings.AvailableLocales.Locales.Count)
+        {
+            Debug.LogWarning($"语言列表数量 ({setting_config.General.Language_List.Count}) 与可用语言数量 ({LocalizationSettings.AvailableLocales.Locales.Count}) 不一致");
+        }
+
         Language_Dropdown.ClearOptions();
         Language_Dropdown.AddOptions(setting_config.General.Language_List);
-        Language_Dropdown.value = setting_config.General.Language;
+
+        if (setting_config.General.Language >= 0 && setting_config.General.Language < setting_config.General.Language_List.Count)
+        {
+            Language_Dropdown.value = setting_config.General.Language;
+        }
+        else
+        {
+            Language_Dropdown.value = 0;
+            setting_config.General.Language = 0;
+        }
+        
         Language_Dropdown.onValueChanged.AddListener(On_Language_Changed);
     }
 
@@ -103,12 +118,19 @@ public class OOBE_Services : MonoBehaviour
 
     private void On_Language_Changed(int value)
     {
-        setting_config.General.Language = value;
-        Config_Services.Instance.Global_Setting_Config.General.Language = value;
-        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[value];
-        
-        Config_Services.Instance.Save_Setting_Config(setting_config, 
-            System.IO.Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
+        if (value >= 0 && value < LocalizationSettings.AvailableLocales.Locales.Count)
+        {
+            setting_config.General.Language = value;
+            Config_Services.Instance.Global_Setting_Config.General.Language = value;
+            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[value];
+            
+            Config_Services.Instance.Save_Setting_Config(setting_config, 
+                System.IO.Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
+        }
+        else
+        {
+            Debug.LogWarning($"无效的语言索引: {value}, 可用语言数量: {LocalizationSettings.AvailableLocales.Locales.Count}");
+        }
     }
 
     private void Open_Discord()

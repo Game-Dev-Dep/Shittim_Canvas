@@ -104,13 +104,21 @@ public class Setting_Services : MonoBehaviour
                     Dropdown_Value = setting_config.General.Language,
                     Dropdown_Options = setting_config.General.Language_List,
                     Dropdown_Callback = (value) => {
-                        setting_config.General.Language = value;
-                        LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[value];
-                        Setting_Contents[Setting_Option_Type.General][0].Dropdown_Value = value;
-                        // dropdown校验
-                        if (Setting_Contents[Setting_Option_Type.General][0].Dropdown_Component != null)
+                        // 验证语言索引是否有效
+                        if (value >= 0 && value < LocalizationSettings.AvailableLocales.Locales.Count)
                         {
-                            Setting_Contents[Setting_Option_Type.General][0].Dropdown_Component.value = value;
+                            setting_config.General.Language = value;
+                            LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[value];
+                            Setting_Contents[Setting_Option_Type.General][0].Dropdown_Value = value;
+                            // dropdown校验
+                            if (Setting_Contents[Setting_Option_Type.General][0].Dropdown_Component != null)
+                            {
+                                Setting_Contents[Setting_Option_Type.General][0].Dropdown_Component.value = value;
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"无效的语言索引: {value}, 可用语言数量: {LocalizationSettings.AvailableLocales.Locales.Count}");
                         }
                     }
                 },
@@ -436,6 +444,9 @@ public class Setting_Services : MonoBehaviour
                 setting_config.General.Language = currentLanguageIndex;
             }
         }
+
+        // 同步语言列表与本地化设置
+        SyncLanguageListWithLocalizationSettings();
 
         Audio_Services.Instance.Global_Sound_Slider_Handler(setting_config.Audio.Global_Sound);
         Audio_Services.Instance.Talk_Slider_Handler(setting_config.Audio.Talk_Sound);
@@ -945,6 +956,51 @@ public class Setting_Services : MonoBehaviour
         
         // 如果当前分辨率不在列表中，返回第一个选项
         return 0;
+    }
+
+    private void SyncLanguageListWithLocalizationSettings()
+    {
+        // 检查语言列表数量是否与可用语言数量一致
+        if (setting_config.General.Language_List.Count != LocalizationSettings.AvailableLocales.Locales.Count)
+        {
+            Console_Log($"语言列表数量 ({setting_config.General.Language_List.Count}) 与可用语言数量 ({LocalizationSettings.AvailableLocales.Locales.Count}) 不一致，正在同步...");
+            
+            // 根据本地化设置重新生成语言列表
+            setting_config.General.Language_List.Clear();
+            for (int i = 0; i < LocalizationSettings.AvailableLocales.Locales.Count; i++)
+            {
+                var locale = LocalizationSettings.AvailableLocales.Locales[i];
+                string languageName = GetLanguageDisplayName(locale);
+                setting_config.General.Language_List.Add(languageName);
+            }
+            
+            Console_Log($"语言列表已同步: {string.Join(", ", setting_config.General.Language_List)}");
+        }
+        
+        // 确保语言索引有效
+        if (setting_config.General.Language >= setting_config.General.Language_List.Count)
+        {
+            setting_config.General.Language = 0;
+            Console_Log($"语言索引超出范围，已重置为0");
+        }
+    }
+
+    private string GetLanguageDisplayName(Locale locale)
+    {
+        // 根据语言代码返回对应的显示名称
+        switch (locale.Identifier.Code)
+        {
+            case "en":
+                return "English";
+            case "ja":
+                return "日本語";
+            case "zh":
+                return "简体中文";
+            case "zh-TW":
+                return "繁體中文";
+            default:
+                return locale.LocaleName;
+        }
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Setting_Services", message, loglevel, logtype); }

@@ -45,6 +45,8 @@ public class CharacterList_Services : MonoBehaviour
     public Toggle All_Characters_Toggle;
     [SerializeField]
     public Toggle Favorite_Characters_Toggle;
+    [SerializeField]
+    public GameObject Empty_Result_GameObject;
 
     public float Character_Portrait_Width;
     public float Character_Portrait_Height;
@@ -60,6 +62,9 @@ public class CharacterList_Services : MonoBehaviour
     private List<GameObject> activeCharacterCards = new List<GameObject>(); // 缓存活跃的卡片对象
     private List<GameObject> cardPool = new List<GameObject>(); // 对象池
     private int maxPoolSize = 50; // 最大池大小
+
+    // 搜索服务
+    private CharacterSearchService searchService = new CharacterSearchService();
 
     // 性能优化相关
     private bool isDataLoaded = false;
@@ -92,6 +97,10 @@ public class CharacterList_Services : MonoBehaviour
         Character_List = JsonConvert.DeserializeObject<Dictionary<long, List<Character>>>(json);
         // 保存原始顺序
         Original_Character_List = new Dictionary<long, List<Character>>(Character_List);
+        
+        // 构建搜索索引
+        searchService.BuildSearchIndex(Character_List);
+        
         isDataLoaded = true;
     }
 
@@ -292,7 +301,19 @@ public class CharacterList_Services : MonoBehaviour
             if (is_Favorite_Filter_On) characterListToUse = Favorite_Filter(characterListToUse);
 
             int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
-            Page_Info_Text.text = $" {currentPage + 1} / {maxPage + 1} "; //i18n摆了
+            string pageInfoKey = "character_list_panel.page_info";
+            string localizedPageInfo = GetLocalizedText(pageInfoKey);
+            
+            // 如果本地化文本为空或与key相同，使用默认格式
+            if (string.IsNullOrEmpty(localizedPageInfo) || localizedPageInfo == pageInfoKey)
+            {
+                Page_Info_Text.text = $" {currentPage + 1} / {maxPage + 1} ";
+            }
+            else
+            {
+                // 使用本地化格式，支持参数替换
+                Page_Info_Text.text = string.Format(localizedPageInfo, currentPage + 1, maxPage + 1);
+            }
         }
 
         // 更新按钮状态
@@ -347,43 +368,15 @@ public class CharacterList_Services : MonoBehaviour
         }
         else
         {
-            // 过滤逻辑，支持精确匹配、前缀匹配和模糊匹配
+            // 使用搜索服务进行搜索
+            var searchResults = searchService.SearchCharacters(searchKeyword);
             Filtered_Character_List = new Dictionary<long, List<Character>>();
 
-            foreach (var character in Character_List)
+            foreach (var characterId in searchResults)
             {
-                string characterName = character.Value.First().DevName.ToLower();
-
-                // 精确匹配
-                if (characterName == searchKeyword)
+                if (Character_List.ContainsKey(characterId))
                 {
-                    Filtered_Character_List.Add(character.Key, character.Value);
-                    continue;
-                }
-
-                // 前缀匹配
-                if (characterName.StartsWith(searchKeyword))
-                {
-                    Filtered_Character_List.Add(character.Key, character.Value);
-                    continue;
-                }
-
-                // 模糊匹配
-                if (characterName.Contains(searchKeyword))
-                {
-                    Filtered_Character_List.Add(character.Key, character.Value);
-                    continue;
-                }
-
-                // 昵称匹配
-                bool nicknameMatch = character.Value.First().Nicknames.Any(nickname =>
-                    nickname.ToLower() == searchKeyword ||
-                    nickname.ToLower().StartsWith(searchKeyword) ||
-                    nickname.ToLower().Contains(searchKeyword));
-
-                if (nicknameMatch)
-                {
-                    Filtered_Character_List.Add(character.Key, character.Value);
+                    Filtered_Character_List.Add(characterId, Character_List[characterId]);
                 }
             }
         }
@@ -392,6 +385,67 @@ public class CharacterList_Services : MonoBehaviour
         currentPage = 0;
 
         Console_Log($"搜索关键词: '{searchKeyword}', 找到 {Filtered_Character_List.Count} 个角色");
+    }
+
+    /// <summary>
+    /// 获取本地化的角色名称
+    /// </summary>
+    private string GetLocalizedCharacterName(Character character)
+    {
+        // 获取当前语言设置
+        var currentLocale = LocalizationSettings.SelectedLocale;
+        if (currentLocale == null) return character.DevName;
+
+        string localeCode = currentLocale.Identifier.Code;
+        
+        // 根据当前语言返回对应的名称
+        switch (localeCode)
+        {
+            case "zh":
+                return !string.IsNullOrEmpty(character.FullNameSC) ? character.FullNameSC : character.DevName;
+            case "zh-TW":
+                return !string.IsNullOrEmpty(character.FullNameTC) ? character.FullNameTC : character.DevName;
+            case "en":
+                return !string.IsNullOrEmpty(character.FullNameEn) ? character.FullNameEn : character.DevName;
+            case "ja":
+                return !string.IsNullOrEmpty(character.FullNameJp) ? character.FullNameJp : character.DevName;
+            default:
+                return character.DevName;
+        }
+    }
+
+    /// <summary>
+    /// 获取本地化的学校名称
+    /// </summary>
+    private string GetLocalizedSchoolName(School school)
+    {
+        string schoolKey = $"character.school.{school.ToString().ToLower()}";
+        string localizedName = GetLocalizedText(schoolKey);
+        
+        // 如果本地化文本为空或与key相同，返回null
+        if (string.IsNullOrEmpty(localizedName) || localizedName == schoolKey)
+        {
+            return null;
+        }
+        
+        return localizedName;
+    }
+
+    /// <summary>
+    /// 获取本地化的俱乐部名称
+    /// </summary>
+    private string GetLocalizedClubName(Club club)
+    {
+        string clubKey = $"character.club.{club.ToString().ToLower()}";
+        string localizedName = GetLocalizedText(clubKey);
+        
+        // 如果本地化文本为空或与key相同，返回null
+        if (string.IsNullOrEmpty(localizedName) || localizedName == clubKey)
+        {
+            return null;
+        }
+        
+        return localizedName;
     }
 
     // 排序相关方法
@@ -446,11 +500,24 @@ public class CharacterList_Services : MonoBehaviour
     // 语言切换相关
     private void OnLanguageChanged(Locale locale)
     {
+        // 重新构建搜索索引以支持新语言
+        if (isDataLoaded)
+        {
+            searchService.BuildSearchIndex(Character_List);
+        }
+
         if (Search_Result_Sort_Dropdown != null)
         {
             int currentValue = Search_Result_Sort_Dropdown.value;
             UpdateSortDropdownOptions();
             Search_Result_Sort_Dropdown.value = currentValue;
+        }
+
+        // 如果当前有搜索结果，重新搜索以更新显示
+        if (!string.IsNullOrEmpty(searchKeyword))
+        {
+            FilterCharacters();
+            UpdateCharacterListDisplay();
         }
     }
 
@@ -642,7 +709,9 @@ public class CharacterList_Services : MonoBehaviour
             TextMeshProUGUI character_name_text_component = character_card_gameobject.GetComponentInChildren<TextMeshProUGUI>();
             if (character_name_text_component != null)
             {
-                character_name_text_component.text = character.First().FullNameTC;
+                // 使用本地化的角色名称
+                string localizedCharacterName = GetLocalizedCharacterName(character.First());
+                character_name_text_component.text = localizedCharacterName;
             }
 
             // 收藏按钮
@@ -672,6 +741,13 @@ public class CharacterList_Services : MonoBehaviour
 
         // 更新分页信息
         UpdatePageInfo();
+
+        // 如果没搜索结果，显示我搞的阿罗娜空结果界面
+        if (Empty_Result_GameObject != null)
+        {
+            bool shouldShowEmptyResult = characterListToUse.Count == 0;
+            Empty_Result_GameObject.SetActive(shouldShowEmptyResult);
+        }
     }
 
     GameObject GetCardFromPool()
@@ -841,6 +917,179 @@ public class CharacterList_Services : MonoBehaviour
         public List<string> Nicknames = new List<string>();
         public School Shcool = new School();
         public Club Club = new Club();
+    }
+
+    /// <summary>
+    /// 角色搜索服务类
+    /// </summary>
+    public class CharacterSearchService
+    {
+        private Dictionary<string, List<long>> searchIndex = new Dictionary<string, List<long>>();
+        private Dictionary<long, Character> characterCache = new Dictionary<long, Character>();
+        private bool isIndexBuilt = false;
+
+        /// <summary>
+        /// 构建搜索索引
+        /// </summary>
+        public void BuildSearchIndex(Dictionary<long, List<Character>> characterList)
+        {
+            searchIndex.Clear();
+            characterCache.Clear();
+
+            foreach (var kvp in characterList)
+            {
+                var character = kvp.Value.First();
+                characterCache[kvp.Key] = character;
+
+                // 索引角色名称（多语言）
+                IndexCharacterName(kvp.Key, character);
+                
+                // 索引昵称
+                IndexNicknames(kvp.Key, character);
+                
+                // 索引学校名称
+                IndexSchoolName(kvp.Key, character);
+                
+                // 索引俱乐部名称
+                IndexClubName(kvp.Key, character);
+            }
+
+            isIndexBuilt = true;
+        }
+
+        private void IndexCharacterName(long characterId, Character character)
+        {
+            // 索引DevName
+            AddToIndex(character.DevName.ToLower(), characterId);
+            
+            // 索引多语言名称
+            AddToIndex(character.FullNameSC.ToLower(), characterId);
+            AddToIndex(character.FullNameTC.ToLower(), characterId);
+            AddToIndex(character.FullNameEn.ToLower(), characterId);
+            AddToIndex(character.FullNameJp.ToLower(), characterId);
+        }
+
+        private void IndexNicknames(long characterId, Character character)
+        {
+            foreach (var nickname in character.Nicknames)
+            {
+                AddToIndex(nickname.ToLower(), characterId);
+            }
+        }
+
+        private void IndexSchoolName(long characterId, Character character)
+        {
+            string schoolKey = $"character.school.{character.Shcool.ToString().ToLower()}";
+            string schoolName = Localization_Utils.Get_Localized_Text(schoolKey);
+            
+            if (!string.IsNullOrEmpty(schoolName) && schoolName != schoolKey)
+            {
+                AddToIndex(schoolName.ToLower(), characterId);
+            }
+        }
+
+        private void IndexClubName(long characterId, Character character)
+        {
+            string clubKey = $"character.club.{character.Club.ToString().ToLower()}";
+            string clubName = Localization_Utils.Get_Localized_Text(clubKey);
+            
+            if (!string.IsNullOrEmpty(clubName) && clubName != clubKey)
+            {
+                AddToIndex(clubName.ToLower(), characterId);
+            }
+        }
+
+        private void AddToIndex(string term, long characterId)
+        {
+            if (string.IsNullOrEmpty(term)) return;
+
+            // 添加完整术语
+            if (!searchIndex.ContainsKey(term))
+                searchIndex[term] = new List<long>();
+            
+            if (!searchIndex[term].Contains(characterId))
+                searchIndex[term].Add(characterId);
+
+            // 添加前缀索引（用于前缀搜索）
+            for (int i = 1; i < term.Length; i++)
+            {
+                string prefix = term.Substring(0, i);
+                if (!searchIndex.ContainsKey(prefix))
+                    searchIndex[prefix] = new List<long>();
+                
+                if (!searchIndex[prefix].Contains(characterId))
+                    searchIndex[prefix].Add(characterId);
+            }
+        }
+
+        /// <summary>
+        /// 搜索角色
+        /// </summary>
+        public List<long> SearchCharacters(string searchTerm)
+        {
+            if (!isIndexBuilt || string.IsNullOrEmpty(searchTerm))
+                return new List<long>();
+
+            string searchTermLower = searchTerm.ToLower();
+            var results = new HashSet<long>();
+
+            // 精确匹配
+            if (searchIndex.ContainsKey(searchTermLower))
+            {
+                foreach (var characterId in searchIndex[searchTermLower])
+                {
+                    results.Add(characterId);
+                }
+            }
+
+            // 模糊匹配（包含搜索）
+            foreach (var kvp in searchIndex)
+            {
+                if (kvp.Key.Contains(searchTermLower))
+                {
+                    foreach (var characterId in kvp.Value)
+                    {
+                        results.Add(characterId);
+                    }
+                }
+            }
+
+            return results.ToList();
+        }
+
+        /// <summary>
+        /// 获取搜索建议
+        /// </summary>
+        public List<string> GetSearchSuggestions(string partialTerm, int maxSuggestions = 5)
+        {
+            if (!isIndexBuilt || string.IsNullOrEmpty(partialTerm))
+                return new List<string>();
+
+            string partialTermLower = partialTerm.ToLower();
+            var suggestions = new List<string>();
+
+            foreach (var kvp in searchIndex)
+            {
+                if (kvp.Key.StartsWith(partialTermLower) && kvp.Key != partialTermLower)
+                {
+                    suggestions.Add(kvp.Key);
+                    if (suggestions.Count >= maxSuggestions)
+                        break;
+                }
+            }
+
+            return suggestions;
+        }
+
+        /// <summary>
+        /// 清除索引
+        /// </summary>
+        public void ClearIndex()
+        {
+            searchIndex.Clear();
+            characterCache.Clear();
+            isIndexBuilt = false;
+        }
     }
 
     public enum School

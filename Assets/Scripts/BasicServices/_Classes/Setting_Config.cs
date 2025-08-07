@@ -11,12 +11,13 @@ public class Setting_Config
 
     public class General_Class
     {
-        public int Language = 0;
+        public int Language = 2;
         public List<string> Language_List = new List<string>
         {
-            "简体中文",
             "English",
-            "日本語"
+            "日本語",
+            "简体中文",
+            "繁體中文"
         };
         public int Auto_Startup = 1;
         public List<string> Auto_Startup_List = new List<string>
