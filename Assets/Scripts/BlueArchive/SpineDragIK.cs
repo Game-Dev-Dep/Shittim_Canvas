@@ -260,6 +260,10 @@ public class SpineDragIK : MonoBehaviour
         //Console_Log($"{gameObject.name} 坐标更新 合法");
 
         // 坐标转换流程保持不变
+        //Console_Log($"screemPos {screenPos.x} {screenPos.y}");
+        screenPos.x = screenPos.x - Wallpaper_Services.Real_WallpaperWindow_Position.x;
+        screenPos.y = screenPos.y + Wallpaper_Services.Real_WallpaperWindow_Position.y;
+        //Console_Log($"1screemPos {screenPos.x} {screenPos.y}");
         Vector3 worldPos = CachedCamera.ScreenToWorldPoint(screenPos);
         Transform parent = Bone.parent;
         Vector3 localPos = parent.InverseTransformPoint(worldPos);

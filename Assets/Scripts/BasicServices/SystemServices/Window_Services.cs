@@ -755,8 +755,7 @@ public class Window_Services : MonoBehaviour
         bool isborderless = (style & 0x00800000) == 0;
         GetWindowRect(hWnd, out RECT windowRect);
         IntPtr monitor = MonitorFromWindow(hWnd, 2);
-        var monitorInfo = new MONITORINFOEX();
-        monitorInfo.cbSize = Marshal.SizeOf(typeof(MONITORINFOEX));
+        var monitorInfo = new Win32Wrapper.MONITORINFOEX { cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(Win32Wrapper.MONITORINFOEX)) };
         GetMonitorInfo(monitor, ref monitorInfo);
         int windowWidth = windowRect.Right - windowRect.Left;
         int windowHeight = windowRect.Bottom - windowRect.Top;
