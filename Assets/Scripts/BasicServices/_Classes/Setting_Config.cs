@@ -14,10 +14,10 @@ public class Setting_Config
         public int Language = 2;
         public List<string> Language_List = new List<string>
         {
-            "English",
-            "日本語",
             "简体中文",
-            "繁體中文"
+            "繁體中文",
+            "English",
+            "日本語"
         };
         public int Auto_Startup = 1;
         public List<string> Auto_Startup_List = new List<string>
@@ -56,7 +56,7 @@ public class Setting_Config
     {
         public int Editor_Mode_Resolution_Width = 1920;
         public int Editor_Mode_Resolution_Height = 1080;
-        public float Editor_Mode_UI_Scale = 0.1f;
+        public float Editor_Mode_UI_Scale = 0.5f;
         public int Wallpaper_Mode_Refresh_Type = 0;
         public List<string> Wallpaper_Mode_Refresh_Type_List = new List<string>
         {
