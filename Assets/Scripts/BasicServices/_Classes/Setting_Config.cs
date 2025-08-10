@@ -56,7 +56,7 @@ public class Setting_Config
     {
         public int Editor_Mode_Resolution_Width = 1920;
         public int Editor_Mode_Resolution_Height = 1080;
-        public float Editor_Mode_UI_Scale = 1.0f;
+        public float Editor_Mode_UI_Scale = 0.1f;
         public int Wallpaper_Mode_Refresh_Type = 0;
         public List<string> Wallpaper_Mode_Refresh_Type_List = new List<string>
         {
