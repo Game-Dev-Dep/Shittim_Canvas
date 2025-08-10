@@ -178,21 +178,20 @@ public class CharacterList_Services : MonoBehaviour
 
     void Toggle_Character_List_Panel()
     {
-        is_Character_List_On = !is_Character_List_On;
         if (is_Character_List_On)
         {
-            Display_Character_List_Panel();
+            Hide_Character_List_Panel();
         }
         else
         {
-            Hide_Character_List_Panel();
+            Display_Character_List_Panel();
         }
     }
 
     void Display_Character_List_Panel()
     {
         is_Character_List_On = true;
-        Character_List_Root_GameObject.SetActive(is_Character_List_On);
+        Character_List_Root_GameObject.SetActive(true);
 
         // 确保Toggle Group状态与当前过滤状态同步
         if (Character_Filter_ToggleGroup != null)
