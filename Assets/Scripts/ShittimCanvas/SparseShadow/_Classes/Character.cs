@@ -230,6 +230,7 @@ public class Character : MonoBehaviour
 
             // ===== 判断是否能显示字幕 =====
             is_Can_Show_Subtitle = memory_lobby_info.Audio_Files.Count == memory_lobby_info.Subtitles.Count ? true : false;
+            Console_Log($"字幕检查: Audio_Files数量={memory_lobby_info.Audio_Files.Count}, Subtitles数量={memory_lobby_info.Subtitles.Count}, is_Can_Show_Subtitle={is_Can_Show_Subtitle}");
 
             // ===== 更新能否显示字幕的相关UI =====
             Subtitle_Services.Instance.Subtitle_JP_Toggle_Button.enabled = is_Can_Show_Subtitle;
