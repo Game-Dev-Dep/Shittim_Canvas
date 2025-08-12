@@ -97,10 +97,10 @@ public class CharacterList_Services : MonoBehaviour
         Character_List = JsonConvert.DeserializeObject<Dictionary<long, List<Character>>>(json);
         // 保存原始顺序
         Original_Character_List = new Dictionary<long, List<Character>>(Character_List);
-        
+
         // 构建搜索索引
         searchService.BuildSearchIndex(Character_List);
-        
+
         isDataLoaded = true;
     }
 
@@ -302,7 +302,7 @@ public class CharacterList_Services : MonoBehaviour
             int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
             string pageInfoKey = "character_list_panel.page_info";
             string localizedPageInfo = GetLocalizedText(pageInfoKey);
-            
+
             // 如果本地化文本为空或与key相同，使用默认格式
             if (string.IsNullOrEmpty(localizedPageInfo) || localizedPageInfo == pageInfoKey)
             {
@@ -396,7 +396,7 @@ public class CharacterList_Services : MonoBehaviour
         if (currentLocale == null) return character.DevName;
 
         string localeCode = currentLocale.Identifier.Code;
-        
+
         // 根据当前语言返回对应的名称
         switch (localeCode)
         {
@@ -420,13 +420,13 @@ public class CharacterList_Services : MonoBehaviour
     {
         string schoolKey = $"character.school.{school.ToString().ToLower()}";
         string localizedName = GetLocalizedText(schoolKey);
-        
+
         // 如果本地化文本为空或与key相同，返回null
         if (string.IsNullOrEmpty(localizedName) || localizedName == schoolKey)
         {
             return null;
         }
-        
+
         return localizedName;
     }
 
@@ -437,13 +437,13 @@ public class CharacterList_Services : MonoBehaviour
     {
         string clubKey = $"character.club.{club.ToString().ToLower()}";
         string localizedName = GetLocalizedText(clubKey);
-        
+
         // 如果本地化文本为空或与key相同，返回null
         if (string.IsNullOrEmpty(localizedName) || localizedName == clubKey)
         {
             return null;
         }
-        
+
         return localizedName;
     }
 
@@ -855,11 +855,13 @@ public class CharacterList_Services : MonoBehaviour
             }
 
             Multi_Lobby_Dropdown.AddOptions(character_names);
+            Multi_Lobby_Confirm_Button.onClick.RemoveAllListeners();
             Multi_Lobby_Confirm_Button.onClick.AddListener(() =>
             {
                 int index = Multi_Lobby_Dropdown.value;
                 Multi_Lobby_Select_Handler(index, character_id);
             });
+            Multi_Lobby_Quit_Button.onClick.RemoveAllListeners();
             Multi_Lobby_Quit_Button.onClick.AddListener(() =>
             {
                 Multi_Lobby_Root_GameObject.SetActive(false);
@@ -942,13 +944,13 @@ public class CharacterList_Services : MonoBehaviour
 
                 // 索引角色名称（多语言）
                 IndexCharacterName(kvp.Key, character);
-                
+
                 // 索引昵称
                 IndexNicknames(kvp.Key, character);
-                
+
                 // 索引学校名称
                 IndexSchoolName(kvp.Key, character);
-                
+
                 // 索引俱乐部名称
                 IndexClubName(kvp.Key, character);
             }
@@ -960,7 +962,7 @@ public class CharacterList_Services : MonoBehaviour
         {
             // 索引DevName
             AddToIndex(character.DevName.ToLower(), characterId);
-            
+
             // 索引多语言名称
             AddToIndex(character.FullNameSC.ToLower(), characterId);
             AddToIndex(character.FullNameTC.ToLower(), characterId);
@@ -980,7 +982,7 @@ public class CharacterList_Services : MonoBehaviour
         {
             string schoolKey = $"character.school.{character.Shcool.ToString().ToLower()}";
             string schoolName = Localization_Utils.Get_Localized_Text(schoolKey);
-            
+
             if (!string.IsNullOrEmpty(schoolName) && schoolName != schoolKey)
             {
                 AddToIndex(schoolName.ToLower(), characterId);
@@ -991,7 +993,7 @@ public class CharacterList_Services : MonoBehaviour
         {
             string clubKey = $"character.club.{character.Club.ToString().ToLower()}";
             string clubName = Localization_Utils.Get_Localized_Text(clubKey);
-            
+
             if (!string.IsNullOrEmpty(clubName) && clubName != clubKey)
             {
                 AddToIndex(clubName.ToLower(), characterId);
@@ -1005,7 +1007,7 @@ public class CharacterList_Services : MonoBehaviour
             // 添加完整术语
             if (!searchIndex.ContainsKey(term))
                 searchIndex[term] = new List<long>();
-            
+
             if (!searchIndex[term].Contains(characterId))
                 searchIndex[term].Add(characterId);
 
@@ -1015,7 +1017,7 @@ public class CharacterList_Services : MonoBehaviour
                 string prefix = term.Substring(0, i);
                 if (!searchIndex.ContainsKey(prefix))
                     searchIndex[prefix] = new List<long>();
-                
+
                 if (!searchIndex[prefix].Contains(characterId))
                     searchIndex[prefix].Add(characterId);
             }
