@@ -30,8 +30,7 @@ public class SpineCharacterBodyTouch : MonoBehaviour
 
     private void OnClick()
     {
-        //Debug.Log($"{gameObject.name} OnClick 触发");
-
+        if (UI_Panel_Checker.IsAnyUIPanelOpen()) return;
         if (!Spine_Services.Instance.is_Talk_On) return;
         if (!Index_Services.Instance.is_Idle_Mode) return;
         if (Index_Services.Instance.Talk_Animaiton_Num == 0) return;

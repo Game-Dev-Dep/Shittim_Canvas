@@ -72,6 +72,22 @@ public class SpineDragIK : MonoBehaviour
 
     private void Update()
     {
+        if (UI_Panel_Checker.IsAnyUIPanelOpen())
+        {
+            if (coroutine != null)
+            {
+                force_trigger_OnPress = true;
+                OnPress(false);
+                if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
+                {
+                    Wallpaper_Mode_Handler.Instance.is_Released = false;
+                    Index_Services.Instance.Cur_Responsing_Object = null;
+                }
+                coroutine = null;
+            }
+            return;
+        }
+
         if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
         {
             if (Window_Services.Instance.Cur_Cover_Window_Type != Window_Services.Cover_Window_Type.No_Window)
@@ -129,10 +145,12 @@ public class SpineDragIK : MonoBehaviour
 
     }
 
+
+
     private bool force_trigger_OnPress = false;
     public void OnPress(bool state)
     {
-        //Console_Log($"{gameObject.name} OnPress 触发");
+        if (UI_Panel_Checker.IsAnyUIPanelOpen()) return;
 
         if (!force_trigger_OnPress)
         {
@@ -219,7 +237,7 @@ public class SpineDragIK : MonoBehaviour
 
     public void OnDrag()
     {
-        //Console_Log($"{gameObject.name} OnDrag 触发");
+        if (UI_Panel_Checker.IsAnyUIPanelOpen()) return;
 
         if (SpineController.SkeletonAnimation.AnimationState.GetCurrent(0)?.Animation.Name != "Idle_01") return;
         if (Index_Services.Instance.is_Talking) return;
@@ -249,7 +267,7 @@ public class SpineDragIK : MonoBehaviour
 
     private void UpdateDestLocalPos()
     {
-        //Console_Log($"{gameObject.name} 坐标更新 触发");
+        if (UI_Panel_Checker.IsAnyUIPanelOpen()) return;
 
         if (!isUpdating) return;
         if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
