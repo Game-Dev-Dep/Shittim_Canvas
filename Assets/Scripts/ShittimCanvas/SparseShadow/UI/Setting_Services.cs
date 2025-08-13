@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Diagnostics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
@@ -118,7 +119,7 @@ public class Setting_Services : MonoBehaviour
                         }
                         else
                         {
-                            Debug.LogWarning($"无效的语言索引: {value}, 可用语言数量: {LocalizationSettings.AvailableLocales.Locales.Count}");
+                            UnityEngine.Debug.LogWarning($"无效的语言索引: {value}, 可用语言数量: {LocalizationSettings.AvailableLocales.Locales.Count}");
                         }
                     }
                 },
@@ -209,10 +210,17 @@ public class Setting_Services : MonoBehaviour
                     Description_Key = "settings_panel.audio.main_volume.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Audio.Global_Sound,
+                    Slider_Min_Value = 0f,
+                    Slider_Max_Value = 1f,
+                    Slider_Text_Min_Value = 0f,   // 0%
+                    Slider_Text_Max_Value = 100f, // 100%
                     Slider_Callback = (value) => {
                         setting_config.Audio.Global_Sound = value;
                         Setting_Contents[Setting_Option_Type.Audio][0].Slider_Value = value;
-                        Setting_Contents[Setting_Option_Type.Audio][0].Text_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][0].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][0].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][0].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][0].Slider_Text_Max_Value):F0} %";
+                        if (Setting_Contents[Setting_Option_Type.Audio][0].Slider_InputField_Component != null)
+                        {
+                            Setting_Contents[Setting_Option_Type.Audio][0].Slider_InputField_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][0].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][0].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][0].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][0].Slider_Text_Max_Value):F0}";
+                        }
                         Audio_Services.Instance.Global_Sound_Slider_Handler(value);
                     }
                 },
@@ -222,10 +230,17 @@ public class Setting_Services : MonoBehaviour
                     Description_Key = "settings_panel.audio.voice_volume.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Audio.Talk_Sound,
+                    Slider_Min_Value = 0f,
+                    Slider_Max_Value = 1f,
+                    Slider_Text_Min_Value = 0f,   // 0%
+                    Slider_Text_Max_Value = 100f, // 100%
                     Slider_Callback = (value) => {
                         setting_config.Audio.Talk_Sound = value;
                         Setting_Contents[Setting_Option_Type.Audio][1].Slider_Value = value;
-                        Setting_Contents[Setting_Option_Type.Audio][1].Text_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][1].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][1].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][1].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][1].Slider_Text_Max_Value):F0} %";
+                        if (Setting_Contents[Setting_Option_Type.Audio][1].Slider_InputField_Component != null)
+                        {
+                            Setting_Contents[Setting_Option_Type.Audio][1].Slider_InputField_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][1].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][1].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][1].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][1].Slider_Text_Max_Value):F0}";
+                        }
                         Audio_Services.Instance.Talk_Slider_Handler(value);
                     }
                 },
@@ -235,10 +250,17 @@ public class Setting_Services : MonoBehaviour
                     Description_Key = "settings_panel.audio.se_volume.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Audio.SFX_Sound,
+                    Slider_Min_Value = 0f,
+                    Slider_Max_Value = 1f,
+                    Slider_Text_Min_Value = 0f,   // 0%
+                    Slider_Text_Max_Value = 100f, // 100%
                     Slider_Callback = (value) => {
                         setting_config.Audio.SFX_Sound = value;
                         Setting_Contents[Setting_Option_Type.Audio][2].Slider_Value = value;
-                        Setting_Contents[Setting_Option_Type.Audio][2].Text_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][2].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][2].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][2].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][2].Slider_Text_Max_Value):F0} %";
+                        if (Setting_Contents[Setting_Option_Type.Audio][2].Slider_InputField_Component != null)
+                        {
+                            Setting_Contents[Setting_Option_Type.Audio][2].Slider_InputField_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][2].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][2].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][2].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][2].Slider_Text_Max_Value):F0}";
+                        }
                         Audio_Services.Instance.SFX_Slider_Handler(value);
                     }
                 },
@@ -248,10 +270,17 @@ public class Setting_Services : MonoBehaviour
                     Description_Key = "settings_panel.audio.bgm_volume.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
                     Slider_Value = setting_config.Audio.BGM_Sound,
+                    Slider_Min_Value = 0f,
+                    Slider_Max_Value = 1f,
+                    Slider_Text_Min_Value = 0f,   // 0%
+                    Slider_Text_Max_Value = 100f, // 100%
                     Slider_Callback = (value) => {
                         setting_config.Audio.BGM_Sound = value;
                         Setting_Contents[Setting_Option_Type.Audio][3].Slider_Value = value;
-                        Setting_Contents[Setting_Option_Type.Audio][3].Text_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][3].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][3].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][3].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][3].Slider_Text_Max_Value):F0} %";
+                        if (Setting_Contents[Setting_Option_Type.Audio][3].Slider_InputField_Component != null)
+                        {
+                            Setting_Contents[Setting_Option_Type.Audio][3].Slider_InputField_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][3].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][3].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][3].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][3].Slider_Text_Max_Value):F0}";
+                        }
                         Audio_Services.Instance.BGM_Slider_Handler(value);
                     }
                 },
@@ -321,10 +350,15 @@ public class Setting_Services : MonoBehaviour
                     Slider_Value = setting_config.Graphic.Editor_Mode_UI_Scale,
                     Slider_Min_Value = 0.5f,
                     Slider_Max_Value = 1.5f,
+                    Slider_Text_Min_Value = 0f,   // 0%
+                    Slider_Text_Max_Value = 100f, // 100%
                     Slider_Callback = (value) => {
                         setting_config.Graphic.Editor_Mode_UI_Scale = value;
                         GameObject.Find("Canvas").GetComponent<CanvasScaler>().scaleFactor = value;
-                        Setting_Contents[Setting_Option_Type.Graphic][2].Text_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Graphic][2].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Graphic][2].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Graphic][2].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Graphic][2].Slider_Text_Max_Value):F0} %";
+                        if (Setting_Contents[Setting_Option_Type.Graphic][2].Slider_InputField_Component != null)
+                        {
+                            Setting_Contents[Setting_Option_Type.Graphic][2].Slider_InputField_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Graphic][2].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Graphic][2].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Graphic][2].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Graphic][2].Slider_Text_Max_Value):F0}";
+                        }
                     }
                 },
                 new Setting_Detail_Option
@@ -405,6 +439,40 @@ public class Setting_Services : MonoBehaviour
                     Description_Key = "settings_panel.about.build_date.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Text,
                     Text_Value = setting_config.About.Build_Date
+                },
+                new Setting_Detail_Option
+                {
+                    Title_Key = "settings_panel.about.open_player_log",
+                    Description_Key = "settings_panel.about.open_player_log.desc",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Button,
+                    Button_Text_Key = "settings_panel.about.open_player_log.button",
+                    Button_Click_Callback = () => {
+                        try
+                        {
+                            string playerLogPath = Path.Combine(Application.persistentDataPath, "Player.log");
+                            string playerLogFolder = Path.GetDirectoryName(playerLogPath);
+                            
+                            if (Directory.Exists(playerLogFolder))
+                            {
+                                #if UNITY_EDITOR
+                                UnityEngine.Debug.Log($"Player Log文件夹路径: {playerLogFolder}");
+                                Toast_Wrapper_Services.ShowToast($"Player Log文件夹路径: {playerLogFolder}", 5f);
+                                #else
+                                Process.Start("explorer.exe", playerLogFolder);
+                                Toast_Wrapper_Services.ShowToast("toast.player_log_folder_opened", 3f);
+                                #endif
+                            }
+                            else
+                            {
+                                Toast_Wrapper_Services.ShowToast("toast.player_log_folder_not_found", 3f);
+                            }
+                        }
+                        catch (System.Exception ex)
+                        {
+                            UnityEngine.Debug.LogError($"打开Player Log文件夹失败: {ex.Message}");
+                            Toast_Wrapper_Services.ShowToast("toast.player_log_folder_open_failed", 3f);
+                        }
+                    }
                 }
             }
         );
@@ -741,17 +809,58 @@ public class Setting_Services : MonoBehaviour
                     setting_detail_option.Setting_Detail_Option_GameObject = new_detail_option.transform.Find("[Setting] Detail Option Slider Group").gameObject;
                     setting_detail_option.Setting_Detail_Option_GameObject.SetActive(true);
                     setting_detail_option.Slider_Component = setting_detail_option.Setting_Detail_Option_GameObject.transform.Find("[Setting] Detail Option Slider").GetComponent<Slider>();
-                    setting_detail_option.Text_Component = setting_detail_option.Setting_Detail_Option_GameObject.transform.Find("[Setting] Detail Option Slider Text").GetComponent<TextMeshProUGUI>();
+                    
+                    setting_detail_option.Slider_InputField_Component = setting_detail_option.Setting_Detail_Option_GameObject.transform.Find("[Setting] Detail Option Slider Text").GetComponent<TMP_InputField>();
+                    
+                    if (setting_detail_option.Slider_InputField_Component == null)
+                    {
+                        setting_detail_option.Text_Component = setting_detail_option.Setting_Detail_Option_GameObject.transform.Find("[Setting] Detail Option Slider Text").GetComponent<TextMeshProUGUI>();
+                    }
 
                     setting_detail_option.Slider_Component.value = setting_detail_option.Slider_Value;
                     setting_detail_option.Slider_Component.minValue = setting_detail_option.Slider_Min_Value;
                     setting_detail_option.Slider_Component.maxValue = setting_detail_option.Slider_Max_Value;
 
-                    setting_detail_option.Text_Component.text = $"{Value_Map(setting_detail_option.Slider_Component.value, setting_detail_option.Slider_Min_Value, setting_detail_option.Slider_Max_Value, setting_detail_option.Slider_Text_Min_Value, setting_detail_option.Slider_Text_Max_Value):F0} %";
+                    if (setting_detail_option.Slider_InputField_Component != null)
+                    {
+                        setting_detail_option.Slider_InputField_Component.text = $"{Value_Map(setting_detail_option.Slider_Component.value, setting_detail_option.Slider_Min_Value, setting_detail_option.Slider_Max_Value, setting_detail_option.Slider_Text_Min_Value, setting_detail_option.Slider_Text_Max_Value):F0}";
+                        setting_detail_option.Slider_InputField_Component.contentType = TMP_InputField.ContentType.IntegerNumber;
+                        setting_detail_option.Slider_InputField_Component.characterLimit = 3;
+                        
+                        setting_detail_option.Slider_InputField_Component.onEndEdit.AddListener((inputValue) => {
+                            if (int.TryParse(inputValue, out int newValue))
+                            {
+                                float mappedValue = Value_Map(newValue, setting_detail_option.Slider_Text_Min_Value, setting_detail_option.Slider_Text_Max_Value, setting_detail_option.Slider_Min_Value, setting_detail_option.Slider_Max_Value);
+                                mappedValue = Mathf.Clamp(mappedValue, setting_detail_option.Slider_Min_Value, setting_detail_option.Slider_Max_Value);
+                                
+                                setting_detail_option.Slider_Component.value = mappedValue;
+                                
+                                if (setting_detail_option.Slider_Callback != null)
+                                {
+                                    setting_detail_option.Slider_Callback(mappedValue);
+                                }
+                            }
+                            else
+                            {
+                                setting_detail_option.Slider_InputField_Component.text = $"{Value_Map(setting_detail_option.Slider_Component.value, setting_detail_option.Slider_Min_Value, setting_detail_option.Slider_Max_Value, setting_detail_option.Slider_Text_Min_Value, setting_detail_option.Slider_Text_Max_Value):F0}";
+                            }
+                        });
+                    }
+                    else
+                    {
+                        setting_detail_option.Text_Component.text = $"{Value_Map(setting_detail_option.Slider_Component.value, setting_detail_option.Slider_Min_Value, setting_detail_option.Slider_Max_Value, setting_detail_option.Slider_Text_Min_Value, setting_detail_option.Slider_Text_Max_Value):F0} %";
+                    }
 
                     if (setting_detail_option.Slider_Callback != null)
                     {
-                        setting_detail_option.Slider_Component.onValueChanged.AddListener((value) => setting_detail_option.Slider_Callback(value));
+                        setting_detail_option.Slider_Component.onValueChanged.AddListener((value) => {
+                            if (setting_detail_option.Slider_InputField_Component != null)
+                            {
+                                setting_detail_option.Slider_InputField_Component.text = $"{Value_Map(value, setting_detail_option.Slider_Min_Value, setting_detail_option.Slider_Max_Value, setting_detail_option.Slider_Text_Min_Value, setting_detail_option.Slider_Text_Max_Value):F0}";
+                            }
+                            
+                            setting_detail_option.Slider_Callback(value);
+                        });
                     }
                     break;
 
@@ -807,6 +916,31 @@ public class Setting_Services : MonoBehaviour
                         button.onClick.AddListener(() => setting_detail_option.Text_Click_Callback());
                     }
                     break;
+
+                case Setting_Detail_Option_Type.Button:
+                    setting_detail_option.Setting_Detail_Option_GameObject = new_detail_option.transform.Find("[Setting] Detail Option Text Group").gameObject;
+                    setting_detail_option.Setting_Detail_Option_GameObject.SetActive(true);
+                    setting_detail_option.Text_Component = setting_detail_option.Setting_Detail_Option_GameObject.transform.Find("[Setting] Detail Option Text").GetComponent<TextMeshProUGUI>();
+
+                    if (!string.IsNullOrEmpty(setting_detail_option.Button_Text_Key))
+                    {
+                        Localization_Utils.Apply_Localization_To_Text(setting_detail_option.Text_Component, setting_detail_option.Button_Text_Key);
+                    }
+                    else
+                    {
+                        setting_detail_option.Text_Component.text = "Button";
+                    }
+                    
+                    if (setting_detail_option.Button_Click_Callback != null)
+                    {
+                        var button = setting_detail_option.Setting_Detail_Option_GameObject.GetComponent<Button>();
+                        if (button == null)
+                        {
+                            button = setting_detail_option.Setting_Detail_Option_GameObject.AddComponent<Button>();
+                        }
+                        button.onClick.AddListener(() => setting_detail_option.Button_Click_Callback());
+                    }
+                    break;
             }
         }
     }
@@ -844,7 +978,8 @@ public class Setting_Services : MonoBehaviour
         Slider,
         Input,
         Dropdown,
-        Text
+        Text,
+        Button
     }
 
     public class Setting_Detail_Option
@@ -859,18 +994,22 @@ public class Setting_Services : MonoBehaviour
         public TMP_InputField InputField_Component;
         public TMP_Dropdown Dropdown_Component;
         public TextMeshProUGUI Text_Component;
+        public Button Button_Component;
+        public TMP_InputField Slider_InputField_Component;
 
         public int ToggleGroup_Value;
         public float Slider_Value;
         public string Input_Value;
         public int Dropdown_Value;
         public string Text_Value;
+        public string Button_Text_Key;
 
         public Action<bool> Toggle_Callback;
         public Action<float> Slider_Callback;
         public Action<string> Input_Callback;
         public Action<int> Dropdown_Callback;
         public Action Text_Click_Callback;
+        public Action Button_Click_Callback;
 
         public List<string> ToggleGroup_Options;
         public float Slider_Min_Value = 0;
