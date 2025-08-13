@@ -34,6 +34,8 @@ public class CharacterList_Services : MonoBehaviour
     [SerializeField]
     public TMP_Dropdown Search_Result_Sort_Dropdown;
     [SerializeField]
+    public TMP_Dropdown School_Dropdown;
+    [SerializeField]
     public Button Previous_Page_Button;
     [SerializeField]
     public Button Next_Page_Button;
@@ -142,6 +144,12 @@ public class CharacterList_Services : MonoBehaviour
         {
             Search_Result_Sort_Dropdown.onValueChanged.AddListener(OnSortDropdownChanged);
             InitializeSortDropdown();
+        }
+
+        if (School_Dropdown != null)
+        {
+            School_Dropdown.onValueChanged.AddListener(OnSchoolDropdownChanged);
+            Initialize_School_Dropdown();
         }
 
         // 分页按钮
@@ -457,6 +465,19 @@ public class CharacterList_Services : MonoBehaviour
         }
     }
 
+    void Initialize_School_Dropdown()
+    {
+        School_Dropdown.ClearOptions();
+        List<string> options = new List<string>();
+        options.Add(GetLocalizedText("character.school.all"));
+        for(int i = 1; i <= 16 ; i++)
+        {
+            string school_name = ((School)i).ToString();
+            options.Add(GetLocalizedText($"character.school.{school_name.ToLower()}"));
+        }
+        School_Dropdown.AddOptions(options);
+    }
+
     void UpdateSortDropdownOptions()
     {
         if (Search_Result_Sort_Dropdown != null)
@@ -585,6 +606,21 @@ public class CharacterList_Services : MonoBehaviour
         }
     }
 
+
+    void OnSchoolDropdownChanged(int index)
+    {
+        if (index == 0)
+        {
+            Console_Log("复位");
+            //Character_List = Original_Character_List;
+            UpdateCharacterListDisplay();
+            return;
+        }
+        Console_Log($"选中学院: {((School)index).ToString()}");
+        //Character_List = School_Filter(Original_Character_List, (School)index);
+        UpdateCharacterListDisplay();
+    }
+
     void SortByField(Dictionary<long, List<Character>> characterListToSort, bool ascending)
     {
         // 将Dictionary转换为List进行排序
@@ -641,6 +677,20 @@ public class CharacterList_Services : MonoBehaviour
         {
             return characterListToUse;
         }
+    }
+
+    public Dictionary<long, List<Character>> School_Filter(Dictionary<long, List<Character>> characterListToUse, School school)
+    {
+        Dictionary<long, List<Character>> characterListToUse_New = new Dictionary<long, List<Character>>();
+        foreach (var character in characterListToUse)
+        {
+            Console_Log(character.Value.First().School.ToString());
+            if (character.Value.First().School == school)
+            {
+                characterListToUse_New.Add(character.Key, character.Value);
+            }
+        }
+        return characterListToUse_New;
     }
 
     void UpdateCharacterListDisplay()
@@ -916,7 +966,7 @@ public class CharacterList_Services : MonoBehaviour
         public string FullNameEn = string.Empty;
         public string FullNameJp = string.Empty;
         public List<string> Nicknames = new List<string>();
-        public School Shcool = new School();
+        public School School = new School();
         public Club Club = new Club();
     }
 
@@ -980,7 +1030,7 @@ public class CharacterList_Services : MonoBehaviour
 
         private void IndexSchoolName(long characterId, Character character)
         {
-            string schoolKey = $"character.school.{character.Shcool.ToString().ToLower()}";
+            string schoolKey = $"character.school.{character.School.ToString().ToLower()}";
             string schoolName = Localization_Utils.Get_Localized_Text(schoolKey);
 
             if (!string.IsNullOrEmpty(schoolName) && schoolName != schoolKey)
@@ -1110,7 +1160,8 @@ public class CharacterList_Services : MonoBehaviour
         SCHALE = 12,
         ETC = 13,
         Tokiwadai = 14,
-        Sakugawa = 15
+        Sakugawa = 15,
+        Highlander = 16
     }
 
     public enum Club
@@ -1165,6 +1216,8 @@ public class CharacterList_Services : MonoBehaviour
         Hyakkayouran = 47,
         ShinySparkleSociety = 48,
         AbydosStudentCouncil = 49,
+        CentralControlCenter = 50,
+        FreightLogisticsDepartment = 51,
     }
 
 
