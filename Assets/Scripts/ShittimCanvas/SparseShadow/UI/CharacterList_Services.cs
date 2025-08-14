@@ -55,7 +55,7 @@ public class CharacterList_Services : MonoBehaviour
     public float Character_Portrait_Spacing_X;
     public float Character_Portrait_Spacing_Y;
 
-    public Dictionary<long, List<Character>> Character_List = new Dictionary<long, List<Character>>();
+    private Dictionary<long, List<Character>> Character_List = new Dictionary<long, List<Character>>();
     private Dictionary<long, List<Character>> Filtered_Character_List = new Dictionary<long, List<Character>>();
     private Dictionary<long, List<Character>> Original_Character_List = new Dictionary<long, List<Character>>(); // 保存原始顺序
     private string searchKeyword = "";
@@ -75,6 +75,22 @@ public class CharacterList_Services : MonoBehaviour
     private int currentPage = 0; // 当前页码
     private List<long> currentDisplayKeys = new List<long>(); // 当前显示的键值列表
 
+    /// <summary>
+    /// 获取应用所有过滤后的角色列表
+    /// </summary>
+    private Dictionary<long, List<Character>> GetFilteredCharacterList()
+    {
+        var characterListToUse = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
+        
+        if (is_Favorite_Filter_On) 
+            characterListToUse = Favorite_Filter(characterListToUse);
+        
+        if (is_School_Filter_On) 
+            characterListToUse = School_Filter(characterListToUse, currentSelectedSchool);
+            
+        return characterListToUse;
+    }
+
     // 排序dropdown列表相关
     private enum SortMode
     {
@@ -86,10 +102,13 @@ public class CharacterList_Services : MonoBehaviour
     private SortMode currentSortMode = SortMode.Default;
 
     private Favorite_Config favorite_config;
-    public bool is_Favorite_Filter_On = false;
+    private bool is_Favorite_Filter_On = false;
+    
+    // 学院过滤相关
+    private School currentSelectedSchool = School.None; // 当前选中的学院
+    private bool is_School_Filter_On = false; // 是否启用学院过滤
 
-
-    public bool is_Character_List_On = false;
+    private bool is_Character_List_On = false;
 
     public void Get_Charcter_List()
     {
@@ -184,7 +203,7 @@ public class CharacterList_Services : MonoBehaviour
         Console_Log("结束初始化 Character_Services");
     }
 
-    void Toggle_Character_List_Panel()
+    private void Toggle_Character_List_Panel()
     {
         if (is_Character_List_On)
         {
@@ -196,7 +215,7 @@ public class CharacterList_Services : MonoBehaviour
         }
     }
 
-    void Display_Character_List_Panel()
+    private void Display_Character_List_Panel()
     {
         is_Character_List_On = true;
         Character_List_Root_GameObject.SetActive(true);
@@ -217,7 +236,7 @@ public class CharacterList_Services : MonoBehaviour
         Create_Character_List_UI();
     }
 
-    void Hide_Character_List_Panel()
+    private void Hide_Character_List_Panel()
     {
         is_Character_List_On = false;
         Character_List_Root_GameObject.SetActive(is_Character_List_On);
@@ -248,7 +267,7 @@ public class CharacterList_Services : MonoBehaviour
         Create_Character_List_UI();
     }
 
-    void Get_Detail_Option_UI_Parameters()
+    private void Get_Detail_Option_UI_Parameters()
     {
         Character_Portrait_Width = Character_List_Search_Result_Content_GameObject.GetComponent<GridLayoutGroup>().cellSize.x;
         Character_Portrait_Height = Character_List_Search_Result_Content_GameObject.GetComponent<GridLayoutGroup>().cellSize.y;
@@ -275,7 +294,7 @@ public class CharacterList_Services : MonoBehaviour
         Console_Log("结束创建角色列表UI");
     }
 
-    void OnPreviousPage()
+    private void OnPreviousPage()
     {
         if (currentPage > 0)
         {
@@ -285,11 +304,9 @@ public class CharacterList_Services : MonoBehaviour
         }
     }
 
-    void OnNextPage()
+    private void OnNextPage()
     {
-        var characterListToUse = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
-        if (is_Favorite_Filter_On) characterListToUse = Favorite_Filter(characterListToUse);
-
+        var characterListToUse = GetFilteredCharacterList();
         int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
 
         if (currentPage < maxPage)
@@ -300,13 +317,11 @@ public class CharacterList_Services : MonoBehaviour
         }
     }
 
-    void UpdatePageInfo()
+    private void UpdatePageInfo()
     {
         if (Page_Info_Text != null)
         {
-            var characterListToUse = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
-            if (is_Favorite_Filter_On) characterListToUse = Favorite_Filter(characterListToUse);
-
+            var characterListToUse = GetFilteredCharacterList();
             int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
             string pageInfoKey = "character_list_panel.page_info";
             string localizedPageInfo = GetLocalizedText(pageInfoKey);
@@ -331,15 +346,13 @@ public class CharacterList_Services : MonoBehaviour
 
         if (Next_Page_Button != null)
         {
-            var characterListToUse = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
-            if (is_Favorite_Filter_On) characterListToUse = Favorite_Filter(characterListToUse);
-
+            var characterListToUse = GetFilteredCharacterList();
             int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
             Next_Page_Button.interactable = currentPage < maxPage;
         }
     }
 
-    void InitializeUI()
+    private void InitializeUI()
     {
         // 预创建一些卡片对象到池中
         for (int i = 0; i < VISIBLE_ITEMS_COUNT; i++)
@@ -349,9 +362,8 @@ public class CharacterList_Services : MonoBehaviour
             cardPool.Add(card);
         }
     }
-
     // 把搜索搬过来了
-    void OnSearchValueChanged(string keyword)
+    private void OnSearchValueChanged(string keyword)
     {
         searchKeyword = keyword.ToLower();
         if (debounceCoroutine != null)
@@ -359,7 +371,7 @@ public class CharacterList_Services : MonoBehaviour
         debounceCoroutine = StartCoroutine(DebounceSearch());
     }
 
-    IEnumerator DebounceSearch()
+    private IEnumerator DebounceSearch()
     {
         yield return new WaitForSeconds(debounceTime);
         FilterCharacters();
@@ -367,7 +379,7 @@ public class CharacterList_Services : MonoBehaviour
         UpdateCharacterListDisplay();
     }
 
-    void FilterCharacters()
+    private void FilterCharacters()
     {
         if (string.IsNullOrEmpty(searchKeyword))
         {
@@ -456,7 +468,7 @@ public class CharacterList_Services : MonoBehaviour
     }
 
     // 排序相关方法
-    void InitializeSortDropdown()
+    private void InitializeSortDropdown()
     {
         if (Search_Result_Sort_Dropdown != null)
         {
@@ -465,7 +477,7 @@ public class CharacterList_Services : MonoBehaviour
         }
     }
 
-    void Initialize_School_Dropdown()
+    private void Initialize_School_Dropdown()
     {
         School_Dropdown.ClearOptions();
         List<string> options = new List<string>();
@@ -478,7 +490,7 @@ public class CharacterList_Services : MonoBehaviour
         School_Dropdown.AddOptions(options);
     }
 
-    void UpdateSortDropdownOptions()
+    private void UpdateSortDropdownOptions()
     {
         if (Search_Result_Sort_Dropdown != null)
         {
@@ -496,7 +508,7 @@ public class CharacterList_Services : MonoBehaviour
         }
     }
 
-    string GetLocalizedText(string key)
+    private string GetLocalizedText(string key)
     {
         // Localization_Utils
         return Localization_Utils.Get_Localized_Text(key);
@@ -532,6 +544,13 @@ public class CharacterList_Services : MonoBehaviour
             UpdateSortDropdownOptions();
             Search_Result_Sort_Dropdown.value = currentValue;
         }
+        
+        if (School_Dropdown != null)
+        {
+            int currentValue = School_Dropdown.value;
+            Initialize_School_Dropdown();
+            School_Dropdown.value = currentValue;
+        }
 
         // 如果当前有搜索结果，重新搜索以更新显示
         if (!string.IsNullOrEmpty(searchKeyword))
@@ -541,7 +560,7 @@ public class CharacterList_Services : MonoBehaviour
         }
     }
 
-    void OnSortDropdownChanged(int index)
+    private void OnSortDropdownChanged(int index)
     {
         // 根据下拉框索引设置排序模式
         switch (index)
@@ -564,7 +583,7 @@ public class CharacterList_Services : MonoBehaviour
 
     void SortCharacters()
     {
-        var characterListToSort = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
+        var characterListToSort = GetFilteredCharacterList();
 
         if (characterListToSort.Count == 0) return;
 
@@ -607,21 +626,28 @@ public class CharacterList_Services : MonoBehaviour
     }
 
 
-    void OnSchoolDropdownChanged(int index)
+    private void OnSchoolDropdownChanged(int index)
     {
         if (index == 0)
         {
-            Console_Log("复位");
-            //Character_List = Original_Character_List;
-            UpdateCharacterListDisplay();
-            return;
+            currentSelectedSchool = School.None;
+            is_School_Filter_On = false;
         }
-        Console_Log($"选中学院: {((School)index).ToString()}");
-        //Character_List = School_Filter(Original_Character_List, (School)index);
-        UpdateCharacterListDisplay();
+        else
+        {
+            currentSelectedSchool = (School)index;
+            is_School_Filter_On = true;
+        }
+        
+        // 重置页码
+        currentPage = 0;
+        
+        // 重新创建UI以应用过滤
+        Destroy_Chracter_List_UI();
+        Create_Character_List_UI();
     }
 
-    void SortByField(Dictionary<long, List<Character>> characterListToSort, bool ascending)
+    private void SortByField(Dictionary<long, List<Character>> characterListToSort, bool ascending)
     {
         // 将Dictionary转换为List进行排序
         var sortedList = characterListToSort.ToList();
@@ -655,10 +681,12 @@ public class CharacterList_Services : MonoBehaviour
     }
 
     /// <summary>
-    /// 杰先生的石山发力了
+    /// 疏: 杰先生的石山发力了
+    /// 杰: 你再骂！？
     /// </summary>
-    /// <returns></returns>
-    public Dictionary<long, List<Character>> Favorite_Filter(Dictionary<long, List<Character>> characterListToUse)
+    /// <param name="characterListToUse">要过滤的角色列表</param>
+    /// <returns>过滤后的角色列表</returns>
+    private Dictionary<long, List<Character>> Favorite_Filter(Dictionary<long, List<Character>> characterListToUse)
     {
         Dictionary<long, List<Character>> characterListToUse_New = new Dictionary<long, List<Character>>();
         foreach (var character in characterListToUse)
@@ -679,12 +707,17 @@ public class CharacterList_Services : MonoBehaviour
         }
     }
 
-    public Dictionary<long, List<Character>> School_Filter(Dictionary<long, List<Character>> characterListToUse, School school)
+    private Dictionary<long, List<Character>> School_Filter(Dictionary<long, List<Character>> characterListToUse, School school)
     {
+        // 如果选择None，返回所有角色
+        if (school == School.None)
+        {
+            return characterListToUse;
+        }
+        
         Dictionary<long, List<Character>> characterListToUse_New = new Dictionary<long, List<Character>>();
         foreach (var character in characterListToUse)
         {
-            Console_Log(character.Value.First().School.ToString());
             if (character.Value.First().School == school)
             {
                 characterListToUse_New.Add(character.Key, character.Value);
@@ -693,12 +726,10 @@ public class CharacterList_Services : MonoBehaviour
         return characterListToUse_New;
     }
 
-    void UpdateCharacterListDisplay()
+    private void UpdateCharacterListDisplay()
     {
         // 使用过滤后的角色列表
-        var characterListToUse = string.IsNullOrEmpty(searchKeyword) ? Character_List : Filtered_Character_List;
-
-        if(is_Favorite_Filter_On) characterListToUse = Favorite_Filter(characterListToUse);
+        var characterListToUse = GetFilteredCharacterList();
 
         // 计算当前需要显示的项目
         currentDisplayKeys.Clear();
@@ -832,7 +863,7 @@ public class CharacterList_Services : MonoBehaviour
         }
     }
 
-    void ReturnCardsToPool()
+    private void ReturnCardsToPool()
     {
         foreach (var card in activeCharacterCards)
         {
@@ -880,7 +911,7 @@ public class CharacterList_Services : MonoBehaviour
         Canvas.ForceUpdateCanvases();
     }
 
-    void Destroy_Chracter_List_UI()
+    private void Destroy_Chracter_List_UI()
     {
         ReturnCardsToPool();
     }
@@ -921,12 +952,8 @@ public class CharacterList_Services : MonoBehaviour
 
     private void Multi_Lobby_Select_Handler(int index, long character_id)
     {
-        Console_Log($"已选择角色的变体: {character_id} {(Character_List[character_id].ToArray())[index].DevName}");
-        Character_Services.Instance.Switch_Character((Character_List[character_id].ToArray())[index].DevName);
-        Multi_Lobby_Root_GameObject.SetActive(false);
-
-        Character_List_Root_GameObject.SetActive(false);
-        Destroy_Chracter_List_UI();
+        // 处理多人大厅选择
+        Console_Log($"选择多人大厅: {index}, 角色ID: {character_id}");
     }
 
     private void Favorite_Toggle_Handler(string character_name, GameObject favorite_button)
