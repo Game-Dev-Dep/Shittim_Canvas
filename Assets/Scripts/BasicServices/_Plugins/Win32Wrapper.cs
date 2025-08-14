@@ -731,4 +731,7 @@ public class Win32Wrapper
     }
 
     public const int MONITORINFOF_PRIMARY = 0x00000001;
+
+    [DllImport("user32.dll")]
+    public static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
 }

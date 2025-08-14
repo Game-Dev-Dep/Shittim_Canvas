@@ -51,6 +51,9 @@ public class Wallpaper_Services : MonoBehaviour
     private bool saved_VSync_Mode = true;
     private int saved_Target_Framerate = 120;
 
+    //壁纸模式窗口实际位置 用于Screen
+    public static Vector2 Real_WallpaperWindow_Position;
+
     private void Get_Config()
     {
         is_Auto_Wallpaper_Mode_On = Config_Services.Instance.Global_Setting_Config.General.Auto_Wallpaper_Mode == 0 ? true : false;
@@ -301,6 +304,7 @@ public class Wallpaper_Services : MonoBehaviour
 
             if (displayIndex < monitorHandles.Count && Win32Wrapper.GetMonitorInfo(monitorHandles[displayIndex], ref monitorInfo))
             {
+                //Console_Log($"移动窗口 {monitorInfo.rcMonitor.Left} {monitorInfo.rcMonitor.Top} ");
                 Win32Wrapper.SetWindowPos(
                     unityWindow,
                     IntPtr.Zero,
@@ -310,6 +314,11 @@ public class Wallpaper_Services : MonoBehaviour
                     targetDisplay.systemHeight,
                     Win32Wrapper.SetWindowPosFlags.NoZOrder | Win32Wrapper.SetWindowPosFlags.NoActivate
                 );
+                Win32Wrapper.RECT wallpaper_windowRect;
+                Win32Wrapper.GetWindowRect(unityWindow, out wallpaper_windowRect);
+                Real_WallpaperWindow_Position.x = wallpaper_windowRect.Left;
+                Real_WallpaperWindow_Position.y = wallpaper_windowRect.Top;
+                //Console_Log($"移动窗口后 实际位置: {wallpaper_windowRect.Left} {wallpaper_windowRect.Top}");
             }
         }
         catch (Exception ex)
