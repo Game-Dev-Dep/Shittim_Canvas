@@ -35,6 +35,20 @@ public class Character_Services : MonoBehaviour
         character = gameObject.AddComponent<Character>();
         character.Load_Charachter(Character_Name);
 //#endif
+        
+        //延迟通知Dropdown_Services设置初始lobby
+        StartCoroutine(DelayedSetInitialCharacter());
+    }
+    
+    private IEnumerator DelayedSetInitialCharacter()
+    {
+        yield return new WaitForSeconds(0.1f);
+        
+        // 通知Dropdown_Services设置初始lobby
+        if (Dropdown_Services.Instance != null)
+        {
+            Dropdown_Services.Instance.SetCurrentSelectedCharacter(Character_Name);
+        }
     }
 
     public void Switch_Character(string character_name)
@@ -43,6 +57,12 @@ public class Character_Services : MonoBehaviour
         
         character = gameObject.AddComponent<Character>();
         character.Load_Charachter(character_name);
+        
+        //通知Dropdown_Services更新当前选择的lobby
+        if (Dropdown_Services.Instance != null)
+        {
+            Dropdown_Services.Instance.SetCurrentSelectedCharacter(character_name);
+        }
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Character_Services", message, loglevel, logtype); }
