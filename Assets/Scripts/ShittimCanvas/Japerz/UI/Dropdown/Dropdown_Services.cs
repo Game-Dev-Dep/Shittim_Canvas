@@ -23,7 +23,13 @@ public class Dropdown_Services : MonoBehaviour
     public ScrollRect starredListScrollView;
     public Transform starredListContentGrid;
     public GameObject characterButtonPrefab;
-    
+
+    [Header("Favorite List Button")]
+    public GameObject favoriteListButton;
+
+    [Header("Character List Services Reference")]
+    public CharacterList_Services characterListServices;
+
     [Header("Settings")]
     public Texture2D defaultIcon;
 
@@ -31,7 +37,7 @@ public class Dropdown_Services : MonoBehaviour
     private Dictionary<long, List<CharacterData>> characterList = new Dictionary<long, List<CharacterData>>();
     private bool isDataLoaded, isUpdatingFromCharacterServices;
     private string currentSelectedCharacter = "";
-    private List<GameObject> activeButtons = new List<GameObject>(); // 活跃的按钮列表
+    private List<GameObject> activeButtons = new List<GameObject>();
 
     [System.Serializable]
     public class CharacterData
@@ -55,20 +61,31 @@ public class Dropdown_Services : MonoBehaviour
     void Start()
     {
         if (starredListButton != null) StartCoroutine(DelayedInitialization());
+        
+        if (favoriteListButton != null) StartCoroutine(DelayedFavoriteButtonInitialization());
+        
+        if (starredListPanel != null)
+            starredListPanel.SetActive(false);
     }
 
     IEnumerator DelayedInitialization()
-    {
-        yield return null;
-        if (starredListButton == null) yield break;
-        
-        LoadCharacterData();
-        LoadStarredCharacters();
-        SetupCharacterButtons();
-        
-        // 绑定按钮点击事件
-        BindButtonEvents();
-    }
+{
+    yield return null;
+    if (starredListButton == null) yield break;
+    
+    LoadCharacterData();
+    LoadStarredCharacters();
+    SetupCharacterButtons();
+    BindButtonEvents();
+}
+
+IEnumerator DelayedFavoriteButtonInitialization()
+{
+    yield return null;
+    if (favoriteListButton == null) yield break;
+    
+    BindFavoriteButtonEvents();
+}
     
     void BindButtonEvents()
     {
@@ -78,6 +95,18 @@ public class Dropdown_Services : MonoBehaviour
             if (button != null)
             {
                 button.onClick.AddListener(ToggleStarredListPanel);
+            }
+        }
+    }
+
+    void BindFavoriteButtonEvents()
+    {
+        if (favoriteListButton != null)
+        {
+            var button = favoriteListButton.GetComponent<Button>();
+            if (button != null)
+            {
+                button.onClick.AddListener(OpenFavoriteListInCharacterList);
             }
         }
     }
@@ -93,10 +122,54 @@ public class Dropdown_Services : MonoBehaviour
             if (!isActive)
             {
                 SetupCharacterButtons();
+                ResetScrollPosition();
             }
         }
     }
 
+    //收藏面板逻辑
+    void OpenFavoriteListInCharacterList()
+    {
+        if (starredListPanel != null)
+        {
+            starredListPanel.SetActive(false);
+        }
+        
+        if (characterListServices != null)
+        {
+            if (characterListServices.Character_List_Root_GameObject != null)
+            {
+                characterListServices.Character_List_Root_GameObject.SetActive(true);
+                characterListServices.Create_Character_List_UI();
+                StartCoroutine(SwitchToFavoriteMode());
+            }
+            else
+            {
+                Debug.LogWarning("[Dropdown_Services] Character_List_Root_GameObject 未找到");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[Dropdown_Services] characterListServices 未找到");
+        }
+    }
+
+IEnumerator SwitchToFavoriteMode()
+{
+    yield return null;
+    
+    // 直接操作收藏夹Toggle来切换到收藏夹
+    if (characterListServices != null && characterListServices.Favorite_Characters_Toggle != null)
+    {
+        // 切换到收藏夹
+        characterListServices.Favorite_Characters_Toggle.isOn = true;
+    }
+    else
+    {
+        Debug.LogWarning("[Dropdown_Services] 无法找到收藏夹Toggle组件");
+    }
+}
+    
     void LoadCharacterData()
     {
         if (isDataLoaded) return;
@@ -116,21 +189,24 @@ public class Dropdown_Services : MonoBehaviour
         // 清理现有按钮
         ClearActiveButtons();
         
-        // 如果收藏数量小于2，隐藏面板
         if (starredCharacterNames.Count < 2)
         {
+            if (starredListButton != null)
+                starredListButton.SetActive(false);
             starredListPanel.SetActive(false);
             return;
         }
         
-        // 显示面板
-        starredListPanel.SetActive(true);
+        if (starredListButton != null)
+            starredListButton.SetActive(true);
         
-        // 为每个收藏学生创建按钮
         foreach (string characterName in starredCharacterNames)
         {
             CreateCharacterButton(characterName);
         }
+        
+        AdjustContentSize();
+        ResetScrollPosition();
     }
     
     void CreateCharacterButton(string characterName)
@@ -138,9 +214,16 @@ public class Dropdown_Services : MonoBehaviour
         if (characterButtonPrefab == null) return;
         
         GameObject buttonObj = Instantiate(characterButtonPrefab, starredListContentGrid);
+        buttonObj.SetActive(true);
         activeButtons.Add(buttonObj);
         
-        // 设置按钮图标
+        RectTransform buttonRect = buttonObj.GetComponent<RectTransform>();
+        if (buttonRect != null)
+        {
+            buttonRect.localScale = Vector3.one;
+            buttonRect.anchoredPosition = Vector2.zero;
+        }
+        
         var imageComponent = buttonObj.GetComponent<Image>();
         if (imageComponent != null)
         {
@@ -151,7 +234,7 @@ public class Dropdown_Services : MonoBehaviour
         var buttonComponent = buttonObj.GetComponent<Button>();
         if (buttonComponent != null)
         {
-            string capturedName = characterName; // 捕获变量
+            string capturedName = characterName;
             buttonComponent.onClick.AddListener(() => OnCharacterButtonClicked(capturedName));
         }
     }
@@ -251,12 +334,47 @@ public class Dropdown_Services : MonoBehaviour
     
     public string GetCurrentSelectedCharacter() => currentSelectedCharacter;
 
+    void AdjustContentSize()
+    {
+        if (starredListContentGrid == null) return;
+        
+        var gridLayout = starredListContentGrid.GetComponent<GridLayoutGroup>();
+        if (gridLayout != null)
+        {
+            int itemsPerRow = Mathf.Max(1, Mathf.FloorToInt(starredListContentGrid.GetComponent<RectTransform>().rect.width / (gridLayout.cellSize.x + gridLayout.spacing.x)));
+            int rowsNeeded = Mathf.CeilToInt((float)starredCharacterNames.Count / itemsPerRow);
+            
+            float contentHeight = (gridLayout.cellSize.y + gridLayout.spacing.y) * rowsNeeded + gridLayout.spacing.y;
+            
+            var contentRect = starredListContentGrid.GetComponent<RectTransform>();
+            contentRect.sizeDelta = new Vector2(contentRect.sizeDelta.x, contentHeight);
+        }
+    }
+    
+    void ResetScrollPosition()
+    {
+        if (starredListScrollView != null)
+        {
+            starredListScrollView.normalizedPosition = new Vector2(0, 1);
+        }
+    }
+
     void OnDestroy()
     {
         // 清理按钮事件监听器
         if (starredListButton != null)
         {
             var button = starredListButton.GetComponent<Button>();
+            if (button != null)
+            {
+                button.onClick.RemoveAllListeners();
+            }
+        }
+        
+        // 清理收藏夹按钮事件监听器
+        if (favoriteListButton != null)
+        {
+            var button = favoriteListButton.GetComponent<Button>();
             if (button != null)
             {
                 button.onClick.RemoveAllListeners();
