@@ -49,6 +49,8 @@ public class CharacterList_Services : MonoBehaviour
     public Toggle Favorite_Characters_Toggle;
     [SerializeField]
     public GameObject Empty_Result_GameObject;
+    [SerializeField]
+    public ScrollRect Character_List_ScrollRect; // 添加ScrollRect引用
 
     public float Character_Portrait_Width;
     public float Character_Portrait_Height;
@@ -301,6 +303,12 @@ public class CharacterList_Services : MonoBehaviour
             currentPage--;
             UpdateCharacterListDisplay();
             UpdatePageInfo();
+            
+            // 重置滚动条位置到顶部
+            if (Character_List_ScrollRect != null)
+            {
+                Character_List_ScrollRect.normalizedPosition = new Vector2(0, 1);
+            }
         }
     }
 
@@ -314,6 +322,12 @@ public class CharacterList_Services : MonoBehaviour
             currentPage++;
             UpdateCharacterListDisplay();
             UpdatePageInfo();
+            
+            // 重置滚动条位置到顶部
+            if (Character_List_ScrollRect != null)
+            {
+                Character_List_ScrollRect.normalizedPosition = new Vector2(0, 1);
+            }
         }
     }
 
@@ -377,6 +391,12 @@ public class CharacterList_Services : MonoBehaviour
         FilterCharacters();
         SortCharacters(); // 保持排序
         UpdateCharacterListDisplay();
+        
+        // 搜索后重置滚动条位置到顶部
+        if (Character_List_ScrollRect != null)
+        {
+            Character_List_ScrollRect.normalizedPosition = new Vector2(0, 1);
+        }
     }
 
     private void FilterCharacters()
@@ -816,7 +836,9 @@ public class CharacterList_Services : MonoBehaviour
         int currentPageItemCount = currentDisplayKeys.Count;
         int rowsNeeded = Mathf.CeilToInt((float)currentPageItemCount / itemsPerRow);
 
-        float contentHeight = (Character_Portrait_Height + Character_Portrait_Spacing_Y) * rowsNeeded + Character_Portrait_Spacing_Y;
+        // 添加额外的底部padding，让最下面一排卡片有更多空间
+        float extraBottomPadding = Character_Portrait_Spacing_Y * 2; // 增加底部间距
+        float contentHeight = (Character_Portrait_Height + Character_Portrait_Spacing_Y) * rowsNeeded + Character_Portrait_Spacing_Y + extraBottomPadding;
         Character_List_Search_Result_Content_GameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, contentHeight);
 
         // 更新分页信息
@@ -827,6 +849,12 @@ public class CharacterList_Services : MonoBehaviour
         {
             bool shouldShowEmptyResult = characterListToUse.Count == 0;
             Empty_Result_GameObject.SetActive(shouldShowEmptyResult);
+        }
+
+        // 重置滚动条位置到顶部
+        if (Character_List_ScrollRect != null)
+        {
+            Character_List_ScrollRect.normalizedPosition = new Vector2(0, 1);
         }
     }
 
@@ -954,6 +982,20 @@ public class CharacterList_Services : MonoBehaviour
     {
         // 处理多人大厅选择
         Console_Log($"选择多人大厅: {index}, 角色ID: {character_id}");
+        
+        // 获取选择的角色名称
+        if (Character_List.ContainsKey(character_id) && index < Character_List[character_id].Count)
+        {
+            string selectedCharacterName = Character_List[character_id][index].DevName;
+            
+            // 切换角色
+            Character_Services.Instance.Switch_Character(selectedCharacterName);
+            
+            // 关闭多人大厅和角色列表
+            Multi_Lobby_Root_GameObject.SetActive(false);
+            Character_List_Root_GameObject.SetActive(false);
+            Destroy_Chracter_List_UI();
+        }
     }
 
     private void Favorite_Toggle_Handler(string character_name, GameObject favorite_button)
@@ -970,6 +1012,12 @@ public class CharacterList_Services : MonoBehaviour
         }
 
         Save_Favorite_Config();
+
+        // 通知Dropdown_Services刷新收藏列表
+        if (Dropdown_Services.Instance != null)
+        {
+            Dropdown_Services.Instance.RefreshStarredList();
+        }
 
         // 如果当前在收藏页面，刷新显示
         if (is_Favorite_Filter_On && is_Character_List_On)
