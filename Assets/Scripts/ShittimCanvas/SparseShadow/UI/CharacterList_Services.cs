@@ -950,8 +950,7 @@ public class CharacterList_Services : MonoBehaviour
         if (character_num == 1)
         {
             Character_Services.Instance.Switch_Character(character_name);
-            Character_List_Root_GameObject.SetActive(false);
-            Destroy_Chracter_List_UI();
+            Hide_Character_List_Panel();
         }
         else
         {
@@ -993,8 +992,7 @@ public class CharacterList_Services : MonoBehaviour
             
             // 关闭多人大厅和角色列表
             Multi_Lobby_Root_GameObject.SetActive(false);
-            Character_List_Root_GameObject.SetActive(false);
-            Destroy_Chracter_List_UI();
+            Hide_Character_List_Panel();
         }
     }
 
