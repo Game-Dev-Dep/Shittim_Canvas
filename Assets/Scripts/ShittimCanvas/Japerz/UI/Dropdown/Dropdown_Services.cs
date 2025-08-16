@@ -273,7 +273,9 @@ IEnumerator SwitchToFavoriteMode()
     {
         if (characterName != "Textures" && Texture_Services.Lobbyillust.ContainsKey(characterName))
         {
-            string thumbnailPath = Path.Combine(File_Services.Student_Lists_Folder_Path, Texture_Services.Lobbyillust[characterName] + ".png");
+            string baseFileName = Texture_Services.Lobbyillust[characterName];
+            string smallFileName = baseFileName + "_Small";
+            string thumbnailPath = Path.Combine(File_Services.Student_Lists_Folder_Path, smallFileName + ".png");
             var thumbnail = Texture_Services.Get_Texture_By_Path(thumbnailPath);
             if (thumbnail != null) return Sprite.Create(thumbnail, new Rect(0, 0, thumbnail.width, thumbnail.height), Vector2.one * 0.5f);
         }
