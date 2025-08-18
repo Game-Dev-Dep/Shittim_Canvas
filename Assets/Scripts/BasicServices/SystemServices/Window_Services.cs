@@ -115,7 +115,7 @@ public class Window_Services : MonoBehaviour
     }
 
     // ===== =====
-    
+
     private void Start()
     {
         Console_Log("开始初始化 Window Services");
@@ -136,7 +136,7 @@ public class Window_Services : MonoBehaviour
                         }
 
         // Edit_Mode_Width = Device_Screen_Width - 50;
-        Edit_Mode_Height = Device_Screen_Height - 200;
+        //Edit_Mode_Height = Device_Screen_Height - 200;
 
         Console_Log($"当前屏幕分辨率: {Device_Screen_Width} × {Device_Screen_Height}");
         Console_Log($"编辑模式分辨率: {Edit_Mode_Width} × {Edit_Mode_Height}");
@@ -174,7 +174,7 @@ public class Window_Services : MonoBehaviour
         is_Fullscreen_Mode = !is_Fullscreen_Mode;
         if (is_Fullscreen_Mode)
         {
-            Console_Log("切换为全屏模式"); 
+            Console_Log("切换为全屏模式");
             Screen.SetResolution(Device_Screen_Width, Device_Screen_Height, FullScreenMode.FullScreenWindow);
         }
         else
@@ -280,7 +280,7 @@ public class Window_Services : MonoBehaviour
         {
             Console_Log("前两种方法都失败，尝试强制创建 WorkerW");
             WorkerW_Handle = Create_WorkerW_Force();
-            
+
             if (WorkerW_Handle != IntPtr.Zero)
             {
                 Console_Log($"强制创建 WorkerW 成功: {WorkerW_Handle}");
@@ -301,10 +301,10 @@ public class Window_Services : MonoBehaviour
     private IntPtr Create_WorkerW_Force()
     {
         Console_Log("开始强制创建 WorkerW");
-        
+
         // 重新发送0x052C消息，使用不同的参数
         IntPtr result = IntPtr.Zero;
-        
+
         // 尝试不同的参数组合
         var paramCombinations = new[]
         {
@@ -317,14 +317,14 @@ public class Window_Services : MonoBehaviour
         foreach (var param in paramCombinations)
         {
             Console_Log($"尝试参数组合: wParam={param.wParam}, lParam={param.lParam}");
-            
+
             Win32Wrapper.SendMessageTimeout(
-                Program_Manager_Handle, 
-                0x052C, 
-                param.wParam, 
-                param.lParam, 
-                Win32Wrapper.SendMessageTimeoutFlags.SMTO_NORMAL, 
-                1000, 
+                Program_Manager_Handle,
+                0x052C,
+                param.wParam,
+                param.lParam,
+                Win32Wrapper.SendMessageTimeoutFlags.SMTO_NORMAL,
+                1000,
                 out result
             );
 
@@ -353,7 +353,7 @@ public class Window_Services : MonoBehaviour
         {
             StringBuilder className = new StringBuilder(256);
             Win32Wrapper.GetClassName(tophandle, className, className.Capacity);
-            
+
             if (className.ToString() == "WorkerW")
             {
                 // 检查这个WorkerW是否包含SHELLDLL_DefView
@@ -398,7 +398,7 @@ public class Window_Services : MonoBehaviour
         return Unity_Handle != IntPtr.Zero ? true : false;
     }
 
-    
+
     /// <summary>
     /// 主要检测函数
     /// </summary>
@@ -433,7 +433,7 @@ public class Window_Services : MonoBehaviour
     public bool is_Switching = false;
     IEnumerator Get_Cover_Window_Coroutine()
     {
-        
+
         Detection_Result last_detection_result = new Detection_Result();
         bool last_is_VSync_Mode = false;
         while (true)
@@ -466,14 +466,14 @@ public class Window_Services : MonoBehaviour
                             Framerate_Services.Instance.Set_Target_Framerate("10", true);
 
                             AudioListener.volume = 0f;
-                            
+
                             Cover_Status_Image.color = new Color32(208, 64, 56, 255);
                             Cover_Status_Text.SetText($"{cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")} {cur_detection_result.top_window_info.className}");
                             Console_Log($"WorkerW 被覆盖，覆盖窗口是最大化窗口: {cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")}  {cur_detection_result.top_window_info.className}", Debug_Services.LogLevel.Ignore);
                             break;
 
                         case Cover_Window_Type.Normal_Window:
-                            
+
                             if (last_detection_result.cover_window_type == Cover_Window_Type.Maximized_Window)
                             {
                                 if (last_is_VSync_Mode)
@@ -640,7 +640,7 @@ public class Window_Services : MonoBehaviour
         return all_window_info;
     }
 
-    
+
     public static bool Is_Window_Minimized(IntPtr hWnd)
     {
         WINDOWPLACEMENT window_placement = new WINDOWPLACEMENT();
