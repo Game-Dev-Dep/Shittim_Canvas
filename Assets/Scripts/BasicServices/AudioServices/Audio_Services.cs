@@ -148,15 +148,11 @@ public class Audio_Services : MonoBehaviour
                 audio_source = BGM_GameObject.AddComponent<AudioSource>();
                 audio_source.outputAudioMixerGroup = BGM_Audio_Mixer_Group;
                 audio_source.clip = audio_clip;
+                audio_source.loop = true;
                 if (is_use_custom_loop)
                 {
-                    audio_source.loop = false;
                     Audio_Loop_Controller audio_loop_controller = audio_source.gameObject.AddComponent<Audio_Loop_Controller>();
                     audio_loop_controller.Initialize(loop_start_time, loop_end_time);
-                }
-                else
-                {
-                    audio_source.loop = true;
                 }
                 break;
         }

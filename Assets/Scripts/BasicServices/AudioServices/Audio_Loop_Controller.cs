@@ -37,5 +37,9 @@ public class Audio_Loop_Controller : MonoBehaviour
         {
             audio_source.timeSamples = loop_start_samples;
         }
+        if (audio_source.isPlaying && audio_source.timeSamples < loop_start_samples)
+        {
+            audio_source.timeSamples = loop_start_samples;
+        }
     }
 }
