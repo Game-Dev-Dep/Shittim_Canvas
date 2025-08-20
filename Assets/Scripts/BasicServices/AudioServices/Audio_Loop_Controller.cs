@@ -9,6 +9,8 @@ public class Audio_Loop_Controller : MonoBehaviour
     private int loop_start_samples;
     private int loop_end_samples;
 
+    bool is_first_time = true;
+
     public void Initialize(float loopStartTime, float loopEndTime)
     {
         audio_source = GetComponent<AudioSource>();
@@ -35,9 +37,10 @@ public class Audio_Loop_Controller : MonoBehaviour
     {
         if (audio_source.isPlaying && audio_source.timeSamples >= loop_end_samples)
         {
+            if (is_first_time) is_first_time = false;
             audio_source.timeSamples = loop_start_samples;
         }
-        if (audio_source.isPlaying && audio_source.timeSamples < loop_start_samples)
+        if (audio_source.isPlaying && audio_source.timeSamples < loop_start_samples && !is_first_time)
         {
             audio_source.timeSamples = loop_start_samples;
         }
