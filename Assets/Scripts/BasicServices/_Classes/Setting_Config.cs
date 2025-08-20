@@ -48,9 +48,9 @@ public class Setting_Config
     public class Audio_Class
     {
         public float Global_Sound = 1.0f;
-        public float Talk_Sound = 1.0f;
-        public float SFX_Sound = 1.0f;
-        public float BGM_Sound = 1.0f;
+        public float Talk_Sound = 0.8f;
+        public float SFX_Sound = 0.3f;
+        public float BGM_Sound = 0.7f;
     }
     public class Graphic_Class
     {
