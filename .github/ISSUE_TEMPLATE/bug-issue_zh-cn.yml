@@ -7,9 +7,9 @@ body:
         # 问题报告
 
         需要注意的是，您的问题此前可能已经被报告过。在报告问题之前，请先检查以下内容：
-        - 置顶的 Issue, 位于 [Issue 列表](https://github.com/Game-Dev-Dep/Shittim_Canvas/issues) 的顶部。
-        - 标签为 `priority:0` 且 Open 的 Issue， 可在 [这里](https://github.com/Game-Dev-Dep/Shittim_Canvas/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Apriority%3A0) 查看。
-        - 还有最重要的, 在 [Issues](https://github.com/Game-Dev-Dep/Shittim_Canvas/issues) 中搜索。如果发现您反馈的问题已存在，请在该 Issue 下提供可能有用的信息。
+        - 置顶的 Issue，位于 [Issue 列表](https://github.com/Game-Dev-Dep/Shittim_Canvas/issues) 的顶部。
+        - 标签为 `priority:0` 且 Open 的 Issue，可在 [这里](https://github.com/Game-Dev-Dep/Shittim_Canvas/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Apriority%3A0) 查看。
+        - 还有最重要的，在 [Issues](https://github.com/Game-Dev-Dep/Shittim_Canvas/issues) 中搜索。如果发现您反馈的问题已存在，请在该 Issue 下提供可能有用的信息。
 
   - type: dropdown
     attributes:
@@ -72,5 +72,6 @@ body:
     attributes:
       label: 日志
       placeholder: 拖拽日志到此处。
+      render: txt
     validations:
       required: false
