@@ -24834,8 +24834,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc575b9364ddf364a8bb17582121a0f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  custom_Version_String: v1.2
-  custom_Build_Time_String: 2025-08-18
+  custom_Version_String: 
+  custom_Build_Time_String: 
 --- !u!1 &1845389809
 GameObject:
   m_ObjectHideFlags: 0

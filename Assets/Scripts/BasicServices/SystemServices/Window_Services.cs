@@ -415,7 +415,16 @@ public class Window_Services : MonoBehaviour
             return detection_result;
         }
 
-        // 2. 检查WorkerW是否被遮挡
+        // 2. 检查是否有被手动设定为全屏的窗口
+        window_info = Get_Manual_Fullscreen_Window_Info();
+        if (window_info != null)
+        {
+            detection_result.cover_window_type = Cover_Window_Type.Maximized_Window;
+            detection_result.top_window_info = window_info;
+            return detection_result;
+        }
+
+        // 3. 检查WorkerW是否被遮挡
         window_info = Get_WorkerW_Cover_Window_Info();
         if (window_info != null)
         {
@@ -563,6 +572,35 @@ public class Window_Services : MonoBehaviour
             if (window_info.isVisible && window_info.isMaximized && !Is_System_Window(window_info))
             {
                 //Console_Log($"找到最大化窗口: {window_info}");
+                return window_info;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// 这是检查窗口是否应该被识别为全屏并静音Shittim Canvas相关的功能
+    /// </summary>
+    private bool Should_Treat_As_Fullscreen(Window_Info window_info)
+    {
+        if (Config_Services.Instance.Gloabal_WindowFilter_Config.Fullscreen_Mute_Whitelist_Title_Names.Contains(window_info.title)) 
+            return true;
+
+        if (Config_Services.Instance.Gloabal_WindowFilter_Config.Fullscreen_Mute_Whitelist_Class_Names.Contains(window_info.className)) 
+            return true;
+
+        return false;
+    }
+
+    private Window_Info Get_Manual_Fullscreen_Window_Info()
+    {
+        List<Window_Info> all_window_info = Get_All_Window_Info();
+
+        foreach (Window_Info window_info in all_window_info)
+        {
+            if (window_info.isVisible && !Is_System_Window(window_info) && Should_Treat_As_Fullscreen(window_info))
+            {
                 return window_info;
             }
         }

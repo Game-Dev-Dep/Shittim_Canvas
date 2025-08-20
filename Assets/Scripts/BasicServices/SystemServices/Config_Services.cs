@@ -85,8 +85,10 @@ public class Config_Services : MonoBehaviour
 
         Gloabal_WindowFilter_Config = File_Services.Load_Specific_Type_From_File<WindowFilter_Config>(Path.Combine(File_Services.Config_Files_Folder_Path, "WindowFilter Config.json"));
         Console_Log($"读取到的自定义覆盖窗口设置:\n" +
-                    $"窗口标题个数: {Gloabal_WindowFilter_Config.Title_Names.Count}\n" +
-                    $"窗口类名个数: {Gloabal_WindowFilter_Config.Class_Names.Count}"
+                    $"壁纸模式交互白名单 - 窗口标题个数: {Gloabal_WindowFilter_Config.Wallpaper_Interaction_Whitelist_Title_Names.Count}\n" +
+                    $"壁纸模式交互白名单 - 窗口类名个数: {Gloabal_WindowFilter_Config.Wallpaper_Interaction_Whitelist_Class_Names.Count}\n" +
+                    $"全屏检测静音白名单 - 窗口标题个数: {Gloabal_WindowFilter_Config.Fullscreen_Mute_Whitelist_Title_Names.Count}\n" +
+                    $"全屏检测静音白名单 - 窗口类名个数: {Gloabal_WindowFilter_Config.Fullscreen_Mute_Whitelist_Class_Names.Count}"
                     );
 
         Global_Favorite_Config = File_Services.Load_Specific_Type_From_File<Favorite_Config>(Path.Combine(File_Services.Config_Files_Folder_Path, "Favorite Config.json"));
