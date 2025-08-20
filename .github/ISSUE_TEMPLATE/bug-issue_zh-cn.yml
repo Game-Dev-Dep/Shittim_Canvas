@@ -53,7 +53,7 @@ body:
   - type: input
     attributes:
       label: 软件版本
-      description: 您可以在软件的左上角找到
+      description: 您可以在设置中的关于部分找到。
 
   - type: markdown
     attributes:
@@ -64,9 +64,10 @@ body:
 
         ### 获取日志
 
-        1. 按 `Win + R` 键打开运行窗口。
-        2. 输入 `%HOMEPATH%\AppData\LocalLow\Ivaldi Forge\Shittim Canvas`，并按回车键。
-        3. 拖放 `.log` 文件到下面的日志部分。
+        1. 打开设置
+        2. 点击关于
+        3. 点击 `轻抚我打开文件夹`
+        4. 拖放 `.log` 文件到下面的日志部分。
 
   - type: textarea
     attributes:
