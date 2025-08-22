@@ -651,7 +651,7 @@ MonoBehaviour:
   m_text: TEST MEOW!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45e20b598bec6cb43b6a057f29adc3a2, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 71d7881fe09fc734abd209f4e075735b, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: bd497dadda5139046a53452a1688910b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

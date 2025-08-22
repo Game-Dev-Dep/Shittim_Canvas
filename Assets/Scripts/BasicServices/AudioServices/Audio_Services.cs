@@ -41,6 +41,8 @@ public class Audio_Services : MonoBehaviour
     public AudioMixerGroup SFX_Audio_Mixer_Group;
     [SerializeField]
     public AudioMixerGroup BGM_Audio_Mixer_Group;
+    [SerializeField]
+    public AudioMixerGroup UI_SFX_Audio_Mixer_Group; // 新增：专门的UI音效混音器组
 
     [SerializeField]
     public GameObject Talk_GameObject;
@@ -48,12 +50,15 @@ public class Audio_Services : MonoBehaviour
     public GameObject SFX_GameObject;
     [SerializeField]
     public GameObject BGM_GameObject;
+    [SerializeField]
+    public GameObject UI_SFX_GameObject; // 新增：专门的UI音效GameObject
 
     [Header("Core Variables")]
     public float Global_Sound = 0f;
     public float Talk_Sound = 0f;
     public float SFX_Sound = 0f;
     public float BGM_Sound = 0f;
+    public float UI_SFX_Sound = 0f; // 新增：UI音效音量
     public List<BGMExcel_DB> BGMExcel_DB_list;
 
     public void Get_Config()
@@ -93,6 +98,20 @@ public class Audio_Services : MonoBehaviour
     {
         BGM_Sound = value;
         BGM_Audio_Mixer_Group.audioMixer.SetFloat("BGM_Volume", Get_Decibels(value, -80, -30));
+    }
+
+    public void UI_SFX_Slider_Handler(float value)
+    {
+        UI_SFX_Sound = value;
+        if (UI_SFX_Audio_Mixer_Group != null && UI_SFX_Audio_Mixer_Group.audioMixer != null)
+        {
+            UI_SFX_Audio_Mixer_Group.audioMixer.SetFloat("UI_SFX_Volume", Get_Decibels(value, -80, -5));
+            Console_Log($"设置UI音效音量: {value} -> {Get_Decibels(value, -80, -5):F1}dB", Debug_Services.LogLevel.Debug);
+        }
+        else
+        {
+            Console_Log("UI音效混音器组未设置，无法调整音量", Debug_Services.LogLevel.Info);
+        }
     }
 
     public static float Get_Decibels(float value, float minDecibel, float maxDecibel)
@@ -211,6 +230,56 @@ public class Audio_Services : MonoBehaviour
                 Destroy(audio_source);
                 Console_Log($"已移除在 {gameobject} 上的 AudioSource 组件: {audio_source.name}");
             }
+        }
+    }
+
+    /// <summary>
+    /// UI音效
+    /// </summary>
+    /// <param name="audioClip">音频文件</param>
+    /// <param name="volumeMultiplier">音量倍数（0-1），最终音量 = 设置面板UI音量 × 倍数</param>
+    public void PlayUI_SFX(AudioClip audioClip, float volumeMultiplier = 1f)
+    {
+        if (audioClip == null)
+        {
+            Console_Log("UI音效播放失败：AudioClip为空", Debug_Services.LogLevel.Info);
+            return;
+        }
+        
+        if (UI_SFX_GameObject == null)
+        {
+            Console_Log("UI音效播放失败：UI_SFX_GameObject未设置", Debug_Services.LogLevel.Info);
+            return;
+        }
+        
+        if (UI_SFX_Audio_Mixer_Group == null)
+        {
+            Console_Log("UI音效播放失败：UI_SFX_Audio_Mixer_Group未设置", Debug_Services.LogLevel.Info);
+            return;
+        }
+        
+        AudioSource audioSource = UI_SFX_GameObject.AddComponent<AudioSource>();
+        audioSource.outputAudioMixerGroup = UI_SFX_Audio_Mixer_Group;
+        audioSource.clip = audioClip;
+        audioSource.volume = volumeMultiplier;
+        audioSource.loop = false;
+        
+        audioSource.Play();
+        Console_Log($"播放UI音效: {audioClip.name}, 音量倍数: {volumeMultiplier}", Debug_Services.LogLevel.Debug);
+        
+        StartCoroutine(DestroyAudioSourceAfterPlay(audioSource));
+    }
+    
+    private IEnumerator DestroyAudioSourceAfterPlay(AudioSource audioSource)
+    {
+        if (audioSource == null || audioSource.clip == null) yield break;
+        
+        // 等
+        yield return new WaitForSeconds(audioSource.clip.length);
+        
+        if (audioSource != null && audioSource.gameObject != null)
+        {
+            Destroy(audioSource);
         }
     }
 

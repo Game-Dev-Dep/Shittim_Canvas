@@ -453,7 +453,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1456099541}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -987,6 +987,7 @@ GameObject:
   m_Component:
   - component: {fileID: 101395122}
   - component: {fileID: 101395123}
+  - component: {fileID: 101395124}
   m_Layer: 5
   m_Name: '[Character List] All Tab Toggle'
   m_TagString: Untagged
@@ -1064,6 +1065,48 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
+--- !u!114 &101395124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101395121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &103449288
 GameObject:
   m_ObjectHideFlags: 0
@@ -1078,6 +1121,7 @@ GameObject:
   - component: {fileID: 103449290}
   - component: {fileID: 103449293}
   - component: {fileID: 103449294}
+  - component: {fileID: 103449295}
   m_Layer: 5
   m_Name: '[IK] Button'
   m_TagString: Untagged
@@ -1219,6 +1263,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &103449295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103449288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &114399053
 GameObject:
   m_ObjectHideFlags: 0
@@ -1358,6 +1444,7 @@ GameObject:
   - component: {fileID: 134540822}
   - component: {fileID: 134540821}
   - component: {fileID: 134540820}
+  - component: {fileID: 134540823}
   m_Layer: 5
   m_Name: '[Setting] Audio Option Toggle'
   m_TagString: Untagged
@@ -1473,6 +1560,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 134540818}
   m_CullTransparentMesh: 1
+--- !u!114 &134540823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 134540818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &156226460
 GameObject:
   m_ObjectHideFlags: 0
@@ -1484,6 +1613,7 @@ GameObject:
   - component: {fileID: 156226461}
   - component: {fileID: 156226463}
   - component: {fileID: 156226462}
+  - component: {fileID: 156226464}
   m_Layer: 5
   m_Name: '[Setting] Detail Option Slider Handle'
   m_TagString: Untagged
@@ -1549,6 +1679,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 156226460}
   m_CullTransparentMesh: 1
+--- !u!114 &156226464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156226460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &161535434
 GameObject:
   m_ObjectHideFlags: 0
@@ -2020,6 +2192,7 @@ GameObject:
   - component: {fileID: 167620729}
   - component: {fileID: 167620732}
   - component: {fileID: 167620733}
+  - component: {fileID: 167620734}
   m_Layer: 5
   m_Name: '[Subtitle JP] Button'
   m_TagString: Untagged
@@ -2161,6 +2334,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &167620734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167620725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &174268379
 GameObject:
   m_ObjectHideFlags: 0
@@ -2896,6 +3111,7 @@ GameObject:
   - component: {fileID: 275551329}
   - component: {fileID: 275551332}
   - component: {fileID: 275551333}
+  - component: {fileID: 275551334}
   m_Layer: 5
   m_Name: '[Volume] Button'
   m_TagString: Untagged
@@ -3037,6 +3253,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &275551334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275551325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &277188167
 GameObject:
   m_ObjectHideFlags: 0
@@ -3258,6 +3516,7 @@ GameObject:
   - component: {fileID: 284235890}
   - component: {fileID: 284235889}
   - component: {fileID: 284235888}
+  - component: {fileID: 284235891}
   m_Layer: 5
   m_Name: '[Setting] About Option Toggle'
   m_TagString: Untagged
@@ -3373,6 +3632,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 284235886}
   m_CullTransparentMesh: 1
+--- !u!114 &284235891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284235886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &284264775
 GameObject:
   m_ObjectHideFlags: 0
@@ -3879,6 +4180,7 @@ GameObject:
   - component: {fileID: 305962543}
   - component: {fileID: 305962542}
   - component: {fileID: 305962541}
+  - component: {fileID: 305962544}
   m_Layer: 5
   m_Name: '[OOBE Notification] QQ Button'
   m_TagString: Untagged
@@ -3989,6 +4291,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 305962539}
   m_CullTransparentMesh: 1
+--- !u!114 &305962544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305962539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &313416441
 GameObject:
   m_ObjectHideFlags: 0
@@ -4001,6 +4345,7 @@ GameObject:
   - component: {fileID: 313416445}
   - component: {fileID: 313416444}
   - component: {fileID: 313416443}
+  - component: {fileID: 313416446}
   m_Layer: 5
   m_Name: '[OOBE Notification] Discord Button'
   m_TagString: Untagged
@@ -4111,6 +4456,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 313416441}
   m_CullTransparentMesh: 1
+--- !u!114 &313416446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313416441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &318174814
 GameObject:
   m_ObjectHideFlags: 0
@@ -4409,6 +4796,7 @@ GameObject:
   - component: {fileID: 333498742}
   - component: {fileID: 333498741}
   - component: {fileID: 333498740}
+  - component: {fileID: 333498743}
   m_Layer: 5
   m_Name: '[Character List] Item Card Button'
   m_TagString: Untagged
@@ -4523,6 +4911,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 333498738}
   m_CullTransparentMesh: 1
+--- !u!114 &333498743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333498738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.6
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 1
 --- !u!1 &333620171
 GameObject:
   m_ObjectHideFlags: 0
@@ -4670,6 +5100,7 @@ GameObject:
   - component: {fileID: 350728653}
   - component: {fileID: 350728655}
   - component: {fileID: 350728654}
+  - component: {fileID: 350728656}
   m_Layer: 5
   m_Name: '[Setting] General Option Toggle'
   m_TagString: Untagged
@@ -4785,6 +5216,48 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &350728656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 350728649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &353117734
 GameObject:
   m_ObjectHideFlags: 0
@@ -4869,6 +5342,7 @@ GameObject:
   - component: {fileID: 360393549}
   - component: {fileID: 360393551}
   - component: {fileID: 360393550}
+  - component: {fileID: 360393552}
   m_Layer: 5
   m_Name: '[Setting] Detail Option Text'
   m_TagString: Untagged
@@ -4993,6 +5467,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 360393548}
   m_CullTransparentMesh: 1
+--- !u!114 &360393552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360393548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &360448700
 GameObject:
   m_ObjectHideFlags: 0
@@ -5435,6 +5951,7 @@ GameObject:
   - component: {fileID: 396671302}
   - component: {fileID: 396671301}
   - component: {fileID: 396671304}
+  - component: {fileID: 396671305}
   m_Layer: 5
   m_Name: '[Starred List] Button'
   m_TagString: Untagged
@@ -5562,6 +6079,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &396671305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396671299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &399347972
 GameObject:
   m_ObjectHideFlags: 0
@@ -6247,7 +6806,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1456099541}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -7088,6 +7647,7 @@ GameObject:
   - component: {fileID: 500391966}
   - component: {fileID: 500391965}
   - component: {fileID: 500391968}
+  - component: {fileID: 500391969}
   m_Layer: 5
   m_Name: '[Setting] Rest Button'
   m_TagString: Untagged
@@ -7215,6 +7775,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &500391969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500391963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &505726801
 GameObject:
   m_ObjectHideFlags: 0
@@ -7300,6 +7902,7 @@ GameObject:
   - component: {fileID: 520742639}
   - component: {fileID: 520742638}
   - component: {fileID: 520742637}
+  - component: {fileID: 520742640}
   m_Layer: 5
   m_Name: '[Character List] Quit Button'
   m_TagString: Untagged
@@ -7409,6 +8012,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 520742635}
   m_CullTransparentMesh: 1
+--- !u!114 &520742640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520742635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: ecb2552253e4e164d9a79cf8a78db9c0, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &532220177
 GameObject:
   m_ObjectHideFlags: 0
@@ -7770,6 +8415,7 @@ GameObject:
   - component: {fileID: 573225346}
   - component: {fileID: 573225345}
   - component: {fileID: 573225344}
+  - component: {fileID: 573225347}
   m_Layer: 5
   m_Name: '[Character List] Sort Mode Dropdownwn'
   m_TagString: Untagged
@@ -7898,6 +8544,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 573225342}
   m_CullTransparentMesh: 1
+--- !u!114 &573225347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573225342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &577342887
 GameObject:
   m_ObjectHideFlags: 0
@@ -8459,6 +9147,7 @@ GameObject:
   - component: {fileID: 594468123}
   - component: {fileID: 594468122}
   - component: {fileID: 594468124}
+  - component: {fileID: 594468125}
   m_Layer: 5
   m_Name: '[Save Camera Setting] Button'
   m_TagString: Untagged
@@ -8612,6 +9301,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &594468125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 594468116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &615663327
 GameObject:
   m_ObjectHideFlags: 0
@@ -8669,6 +9400,7 @@ GameObject:
   - component: {fileID: 618084700}
   - component: {fileID: 618084699}
   - component: {fileID: 618084698}
+  - component: {fileID: 618084701}
   m_Layer: 5
   m_Name: '[Setting] Graphic Option Toggle'
   m_TagString: Untagged
@@ -8784,6 +9516,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 618084696}
   m_CullTransparentMesh: 1
+--- !u!114 &618084701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618084696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &626265403
 GameObject:
   m_ObjectHideFlags: 0
@@ -9354,6 +10128,7 @@ GameObject:
   - component: {fileID: 701564328}
   - component: {fileID: 701564327}
   - component: {fileID: 701564330}
+  - component: {fileID: 701564331}
   m_Layer: 5
   m_Name: '[Starred List] Panel Title Shortcut Button'
   m_TagString: Untagged
@@ -9375,7 +10150,7 @@ RectTransform:
   m_Children:
   - {fileID: 1762785456}
   m_Father: {fileID: 1456099541}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -9484,6 +10259,48 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &701564331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701564325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &702983392
 GameObject:
   m_ObjectHideFlags: 0
@@ -10344,6 +11161,7 @@ Transform:
   - {fileID: 1407402368}
   - {fileID: 1423139065}
   - {fileID: 893485525}
+  - {fileID: 1520224946}
   m_Father: {fileID: 935311310}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10363,13 +11181,16 @@ MonoBehaviour:
   Talk_Audio_Mixer_Group: {fileID: -4458639950931691112, guid: f296ba93e15cc6d4cb756ba4d153168e, type: 2}
   SFX_Audio_Mixer_Group: {fileID: 6551348604530159799, guid: f296ba93e15cc6d4cb756ba4d153168e, type: 2}
   BGM_Audio_Mixer_Group: {fileID: 2939153091488936272, guid: f296ba93e15cc6d4cb756ba4d153168e, type: 2}
+  UI_SFX_Audio_Mixer_Group: {fileID: 3157286432875329900, guid: f296ba93e15cc6d4cb756ba4d153168e, type: 2}
   Talk_GameObject: {fileID: 1407402367}
   SFX_GameObject: {fileID: 1423139064}
   BGM_GameObject: {fileID: 893485524}
+  UI_SFX_GameObject: {fileID: 1520224944}
   Global_Sound: 0
   Talk_Sound: 0
   SFX_Sound: 0
   BGM_Sound: 0
+  UI_SFX_Sound: 0
 --- !u!81 &726916160
 AudioListener:
   m_ObjectHideFlags: 0
@@ -11129,6 +11950,7 @@ GameObject:
   - component: {fileID: 791324424}
   - component: {fileID: 791324423}
   - component: {fileID: 791324422}
+  - component: {fileID: 791324425}
   m_Layer: 5
   m_Name: '[Character List] School Dropdownwn'
   m_TagString: Untagged
@@ -11257,6 +12079,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 791324420}
   m_CullTransparentMesh: 1
+--- !u!114 &791324425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791324420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &793876493
 GameObject:
   m_ObjectHideFlags: 0
@@ -12014,7 +12878,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.00004459818}
   m_SizeDelta: {x: 0, y: 315}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &852473474
@@ -13663,6 +14527,7 @@ GameObject:
   - component: {fileID: 922954523}
   - component: {fileID: 922954522}
   - component: {fileID: 922954525}
+  - component: {fileID: 922954526}
   m_Layer: 5
   m_Name: '[Hide GUI] Button'
   m_TagString: Untagged
@@ -13791,6 +14656,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &922954526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 922954519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &930421341
 GameObject:
   m_ObjectHideFlags: 0
@@ -13902,6 +14809,7 @@ Transform:
   - {fileID: 1679942439}
   - {fileID: 54632694}
   - {fileID: 1077123506}
+  - {fileID: 1760467951}
   m_Father: {fileID: 1457816733}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13936,6 +14844,7 @@ GameObject:
   - component: {fileID: 937014410}
   - component: {fileID: 937014409}
   - component: {fileID: 937014408}
+  - component: {fileID: 937014411}
   m_Layer: 5
   m_Name: '[Character List] Next Page Button'
   m_TagString: Untagged
@@ -14046,6 +14955,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 937014406}
   m_CullTransparentMesh: 1
+--- !u!114 &937014411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 937014406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &960714288
 GameObject:
   m_ObjectHideFlags: 0
@@ -14185,6 +15136,7 @@ GameObject:
   - component: {fileID: 964583365}
   - component: {fileID: 964583364}
   - component: {fileID: 964583363}
+  - component: {fileID: 964583366}
   m_Layer: 5
   m_Name: '[Setting] Detail Option Dropdown'
   m_TagString: Untagged
@@ -14313,6 +15265,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 964583361}
   m_CullTransparentMesh: 1
+--- !u!114 &964583366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 964583361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &977673884
 GameObject:
   m_ObjectHideFlags: 0
@@ -14987,6 +15981,7 @@ GameObject:
   - component: {fileID: 1010896016}
   - component: {fileID: 1010896019}
   - component: {fileID: 1010896020}
+  - component: {fileID: 1010896021}
   m_Layer: 5
   m_Name: '[Save Funtion Setting] Button'
   m_TagString: Untagged
@@ -15127,6 +16122,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &1010896021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010896014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1021149495
 GameObject:
   m_ObjectHideFlags: 0
@@ -15714,6 +16751,7 @@ GameObject:
   - component: {fileID: 1080025075}
   - component: {fileID: 1080025076}
   - component: {fileID: 1080025077}
+  - component: {fileID: 1080025078}
   m_Layer: 5
   m_Name: '[Reset Camera Setting] Button'
   m_TagString: Untagged
@@ -15854,6 +16892,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &1080025078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1080025070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1087866248
 GameObject:
   m_ObjectHideFlags: 0
@@ -16934,8 +18014,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1215087168}
   - {fileID: 1456099541}
+  - {fileID: 1215087168}
   - {fileID: 234511655}
   m_Father: {fileID: 1479221879}
   m_RootOrder: 0
@@ -17302,6 +18382,7 @@ GameObject:
   - component: {fileID: 1214749104}
   - component: {fileID: 1214749103}
   - component: {fileID: 1214749102}
+  - component: {fileID: 1214749105}
   m_Layer: 5
   m_Name: '[Character List] Previous Page Button'
   m_TagString: Untagged
@@ -17412,6 +18493,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1214749100}
   m_CullTransparentMesh: 1
+--- !u!114 &1214749105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1214749100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1215087167
 GameObject:
   m_ObjectHideFlags: 0
@@ -17445,7 +18568,7 @@ RectTransform:
   m_Children:
   - {fileID: 1735052289}
   m_Father: {fileID: 1171430312}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -17787,6 +18910,7 @@ GameObject:
   - component: {fileID: 1264963019}
   - component: {fileID: 1264963018}
   - component: {fileID: 1264963022}
+  - component: {fileID: 1264963023}
   m_Layer: 5
   m_Name: '[Character List] Button'
   m_TagString: Untagged
@@ -17927,6 +19051,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &1264963023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1264963016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1266995628
 GameObject:
   m_ObjectHideFlags: 0
@@ -18163,6 +19329,7 @@ GameObject:
   - component: {fileID: 1282638708}
   - component: {fileID: 1282638707}
   - component: {fileID: 1282638706}
+  - component: {fileID: 1282638709}
   m_Layer: 5
   m_Name: '[Setting] Detail Option Toggle Template'
   m_TagString: Untagged
@@ -18278,6 +19445,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1282638704}
   m_CullTransparentMesh: 1
+--- !u!114 &1282638709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1282638704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1310414975
 GameObject:
   m_ObjectHideFlags: 0
@@ -18366,6 +19575,7 @@ GameObject:
   - component: {fileID: 1316855264}
   - component: {fileID: 1316855263}
   - component: {fileID: 1316855262}
+  - component: {fileID: 1316855265}
   m_Layer: 5
   m_Name: '[OOBE Notification] Comfirm Button'
   m_TagString: Untagged
@@ -18476,6 +19686,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1316855260}
   m_CullTransparentMesh: 1
+--- !u!114 &1316855265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316855260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1325038473
 GameObject:
   m_ObjectHideFlags: 0
@@ -19432,6 +20684,7 @@ GameObject:
   - component: {fileID: 1414079937}
   - component: {fileID: 1414079936}
   - component: {fileID: 1414079939}
+  - component: {fileID: 1414079940}
   m_Layer: 5
   m_Name: '[Starred List] Panel Button'
   m_TagString: Untagged
@@ -19556,6 +20809,48 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.6666667}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!114 &1414079940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414079934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1423139064
 GameObject:
   m_ObjectHideFlags: 0
@@ -19889,12 +21184,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2134101612}
   - {fileID: 42531160}
   - {fileID: 459197892}
   - {fileID: 701564326}
-  - {fileID: 2134101612}
   m_Father: {fileID: 1171430312}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -20063,6 +21358,7 @@ GameObject:
   - component: {fileID: 1462414271}
   - component: {fileID: 1462414270}
   - component: {fileID: 1462414269}
+  - component: {fileID: 1462414272}
   m_Layer: 5
   m_Name: '[Setting] Quit Button'
   m_TagString: Untagged
@@ -20172,6 +21468,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1462414267}
   m_CullTransparentMesh: 1
+--- !u!114 &1462414272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462414267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: ecb2552253e4e164d9a79cf8a78db9c0, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1463536436
 GameObject:
   m_ObjectHideFlags: 0
@@ -20880,6 +22218,7 @@ GameObject:
   - component: {fileID: 1518129499}
   - component: {fileID: 1518129502}
   - component: {fileID: 1518129503}
+  - component: {fileID: 1518129504}
   m_Layer: 5
   m_Name: '[Fullscreen] Button'
   m_TagString: Untagged
@@ -21021,6 +22360,79 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &1518129504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518129496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
+--- !u!1 &1520224944
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1520224946}
+  m_Layer: 0
+  m_Name: UI SFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1520224946
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520224944}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 726916158}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1527513117
 GameObject:
   m_ObjectHideFlags: 0
@@ -21072,6 +22484,7 @@ GameObject:
   - component: {fileID: 1528109875}
   - component: {fileID: 1528109879}
   - component: {fileID: 1528109878}
+  - component: {fileID: 1528109880}
   m_Layer: 5
   m_Name: '[Setting] Button'
   m_TagString: Untagged
@@ -21212,6 +22625,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshold: 0.1
+--- !u!114 &1528109880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528109873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1531398295
 GameObject:
   m_ObjectHideFlags: 0
@@ -21810,6 +23265,7 @@ GameObject:
   - component: {fileID: 1610625591}
   - component: {fileID: 1610625590}
   - component: {fileID: 1610625589}
+  - component: {fileID: 1610625592}
   m_Layer: 5
   m_Name: '[OOBE Notification] Language Dropdown'
   m_TagString: Untagged
@@ -21939,6 +23395,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1610625587}
   m_CullTransparentMesh: 1
+--- !u!114 &1610625592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610625587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1612107347
 GameObject:
   m_ObjectHideFlags: 0
@@ -24026,6 +25524,50 @@ Transform:
   m_Father: {fileID: 1457816733}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1760467950
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1760467951}
+  - component: {fileID: 1760467952}
+  m_Layer: 0
+  m_Name: Button FX Services
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1760467951
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760467950}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 935311310}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1760467952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760467950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb37690357bfd0646b117d6bcfa7e7d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1762721727
 GameObject:
   m_ObjectHideFlags: 0
@@ -24075,7 +25617,7 @@ GameObject:
   - component: {fileID: 1762785458}
   - component: {fileID: 1762785457}
   m_Layer: 5
-  m_Name: Image
+  m_Name: '[Starred List] Panel Title Shortcut Button Image'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24522,6 +26064,7 @@ GameObject:
   - component: {fileID: 1798566276}
   - component: {fileID: 1798566277}
   - component: {fileID: 1798566278}
+  - component: {fileID: 1798566279}
   m_Layer: 5
   m_Name: '[Read Camera Setting] Button'
   m_TagString: Untagged
@@ -24662,6 +26205,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &1798566279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1798566271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1805901020
 GameObject:
   m_ObjectHideFlags: 0
@@ -24959,6 +26544,7 @@ GameObject:
   - component: {fileID: 1856641174}
   - component: {fileID: 1856641177}
   - component: {fileID: 1856641178}
+  - component: {fileID: 1856641179}
   m_Layer: 5
   m_Name: '[Talk] Button'
   m_TagString: Untagged
@@ -25100,6 +26686,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &1856641179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1856641171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1860259719
 GameObject:
   m_ObjectHideFlags: 0
@@ -25761,6 +27389,7 @@ GameObject:
   - component: {fileID: 1888404356}
   - component: {fileID: 1888404357}
   - component: {fileID: 1888404358}
+  - component: {fileID: 1888404359}
   m_Layer: 5
   m_Name: '[Wallpaper Mode] Button'
   m_TagString: Untagged
@@ -25901,6 +27530,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &1888404359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888404350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1900746730
 GameObject:
   m_ObjectHideFlags: 0
@@ -26012,6 +27683,7 @@ GameObject:
   - component: {fileID: 1921455014}
   - component: {fileID: 1921455013}
   - component: {fileID: 1921455012}
+  - component: {fileID: 1921455015}
   m_Layer: 5
   m_Name: '[Character List] Favorite Button'
   m_TagString: Untagged
@@ -26123,6 +27795,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1921455010}
   m_CullTransparentMesh: 1
+--- !u!114 &1921455015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1921455010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1932150293
 GameObject:
   m_ObjectHideFlags: 0
@@ -26347,6 +28061,7 @@ GameObject:
   - component: {fileID: 1956700956}
   - component: {fileID: 1956700955}
   - component: {fileID: 1956700958}
+  - component: {fileID: 1956700959}
   m_Layer: 5
   m_Name: '[Setting] Save Button'
   m_TagString: Untagged
@@ -26474,6 +28189,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &1956700959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956700953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1957747155
 GameObject:
   m_ObjectHideFlags: 0
@@ -26560,6 +28317,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1969815631}
   - component: {fileID: 1969815632}
+  - component: {fileID: 1969815633}
   m_Layer: 5
   m_Name: '[Character List] Favorite Tab Toggle'
   m_TagString: Untagged
@@ -26637,6 +28395,48 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 0
+--- !u!114 &1969815633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969815630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &1971788290
 GameObject:
   m_ObjectHideFlags: 0
@@ -28621,6 +30421,7 @@ GameObject:
   - component: {fileID: 2124050277}
   - component: {fileID: 2124050280}
   - component: {fileID: 2124050281}
+  - component: {fileID: 2124050282}
   m_Layer: 5
   m_Name: '[Subtitle Custom] Button'
   m_TagString: Untagged
@@ -28762,6 +30563,48 @@ MonoBehaviour:
   enableTooltip: 1
   customPosition: {x: 0, y: 0, z: 0}
   useCustomPosition: 0
+--- !u!114 &2124050282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124050275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &2133090621
 GameObject:
   m_ObjectHideFlags: 0
@@ -28924,7 +30767,7 @@ GameObject:
   - component: {fileID: 2134101614}
   - component: {fileID: 2134101613}
   m_Layer: 5
-  m_Name: Image
+  m_Name: '[Starred List] BG Deco'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28943,7 +30786,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1456099541}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -29678,6 +31521,7 @@ GameObject:
   - component: {fileID: 2815703495382322295}
   - component: {fileID: 2815703495382322288}
   - component: {fileID: 2815703495382322293}
+  - component: {fileID: 2815703495382322296}
   m_Layer: 5
   m_Name: '[File Check] Open Root Button'
   m_TagString: Untagged
@@ -29736,6 +31580,48 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2815703495382322296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2815703495382322290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!1 &2815703495476486376
 GameObject:
   m_ObjectHideFlags: 0
@@ -30668,6 +32554,7 @@ GameObject:
   - component: {fileID: 2815703496678899008}
   - component: {fileID: 2815703496678899009}
   - component: {fileID: 2815703496678899010}
+  - component: {fileID: 2815703496678899021}
   m_Layer: 5
   m_Name: '[File Check] Restart Button'
   m_TagString: Untagged
@@ -30675,6 +32562,48 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2815703496678899021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2815703496678899020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0003b1b25ad3f2f45ae71d225d2d25d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pressedScale: 0.92
+  tweenDuration: 0.08
+  ease:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  clickClip: {fileID: 0}
+  downClip: {fileID: 8300000, guid: bb789c07d2454aa48bf733d82afb74d5, type: 3}
+  volumeMultiplier: 1
+  disableAnimation: 0
 --- !u!114 &2815703496774315777
 MonoBehaviour:
   m_ObjectHideFlags: 0
