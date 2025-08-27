@@ -21,6 +21,8 @@ namespace Utils
         {
             MenuActions = new Dictionary<string, Action>();
             ActionMappings = new Dictionary<uint, string>();
+            SubMenus = new Dictionary<string, List<(string, Action)>>();
+            SubMenuMappings = new Dictionary<uint, string>();
 
             if (actions == null)
                 return;
@@ -37,6 +39,19 @@ namespace Utils
                 ActionMappings[uid] = label;
                 MenuActions[label] = callback;
             }
+        }
+
+        /// <summary>
+        /// 创建子菜单
+        /// </summary>
+        /// <param name="parentMenuLabel">父菜单标签</param>
+        /// <param name="subMenuItems">子菜单项列表</param>
+        public static void CreateSubMenu(string parentMenuLabel, List<(string, Action)> subMenuItems)
+        {
+            if (SubMenus == null)
+                SubMenus = new Dictionary<string, List<(string, Action)>>();
+            
+            SubMenus[parentMenuLabel] = subMenuItems;
         }
 
         private static string TruncateString(string str, int maxLength)

@@ -1008,6 +1008,13 @@ public class CharacterList_Services : MonoBehaviour
             Dropdown_Services.Instance.RefreshStarredList();
         }
 
+        // 通知系统托盘刷新收藏学生子菜单
+        var systemTrayServices = FindObjectOfType<SystemTray_Services>();
+        if (systemTrayServices != null)
+        {
+            systemTrayServices.RefreshFavoriteStudentsSubMenu();
+        }
+
         // 如果当前在收藏页面，刷新显示
         if (is_Favorite_Filter_On && is_Character_List_On)
         {
