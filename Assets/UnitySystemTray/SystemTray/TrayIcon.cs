@@ -18,6 +18,10 @@ namespace Utils
         private static Dictionary<uint, string> ActionMappings;
         private static Action OnLeftClick;
 
+        // 新增：支持子菜单的数据结构
+        private static Dictionary<string, List<(string, Action)>> SubMenus;
+        private static Dictionary<uint, string> SubMenuMappings;
+
         private static WndProcDelegate wndProcDelegate;
 
         /// <summary>Create a System Tray Icon</summary>
@@ -172,9 +176,29 @@ namespace Utils
             foreach (var pair in ActionMappings)
             {
                 if (pair.Value == SEPARATOR)
+                {
                     WinAPI.AppendMenu(hMenu, MF_SEPARATOR, 0, null);
+                }
+                else if (SubMenus != null && SubMenus.ContainsKey(pair.Value))
+                {
+                    // 创建子菜单
+                    IntPtr hSubMenu = WinAPI.CreatePopupMenu();
+                    if (hSubMenu != IntPtr.Zero)
+                    {
+                        foreach (var subItem in SubMenus[pair.Value])
+                        {
+                            uint subUid = GetUniqueID();
+                            SubMenuMappings[subUid] = subItem.Item1;
+                            MenuActions[subItem.Item1] = subItem.Item2;
+                            WinAPI.AppendMenu(hSubMenu, MF_STRING, subUid, subItem.Item1);
+                        }
+                        WinAPI.AppendMenu(hMenu, MF_STRING | MF_POPUP, (uint)hSubMenu, pair.Value);
+                    }
+                }
                 else
+                {
                     WinAPI.AppendMenu(hMenu, MF_STRING, pair.Key, pair.Value);
+                }
             }
 
             WinAPI.SetForegroundWindow(messageWindowHandle);
@@ -201,7 +225,14 @@ namespace Utils
 
                 case WM_COMMAND:
                     uint commandId = (uint)wParam & 0xFFFF;
-                    MenuActions[ActionMappings[commandId]]?.Invoke();
+                    if (ActionMappings.ContainsKey(commandId))
+                    {
+                        MenuActions[ActionMappings[commandId]]?.Invoke();
+                    }
+                    else if (SubMenuMappings.ContainsKey(commandId))
+                    {
+                        MenuActions[SubMenuMappings[commandId]]?.Invoke();
+                    }
                     return IntPtr.Zero;
 
                 default:

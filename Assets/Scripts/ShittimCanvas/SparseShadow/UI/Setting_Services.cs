@@ -284,6 +284,26 @@ public class Setting_Services : MonoBehaviour
                         Audio_Services.Instance.BGM_Slider_Handler(value);
                     }
                 },
+                new Setting_Detail_Option
+                {
+                    Title_Key = "settings_panel.audio.ui_sfx_volume",
+                    Description_Key = "settings_panel.audio.ui_sfx_volume.desc",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Slider,
+                    Slider_Value = setting_config.Audio.UI_SFX_Sound,
+                    Slider_Min_Value = 0f,
+                    Slider_Max_Value = 1f,
+                    Slider_Text_Min_Value = 0f,
+                    Slider_Text_Max_Value = 100f,
+                    Slider_Callback = (value) => {
+                        setting_config.Audio.UI_SFX_Sound = value;
+                        Setting_Contents[Setting_Option_Type.Audio][4].Slider_Value = value;
+                        if (Setting_Contents[Setting_Option_Type.Audio][4].Slider_InputField_Component != null)
+                        {
+                            Setting_Contents[Setting_Option_Type.Audio][4].Slider_InputField_Component.text = $"{Value_Map(value, Setting_Contents[Setting_Option_Type.Audio][4].Slider_Min_Value, Setting_Contents[Setting_Option_Type.Audio][4].Slider_Max_Value, Setting_Contents[Setting_Option_Type.Audio][4].Slider_Text_Min_Value, Setting_Contents[Setting_Option_Type.Audio][4].Slider_Text_Max_Value):F0}";
+                        }
+                        Audio_Services.Instance.UI_SFX_Slider_Handler(value);
+                    }
+                },
             }
         );
 
@@ -416,7 +436,18 @@ public class Setting_Services : MonoBehaviour
                     Title_Key = "settings_panel.about.shittim_canvas",
                     Description_Key = "settings_panel.about.shittim_canvas.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Text,
-                    Text_Value = "GitHub: https://github.com/Game-Dev-Dep/Shittim_Canvas"
+                    Text_Value = "https://sc.japerz.com/",
+                    Text_Click_Callback = () => {
+                        try
+                        {
+                            Toast_Wrapper_Services.ShowToast("toast.open_webpage", 3f);
+                            Application.OpenURL("https://sc.japerz.com/");
+                        }
+                        catch (System.Exception ex)
+                        {
+                            Toast_Wrapper_Services.ShowToast("toast.open_webpage_failed", 3f);
+                        }
+                    }
                 },
                 new Setting_Detail_Option
                 {
@@ -520,6 +551,7 @@ public class Setting_Services : MonoBehaviour
         Audio_Services.Instance.Talk_Slider_Handler(setting_config.Audio.Talk_Sound);
         Audio_Services.Instance.SFX_Slider_Handler(setting_config.Audio.SFX_Sound);
         Audio_Services.Instance.BGM_Slider_Handler(setting_config.Audio.BGM_Sound);
+        Audio_Services.Instance.UI_SFX_Slider_Handler(setting_config.Audio.UI_SFX_Sound);
 
         Init_Setting_Contents();
 

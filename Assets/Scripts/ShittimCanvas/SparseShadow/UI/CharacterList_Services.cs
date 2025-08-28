@@ -265,8 +265,7 @@ public class CharacterList_Services : MonoBehaviour
         currentPage = 0;
 
         // 重新创建UI以应用过滤
-        Destroy_Chracter_List_UI();
-        Create_Character_List_UI();
+        UpdateCharacterListDisplay();
     }
 
     private void Get_Detail_Option_UI_Parameters()
@@ -662,9 +661,7 @@ public class CharacterList_Services : MonoBehaviour
         // 重置页码
         currentPage = 0;
         
-        // 重新创建UI以应用过滤
-        Destroy_Chracter_List_UI();
-        Create_Character_List_UI();
+        UpdateCharacterListDisplay();
     }
 
     private void SortByField(Dictionary<long, List<Character>> characterListToSort, bool ascending)
@@ -866,7 +863,9 @@ public class CharacterList_Services : MonoBehaviour
             cardPool.RemoveAt(cardPool.Count - 1);
 
             RectTransform cardRect = card.GetComponent<RectTransform>();
-            if (cardRect != null)
+            if (cardRect != null && (cardRect.localScale != Vector3.one || 
+            cardRect.sizeDelta != new Vector2(Character_Portrait_Width, Character_Portrait_Height) || 
+            cardRect.anchoredPosition != Vector2.zero))
             {
                 cardRect.localScale = Vector3.one;
                 cardRect.sizeDelta = new Vector2(Character_Portrait_Width, Character_Portrait_Height);
@@ -878,15 +877,6 @@ public class CharacterList_Services : MonoBehaviour
         else
         {
             GameObject newCard = Instantiate(Character_Card_Template);
-
-            RectTransform cardRect = newCard.GetComponent<RectTransform>();
-            if (cardRect != null)
-            {
-                cardRect.localScale = Vector3.one;
-                cardRect.sizeDelta = new Vector2(Character_Portrait_Width, Character_Portrait_Height);
-                cardRect.anchoredPosition = Vector2.zero;
-            }
-
             return newCard;
         }
     }
@@ -926,8 +916,6 @@ public class CharacterList_Services : MonoBehaviour
     {
         yield return null;
 
-        Canvas.ForceUpdateCanvases();
-
         GridLayoutGroup gridLayout = Character_List_Search_Result_Content_GameObject.GetComponent<GridLayoutGroup>();
         if (gridLayout != null)
         {
@@ -936,7 +924,10 @@ public class CharacterList_Services : MonoBehaviour
             gridLayout.enabled = true;
         }
 
-        Canvas.ForceUpdateCanvases();
+        if(Character_List_ScrollRect != null)
+        {
+            Character_List_ScrollRect.normalizedPosition = Character_List_ScrollRect.normalizedPosition;
+        }
     }
 
     private void Destroy_Chracter_List_UI()
@@ -1015,6 +1006,13 @@ public class CharacterList_Services : MonoBehaviour
         if (Dropdown_Services.Instance != null)
         {
             Dropdown_Services.Instance.RefreshStarredList();
+        }
+
+        // 通知系统托盘刷新收藏学生子菜单
+        var systemTrayServices = FindObjectOfType<SystemTray_Services>();
+        if (systemTrayServices != null)
+        {
+            systemTrayServices.RefreshFavoriteStudentsSubMenu();
         }
 
         // 如果当前在收藏页面，刷新显示
