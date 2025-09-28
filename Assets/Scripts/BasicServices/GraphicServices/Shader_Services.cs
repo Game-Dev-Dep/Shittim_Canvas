@@ -80,7 +80,7 @@ public class Shader_Services : MonoBehaviour
     //                is_need_replace_texture = true;
     //            }
     //            if (
-    //                material.shader.name == "DSFX/FX_SHADER_Matcap" || 
+    //                material.shader.name == "DSFX/FX_SHADER_Matcap" ||
     //                material.shader.name == "DSFX/FX_SHADER_Matcap_0"
     //                )
     //            {
@@ -196,9 +196,9 @@ public class Shader_Services : MonoBehaviour
                     Sprite ab_sprite = renderer.gameObject.GetComponent<SpriteRenderer>().sprite;
                     Material ab_material = renderer.gameObject.GetComponent<SpriteRenderer>().material;
                     Shader ab_shader = renderer.gameObject.GetComponent<SpriteRenderer>().material.shader;
-                    Console_Log($"  └Sprite: {ab_sprite.name} Material: {ab_material.name} Shader: {ab_shader.name}", Debug_Services.LogLevel.Core);
                     if (ab_sprite != null)
                     {
+                        Console_Log($"  └Sprite: {ab_sprite.name} Material: {ab_material.name} Shader: {ab_shader.name}", Debug_Services.LogLevel.Core);
                         Sprite local_sprite = Resources.Load<Sprite>($"Sprites/My_{ab_sprite.name}");
                         Shader local_shader = Shader.Find(ab_material.shader.name);
                         renderer.gameObject.GetComponent<SpriteRenderer>().sprite = local_sprite;
@@ -226,7 +226,7 @@ public class Shader_Services : MonoBehaviour
                             ab_material.shader = local_shader;
                             ab_material.renderQueue = ab_render_queue;
                             if (ab_material.renderQueue == 2000) ab_material.renderQueue = 3000;
-                            
+
                             for (int j = 0; j < shader_property_count; j++)
                             {
                                 string shader_property_name = ab_material.shader.GetPropertyName(j) ?? "";
@@ -251,7 +251,13 @@ public class Shader_Services : MonoBehaviour
                         }
                         else
                         {
-                            Console_Log($"  └Material {ab_material.name} 的 Shader {ab_material.shader.name} 不存在本地替换文件", Debug_Services.LogLevel.Core);
+                            if (ab_material.shader.name == "Spine/Skeleton MX Standard - NoiseFlowAnimation")
+                            {
+                                int ab_render_queue = ab_material.renderQueue;
+                                ab_material.shader = Shader.Find("Spine/Skeleton MX Standard");
+                                ab_material.renderQueue = ab_render_queue;
+                            }
+                            else Console_Log($"  └Material {ab_material.name} 的 Shader {ab_material.shader.name} 不存在本地替换文件", Debug_Services.LogLevel.Core);
                         }
                     }
                 }
