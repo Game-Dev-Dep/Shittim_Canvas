@@ -20537,6 +20537,7 @@ GameObject:
   - component: {fileID: 1399649035}
   - component: {fileID: 1399649034}
   - component: {fileID: 1399649033}
+  - component: {fileID: 1399649037}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -20640,6 +20641,39 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1399649037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399649032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66558a56e0598124b87c04b8474bb09d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCanvas: {fileID: 1399649035}
+  ringSprite: {fileID: -2413806693520163455, guid: 74b2463474ed2cf4984ffc358160d6e8, type: 3}
+  ringColor: {r: 0.6773585, g: 0.9269742, b: 1, a: 0.6}
+  particleColor: {r: 0.14680658, g: 0.8585601, b: 0.98490566, a: 0.9}
+  particleCount: 8
+  ringDuration: 0.35
+  particleDuration: 0.35
+  ringStartSize: 80
+  ringEndSize: 220
+  particleSize: {x: 50, y: 50}
+  particleDistanceRange: {x: 60, y: 120}
+  enableTrail: 1
+  trailDistanceStep: 5
+  trailSize: {x: 20, y: 15}
+  trailDuration: 0.15
+  trailColor: {r: 0.6622641, g: 1, b: 0.99400467, a: 0.58431375}
+  enableGlow: 1
+  particleGlowScale: 1.5
+  particleGlowAlphaMultiplier: 0.1
+  trailGlowWidthMultiplier: 1.5
+  trailGlowAlphaMultiplier: 0.35
 --- !u!1 &1407402367
 GameObject:
   m_ObjectHideFlags: 0
