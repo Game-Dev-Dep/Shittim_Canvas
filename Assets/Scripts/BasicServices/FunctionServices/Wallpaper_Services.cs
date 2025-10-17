@@ -33,6 +33,8 @@ public class Wallpaper_Services : MonoBehaviour
     public GameObject Function_Area;
     [SerializeField]
     public GameObject Status_Area;
+    [SerializeField]
+    public GameObject Lobby_Switch_Area;
     //[SerializeField]
     //public RawImage Auto_Wallpaper_Mode_On_Icon;
     //[SerializeField]
@@ -249,6 +251,7 @@ public class Wallpaper_Services : MonoBehaviour
 #if UNITY_EDITOR
         Wallpaper_Area.SetActive(!is_Wallpaper_Mode_Editor);
         Function_Area.SetActive(!is_Wallpaper_Mode_Editor);
+        if (Lobby_Switch_Area != null) Lobby_Switch_Area.SetActive(!is_Wallpaper_Mode_Editor);
         // Status Area 根据设置决定是否在壁纸模式下显示
         bool shouldShowStatusArea = is_Wallpaper_Mode_Editor && 
             Config_Services.Instance.Global_Setting_Config.General.Wallpaper_Mode_Status_Area_Enabled == 0;
@@ -256,6 +259,7 @@ public class Wallpaper_Services : MonoBehaviour
 #else
         Wallpaper_Area.SetActive(!is_Wallpaper_Mode);
         Function_Area.SetActive(!is_Wallpaper_Mode);
+        if (Lobby_Switch_Area != null) Lobby_Switch_Area.SetActive(!is_Wallpaper_Mode);
         // Status Area 根据设置决定是否在壁纸模式下显示
         bool shouldShowStatusArea = is_Wallpaper_Mode && 
             Config_Services.Instance.Global_Setting_Config.General.Wallpaper_Mode_Status_Area_Enabled == 0;

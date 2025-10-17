@@ -27,6 +27,10 @@ public class Dropdown_Services : MonoBehaviour
     [Header("Favorite List Button")]
     public GameObject favoriteListButton;
 
+    [Header("Navigation Buttons")]
+    public Button previousButton;
+    public Button nextButton;
+
     [Header("Character List Services Reference")]
     public CharacterList_Services characterListServices;
 
@@ -64,28 +68,34 @@ public class Dropdown_Services : MonoBehaviour
         
         if (favoriteListButton != null) StartCoroutine(DelayedFavoriteButtonInitialization());
         
+        if (previousButton != null) previousButton.onClick.AddListener(SwitchToPreviousFavorite);
+        if (nextButton != null) nextButton.onClick.AddListener(SwitchToNextFavorite);
+        
+        UpdateNavigationButtonsVisibility();
+        
         if (starredListPanel != null)
             starredListPanel.SetActive(false);
     }
 
     IEnumerator DelayedInitialization()
-{
-    yield return null;
-    if (starredListButton == null) yield break;
-    
-    LoadCharacterData();
-    LoadStarredCharacters();
-    SetupCharacterButtons();
-    BindButtonEvents();
-}
+    {
+        yield return null;
+        if (starredListButton == null) yield break;
+        
+        LoadCharacterData();
+        LoadStarredCharacters();
+        SetupCharacterButtons();
+        BindButtonEvents();
+        UpdateNavigationButtonsVisibility();
+    }
 
-IEnumerator DelayedFavoriteButtonInitialization()
-{
-    yield return null;
-    if (favoriteListButton == null) yield break;
-    
-    BindFavoriteButtonEvents();
-}
+    IEnumerator DelayedFavoriteButtonInitialization()
+    {
+        yield return null;
+        if (favoriteListButton == null) yield break;
+        
+        BindFavoriteButtonEvents();
+    }
     
     void BindButtonEvents()
     {
@@ -297,11 +307,11 @@ IEnumerator SwitchToFavoriteMode()
         isUpdatingFromCharacterServices = false;
     }
 
-    // Public methods
     public void RefreshStarredList()
     {
         LoadStarredCharacters();
         SetupCharacterButtons();
+        UpdateNavigationButtonsVisibility();
     }
 
     public void AddStarredCharacter(string characterName)
@@ -334,6 +344,39 @@ IEnumerator SwitchToFavoriteMode()
     
     public string GetCurrentSelectedCharacter() => currentSelectedCharacter;
 
+    void SwitchToPreviousFavorite()
+    {
+        LoadStarredCharacters();
+        if (starredCharacterNames.Count < 1) return;
+        
+        int currentIndex = starredCharacterNames.IndexOf(currentSelectedCharacter);
+        if (currentIndex == -1) currentIndex = 0;
+        
+        int previousIndex = (currentIndex - 1 + starredCharacterNames.Count) % starredCharacterNames.Count;
+        OnOptionSelected(starredCharacterNames[previousIndex]);
+    }
+
+    void SwitchToNextFavorite()
+    {
+        LoadStarredCharacters();
+        if (starredCharacterNames.Count < 1) return;
+        
+        int currentIndex = starredCharacterNames.IndexOf(currentSelectedCharacter);
+        if (currentIndex == -1) currentIndex = 0;
+        
+        int nextIndex = (currentIndex + 1) % starredCharacterNames.Count;
+        OnOptionSelected(starredCharacterNames[nextIndex]);
+    }
+
+    void UpdateNavigationButtonsVisibility()
+    {
+        LoadStarredCharacters();
+        bool shouldShow = starredCharacterNames.Count >= 2;
+        
+        if (previousButton != null) previousButton.gameObject.SetActive(shouldShow);
+        if (nextButton != null) nextButton.gameObject.SetActive(shouldShow);
+    }
+
     void AdjustContentSize()
     {
         if (starredListContentGrid == null) return;
@@ -365,20 +408,17 @@ IEnumerator SwitchToFavoriteMode()
         if (starredListButton != null)
         {
             var button = starredListButton.GetComponent<Button>();
-            if (button != null)
-            {
-                button.onClick.RemoveAllListeners();
-            }
+            if (button != null) button.onClick.RemoveAllListeners();
         }
         
         // 清理收藏夹按钮事件监听器
         if (favoriteListButton != null)
         {
             var button = favoriteListButton.GetComponent<Button>();
-            if (button != null)
-            {
-                button.onClick.RemoveAllListeners();
-            }
+            if (button != null) button.onClick.RemoveAllListeners();
         }
+        
+        if (previousButton != null) previousButton.onClick.RemoveAllListeners();
+        if (nextButton != null) nextButton.onClick.RemoveAllListeners();
     }
 }
