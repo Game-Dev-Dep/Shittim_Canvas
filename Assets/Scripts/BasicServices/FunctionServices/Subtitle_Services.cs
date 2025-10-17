@@ -123,6 +123,7 @@ public class Subtitle_Services : MonoBehaviour
         if (!is_Subtitle_JP_On) StartCoroutine(Text_Fade_Out(Subtitle_JP_Text, Text_Fade_Duration));
         else StartCoroutine(Text_Fade_In(Subtitle_JP_Text, Text_Fade_Duration));
         Update_JP_Button_UI();
+        Config_Services.Instance.Auto_Save_Function_Config();
     }
 
     public void Update_JP_Button_UI()
@@ -137,6 +138,7 @@ public class Subtitle_Services : MonoBehaviour
         if (!is_Subtitle_Custom_On) StartCoroutine(Text_Fade_Out(Subtitle_Custom_Text, Text_Fade_Duration));
         else StartCoroutine(Text_Fade_In(Subtitle_Custom_Text, Text_Fade_Duration));
         Update_Custom_Button_UI();
+        Config_Services.Instance.Auto_Save_Function_Config();
     }
 
     public void Update_Custom_Button_UI()

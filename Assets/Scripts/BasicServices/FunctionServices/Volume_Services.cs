@@ -59,6 +59,7 @@ public class Volume_Services : MonoBehaviour
         is_Volume_On = !is_Volume_On;
         Volume_Component.enabled = is_Volume_On;
         Update_Button_UI();
+        Config_Services.Instance.Auto_Save_Function_Config();
     }
 
     public void Update_Button_UI()

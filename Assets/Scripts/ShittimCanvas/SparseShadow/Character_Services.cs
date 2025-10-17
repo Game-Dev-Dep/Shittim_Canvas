@@ -53,6 +53,11 @@ public class Character_Services : MonoBehaviour
 
     public void Switch_Character(string character_name)
     {
+        if (Camera_Services.Instance != null && Character_Name != character_name && !string.IsNullOrEmpty(Character_Name))
+        {
+            Camera_Services.Instance.Auto_Save_Camera_Settings();
+        }
+        
         if(character != null) character.Unload_Character();
         
         character = gameObject.AddComponent<Character>();
@@ -62,6 +67,11 @@ public class Character_Services : MonoBehaviour
         if (Dropdown_Services.Instance != null)
         {
             Dropdown_Services.Instance.SetCurrentSelectedCharacter(character_name);
+        }
+
+        if (Camera_Services.Instance != null)
+        {
+            Camera_Services.Instance.Save_Character_Selection();
         }
     }
 

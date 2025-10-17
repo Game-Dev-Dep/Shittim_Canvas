@@ -33,6 +33,8 @@ public class Camera_Services : MonoBehaviour
     public GameObject Camera_Mode_Panel;
     [SerializeField]
     public TextMeshProUGUI Camera_Mode_Text;
+    [SerializeField]
+    public GameObject Unsaved_Icon;
 
     [Header("Drag Settings")]
     public float Drag_Sensitivity = 0.4f;  // 拖拽灵敏度
@@ -51,6 +53,7 @@ public class Camera_Services : MonoBehaviour
     private bool is_Rotate_Mode;  // 旋转模式激活
     private Vector3 Drag_Start_Position;
     private bool is_Camera_Fixed = false;
+    private Camera_Config saved_camera_config;
 
     private void Start()
     {
@@ -65,6 +68,9 @@ public class Camera_Services : MonoBehaviour
         Reset_Camera_Settings_Button.onClick.AddListener(
             () => Reset_Camera_Settings(MemoryLobby_Camera)
         );
+
+        saved_camera_config = CloneCameraConfig(Config_Services.Instance.MemoryLobby_Camera_Config);
+        if (Unsaved_Icon != null) Unsaved_Icon.SetActive(false);
 
         Console_Log("结束初始化 Camera Services");
     }
@@ -147,6 +153,8 @@ public class Camera_Services : MonoBehaviour
                     is_Camera_Fixed = true;
                 }
             }
+
+            UpdateUnsavedIcon();
         }
     }
 
@@ -230,7 +238,37 @@ public class Camera_Services : MonoBehaviour
         camera_config.Camera_Rotation_Z = camera.transform.eulerAngles.z;
         camera_config.Camera_Size = camera.orthographicSize;
         Config_Services.Instance.Save_Camera_Config(camera_config, Path.Combine(File_Services.Config_Files_Folder_Path, "MemoryLobby Camera Config.json"));
+        saved_camera_config = CloneCameraConfig(camera_config);
+        if (Unsaved_Icon != null) Unsaved_Icon.SetActive(false);
         Toast_Wrapper_Services.ShowToast("toast.save_camera_settings", 3f, "success");
+    }
+
+    // 自动保存摄像机设置相关的东西
+    public void Auto_Save_Camera_Settings()
+    {
+        if (MemoryLobby_Camera == null) return;
+        
+        var camera_config = Config_Services.Instance.MemoryLobby_Camera_Config;
+        camera_config.Defalut_Character_Name = Index_Services.Instance.Character_Name;
+        camera_config.Camera_Position_X = MemoryLobby_Camera.transform.position.x;
+        camera_config.Camera_Position_Y = MemoryLobby_Camera.transform.position.y;
+        camera_config.Camera_Rotation_Z = MemoryLobby_Camera.transform.eulerAngles.z;
+        camera_config.Camera_Size = MemoryLobby_Camera.orthographicSize;
+        Config_Services.Instance.Save_Camera_Config(camera_config, Path.Combine(File_Services.Config_Files_Folder_Path, "MemoryLobby Camera Config.json"));
+        saved_camera_config = CloneCameraConfig(camera_config);
+        if (Unsaved_Icon != null) Unsaved_Icon.SetActive(false);
+        Console_Log("已自动保存相机设置");
+    }
+
+    // 保存角色选择相关的东西
+    public void Save_Character_Selection()
+    {
+        var camera_config = Config_Services.Instance.MemoryLobby_Camera_Config;
+        camera_config.Defalut_Character_Name = Index_Services.Instance.Character_Name;
+        Config_Services.Instance.Save_Camera_Config(camera_config, Path.Combine(File_Services.Config_Files_Folder_Path, "MemoryLobby Camera Config.json"));
+        saved_camera_config.Defalut_Character_Name = camera_config.Defalut_Character_Name;
+        if (Unsaved_Icon != null) Unsaved_Icon.SetActive(false);
+        Console_Log($"已保存角色选择: {camera_config.Defalut_Character_Name}");
     }
 
     public void Reset_Camera_Settings(Camera camera)
@@ -239,6 +277,32 @@ public class Camera_Services : MonoBehaviour
         camera.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         camera.orthographicSize = 1;
         Toast_Wrapper_Services.ShowToast("toast.reset_camera_settings", 3f, "success");
+    }
+
+    //小红点相关
+    private void UpdateUnsavedIcon()
+    {
+        if (Unsaved_Icon == null || MemoryLobby_Camera == null || saved_camera_config == null) return;
+        
+        bool hasChanges = Index_Services.Instance.Character_Name != saved_camera_config.Defalut_Character_Name ||
+                          Mathf.Abs(MemoryLobby_Camera.transform.position.x - saved_camera_config.Camera_Position_X) > 0.001f ||
+                          Mathf.Abs(MemoryLobby_Camera.transform.position.y - saved_camera_config.Camera_Position_Y) > 0.001f ||
+                          Mathf.Abs(MemoryLobby_Camera.transform.eulerAngles.z - saved_camera_config.Camera_Rotation_Z) > 0.001f ||
+                          Mathf.Abs(MemoryLobby_Camera.orthographicSize - saved_camera_config.Camera_Size) > 0.001f;
+        
+        Unsaved_Icon.SetActive(hasChanges);
+    }
+
+    private Camera_Config CloneCameraConfig(Camera_Config config)
+    {
+        return new Camera_Config
+        {
+            Defalut_Character_Name = config.Defalut_Character_Name,
+            Camera_Position_X = config.Camera_Position_X,
+            Camera_Position_Y = config.Camera_Position_Y,
+            Camera_Rotation_Z = config.Camera_Rotation_Z,
+            Camera_Size = config.Camera_Size
+        };
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Camera_Services", message, loglevel, logtype); }

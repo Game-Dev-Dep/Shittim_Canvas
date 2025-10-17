@@ -36,6 +36,10 @@ public class Setting_Services : MonoBehaviour
     public Button Setting_Save_Button;
     [SerializeField]
     public Button Setting_Reset_Button;
+    [SerializeField]
+    public GameObject Setting_Save_Button_Unsaved_Icon;
+    [SerializeField]
+    public GameObject Setting_Toggle_Button_Unsaved_Icon;
 
     //[Header("UI Settings")]
 
@@ -48,6 +52,7 @@ public class Setting_Services : MonoBehaviour
     public Dictionary<Setting_Option_Type, List<Setting_Detail_Option>> Setting_Contents = new Dictionary<Setting_Option_Type, List<Setting_Detail_Option>>();
 
     private Setting_Config setting_config;
+    private Setting_Config saved_setting_config;
     private LocalizedString localizedString = new LocalizedString();
     private int buildVersionClickCount = 0; // 构建版本点击计数器
 
@@ -72,6 +77,9 @@ public class Setting_Services : MonoBehaviour
     public void Save_Setting_Config()
     {
         Config_Services.Instance.Save_Setting_Config(setting_config, Path.Combine(File_Services.Config_Files_Folder_Path, "Setting Config.json"));
+        saved_setting_config = CloneSettingConfig(setting_config);
+        if (Setting_Save_Button_Unsaved_Icon != null) Setting_Save_Button_Unsaved_Icon.SetActive(false);
+        if (Setting_Toggle_Button_Unsaved_Icon != null) Setting_Toggle_Button_Unsaved_Icon.SetActive(false);
         Toast_Wrapper_Services.ShowToast("toast.settings_saved", 3f);
     }
 
@@ -443,7 +451,7 @@ public class Setting_Services : MonoBehaviour
                             Toast_Wrapper_Services.ShowToast("toast.open_webpage", 3f);
                             Application.OpenURL("https://sc.japerz.com/");
                         }
-                        catch (System.Exception ex)
+                        catch (System.Exception)
                         {
                             Toast_Wrapper_Services.ShowToast("toast.open_webpage_failed", 3f);
                         }
@@ -557,7 +565,16 @@ public class Setting_Services : MonoBehaviour
 
         Update_Setting_Content_UI();
 
+        saved_setting_config = CloneSettingConfig(setting_config);
+        if (Setting_Save_Button_Unsaved_Icon != null) Setting_Save_Button_Unsaved_Icon.SetActive(false);
+        if (Setting_Toggle_Button_Unsaved_Icon != null) Setting_Toggle_Button_Unsaved_Icon.SetActive(false);
+
         Console_Log("结束初始化 Setting Services");
+    }
+
+    private void Update()
+    {
+        UpdateUnsavedIcon();
     }
 
     private void OnDestroy()
@@ -1172,6 +1189,57 @@ public class Setting_Services : MonoBehaviour
             default:
                 return locale.LocaleName;
         }
+    }
+
+    // 更新小红点相关
+    private void UpdateUnsavedIcon()
+    {
+        if (saved_setting_config == null) return;
+        
+        bool hasChanges = 
+            setting_config.General.Language != saved_setting_config.General.Language ||
+            setting_config.General.Auto_Startup != saved_setting_config.General.Auto_Startup ||
+            setting_config.General.Auto_Wallpaper_Mode != saved_setting_config.General.Auto_Wallpaper_Mode ||
+            setting_config.General.Notification_Enabled != saved_setting_config.General.Notification_Enabled ||
+            setting_config.General.Wallpaper_Mode_Status_Area_Enabled != saved_setting_config.General.Wallpaper_Mode_Status_Area_Enabled ||
+            Mathf.Abs(setting_config.Audio.Global_Sound - saved_setting_config.Audio.Global_Sound) > 0.001f ||
+            Mathf.Abs(setting_config.Audio.Talk_Sound - saved_setting_config.Audio.Talk_Sound) > 0.001f ||
+            Mathf.Abs(setting_config.Audio.SFX_Sound - saved_setting_config.Audio.SFX_Sound) > 0.001f ||
+            Mathf.Abs(setting_config.Audio.BGM_Sound - saved_setting_config.Audio.BGM_Sound) > 0.001f ||
+            Mathf.Abs(setting_config.Audio.UI_SFX_Sound - saved_setting_config.Audio.UI_SFX_Sound) > 0.001f ||
+            setting_config.Graphic.Editor_Mode_Resolution_Width != saved_setting_config.Graphic.Editor_Mode_Resolution_Width ||
+            setting_config.Graphic.Editor_Mode_Resolution_Height != saved_setting_config.Graphic.Editor_Mode_Resolution_Height ||
+            Mathf.Abs(setting_config.Graphic.Editor_Mode_UI_Scale - saved_setting_config.Graphic.Editor_Mode_UI_Scale) > 0.001f ||
+            setting_config.Graphic.Wallpaper_Mode_Refresh_Type != saved_setting_config.Graphic.Wallpaper_Mode_Refresh_Type ||
+            setting_config.Graphic.Wallpaper_Mode_Framerate != saved_setting_config.Graphic.Wallpaper_Mode_Framerate ||
+            setting_config.Graphic.Selected_Display_Monitor_Index != saved_setting_config.Graphic.Selected_Display_Monitor_Index;
+        
+        if (Setting_Save_Button_Unsaved_Icon != null) Setting_Save_Button_Unsaved_Icon.SetActive(hasChanges);
+        if (Setting_Toggle_Button_Unsaved_Icon != null) Setting_Toggle_Button_Unsaved_Icon.SetActive(hasChanges);
+    }
+
+    // 复制一份设置配置来比对设置是否发生变化
+    private Setting_Config CloneSettingConfig(Setting_Config config)
+    {
+        var clone = new Setting_Config();
+        clone.General.Language = config.General.Language;
+        clone.General.Auto_Startup = config.General.Auto_Startup;
+        clone.General.Auto_Wallpaper_Mode = config.General.Auto_Wallpaper_Mode;
+        clone.General.Notification_Enabled = config.General.Notification_Enabled;
+        clone.General.Wallpaper_Mode_Status_Area_Enabled = config.General.Wallpaper_Mode_Status_Area_Enabled;
+        clone.General.OOBE_Completed = config.General.OOBE_Completed;
+        clone.Audio.Global_Sound = config.Audio.Global_Sound;
+        clone.Audio.Talk_Sound = config.Audio.Talk_Sound;
+        clone.Audio.SFX_Sound = config.Audio.SFX_Sound;
+        clone.Audio.BGM_Sound = config.Audio.BGM_Sound;
+        clone.Audio.UI_SFX_Sound = config.Audio.UI_SFX_Sound;
+        clone.Graphic.Editor_Mode_Resolution_Width = config.Graphic.Editor_Mode_Resolution_Width;
+        clone.Graphic.Editor_Mode_Resolution_Height = config.Graphic.Editor_Mode_Resolution_Height;
+        clone.Graphic.Editor_Mode_UI_Scale = config.Graphic.Editor_Mode_UI_Scale;
+        clone.Graphic.Wallpaper_Mode_Refresh_Type = config.Graphic.Wallpaper_Mode_Refresh_Type;
+        clone.Graphic.Wallpaper_Mode_Framerate = config.Graphic.Wallpaper_Mode_Framerate;
+        clone.Graphic.Selected_Display_Monitor_Index = config.Graphic.Selected_Display_Monitor_Index;
+        return clone;
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Setting_Services", message, loglevel, logtype); }
