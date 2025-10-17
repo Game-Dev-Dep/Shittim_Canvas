@@ -368,6 +368,29 @@ IEnumerator SwitchToFavoriteMode()
         OnOptionSelected(starredCharacterNames[nextIndex]);
     }
 
+    // 在收藏夹中随机切换大厅
+    public void SwitchToRandomFavorite()
+    {
+        LoadStarredCharacters();
+        if (starredCharacterNames.Count < 1) return;
+        
+        int randomIndex = Random.Range(0, starredCharacterNames.Count);
+        OnOptionSelected(starredCharacterNames[randomIndex]);
+    }
+
+    // 在所有大厅中随机切换
+    public void SwitchToRandomCharacter()
+    {
+        LoadCharacterData();
+        if (characterList == null || characterList.Count == 0) return;
+        
+        var allCharacters = characterList.Values.SelectMany(list => list.Select(c => c.DevName)).ToList();
+        if (allCharacters.Count == 0) return;
+        
+        int randomIndex = Random.Range(0, allCharacters.Count);
+        OnOptionSelected(allCharacters[randomIndex]);
+    }
+
     void UpdateNavigationButtonsVisibility()
     {
         LoadStarredCharacters();

@@ -31,13 +31,34 @@ public class Character_Services : MonoBehaviour
     private void Start()
     {
         Get_Config();
-//#if !UNITY_EDITOR
-        character = gameObject.AddComponent<Character>();
-        character.Load_Charachter(Character_Name);
-//#endif
         
-        //延迟通知Dropdown_Services设置初始lobby
-        StartCoroutine(DelayedSetInitialCharacter());
+        // 检查是否启用启动随机大厅
+        bool isRandomStartup = Config_Services.Instance.Global_Setting_Config.General.Random_Character_On_Startup == 0;
+        
+        if (isRandomStartup)
+        {
+            StartCoroutine(LoadRandomCharacter());
+        }
+        else
+        {
+//#if !UNITY_EDITOR
+            character = gameObject.AddComponent<Character>();
+            character.Load_Charachter(Character_Name);
+//#endif
+            
+            //延迟通知Dropdown_Services设置初始lobby
+            StartCoroutine(DelayedSetInitialCharacter());
+        }
+    }
+    
+    private IEnumerator LoadRandomCharacter()
+    {
+        yield return new WaitForSeconds(0.1f);
+        
+        if (Dropdown_Services.Instance != null)
+        {
+            Dropdown_Services.Instance.SwitchToRandomCharacter();
+        }
     }
     
     private IEnumerator DelayedSetInitialCharacter()
