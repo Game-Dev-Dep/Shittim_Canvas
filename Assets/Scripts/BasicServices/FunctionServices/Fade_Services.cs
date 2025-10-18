@@ -24,11 +24,13 @@ public class Fade_Services : MonoBehaviour
 
     private void Start()
     {
-        CreateFadeCanvas();
+        EnsureCanvasCreated();
     }
 
-    private void CreateFadeCanvas()
+    private void EnsureCanvasCreated()
     {
+        if (fadeCanvas != null) return;
+        
         GameObject canvasObj = new GameObject("Fade_Canvas");
         canvasObj.transform.SetParent(transform);
         
@@ -55,6 +57,7 @@ public class Fade_Services : MonoBehaviour
 
     public IEnumerator FadeOut(float duration)
     {
+        EnsureCanvasCreated();
         fadeCanvas.gameObject.SetActive(true);
         float elapsed = 0f;
         
@@ -71,6 +74,7 @@ public class Fade_Services : MonoBehaviour
 
     public IEnumerator FadeIn(float duration)
     {
+        EnsureCanvasCreated();
         float elapsed = 0f;
         
         while (elapsed < duration)

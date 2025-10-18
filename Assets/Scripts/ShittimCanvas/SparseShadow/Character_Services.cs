@@ -79,11 +79,14 @@ public class Character_Services : MonoBehaviour
 
     private IEnumerator Switch_Character_Coroutine(string character_name)
     {
+        Debug.Log($"[Character_Services] 开始切换角色到: {character_name}");
+        
         EnsureFadeServices();
 
         if (Fade_Services.Instance != null)
         {
-            yield return Fade_Services.Instance.FadeOut(0.3f);
+            Debug.Log($"[Character_Services] 执行淡出效果");
+            yield return StartCoroutine(Fade_Services.Instance.FadeOut(0.2f));
         }
 
         if (Camera_Services.Instance != null && Character_Name != character_name && !string.IsNullOrEmpty(Character_Name))
@@ -93,8 +96,13 @@ public class Character_Services : MonoBehaviour
         
         if(character != null) character.Unload_Character();
         
+        yield return null;
+        
+        Debug.Log($"[Character_Services] 加载角色: {character_name}");
         character = gameObject.AddComponent<Character>();
         character.Load_Charachter(character_name);
+        
+        yield return new WaitForSeconds(0.1f);
         
         //通知Dropdown_Services更新当前选择的lobby
         if (Dropdown_Services.Instance != null)
@@ -109,8 +117,11 @@ public class Character_Services : MonoBehaviour
 
         if (Fade_Services.Instance != null)
         {
-            yield return Fade_Services.Instance.FadeIn(0.3f);
+            Debug.Log($"[Character_Services] 执行淡入效果");
+            yield return StartCoroutine(Fade_Services.Instance.FadeIn(0.2f));
         }
+        
+        Debug.Log($"[Character_Services] 角色切换完成: {character_name}");
     }
 
     private void EnsureFadeServices()

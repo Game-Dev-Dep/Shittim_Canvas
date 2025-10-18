@@ -42,6 +42,10 @@ public class Dropdown_Services : MonoBehaviour
     private bool isDataLoaded, isUpdatingFromCharacterServices;
     private string currentSelectedCharacter = "";
     private List<GameObject> activeButtons = new List<GameObject>();
+    
+    private Coroutine autoRandomCoroutine;
+    private int currentAutoRandomInterval = 0;
+    private bool isSwitchingCharacter = false;
 
     [System.Serializable]
     public class CharacterData
@@ -75,6 +79,14 @@ public class Dropdown_Services : MonoBehaviour
         
         if (starredListPanel != null)
             starredListPanel.SetActive(false);
+        
+        StartCoroutine(DelayedInitAutoRandomTimer());
+    }
+    
+    IEnumerator DelayedInitAutoRandomTimer()
+    {
+        yield return new WaitForSeconds(0.5f);
+        InitAutoRandomTimer();
     }
 
     IEnumerator DelayedInitialization()
@@ -293,18 +305,26 @@ IEnumerator SwitchToFavoriteMode()
     void OnOptionSelected(string selectedCharacter)
     {
         if (selectedCharacter == currentSelectedCharacter) return;
+        if (isSwitchingCharacter)
+        {
+            Debug.Log($"[Dropdown_Services] 正在切换角色中，跳过本次请求");
+            return;
+        }
 
         currentSelectedCharacter = selectedCharacter;
 
         isUpdatingFromCharacterServices = true;
+        isSwitchingCharacter = true;
         if (Character_Services.Instance != null) Character_Services.Instance.Switch_Character(selectedCharacter);
         StartCoroutine(ResetUpdateFlag());
     }
     
     private IEnumerator ResetUpdateFlag()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(2f);
         isUpdatingFromCharacterServices = false;
+        isSwitchingCharacter = false;
+        Debug.Log($"[Dropdown_Services] 角色切换标志重置完成");
     }
 
     public void RefreshStarredList()
@@ -425,8 +445,77 @@ IEnumerator SwitchToFavoriteMode()
         }
     }
 
+    // ==自动随机切换大厅定时器相关方法开始==
+    // 初始化自动随机切换大厅定时器
+    private void InitAutoRandomTimer()
+    {
+        if (Config_Services.Instance != null)
+        {
+            currentAutoRandomInterval = Config_Services.Instance.Global_Setting_Config.General.Auto_Random_Character_Interval;
+            Debug.Log($"[Dropdown_Services] 读取定时随机间隔配置: {currentAutoRandomInterval}");
+            UpdateAutoRandomInterval(currentAutoRandomInterval);
+        }
+    }
+
+    // 更新自动随机切换大厅定时器
+    public void UpdateAutoRandomInterval(int intervalIndex)
+    {
+        currentAutoRandomInterval = intervalIndex;
+        
+        if (autoRandomCoroutine != null)
+        {
+            StopCoroutine(autoRandomCoroutine);
+            autoRandomCoroutine = null;
+            Debug.Log($"[Dropdown_Services] 停止已有的定时器");
+        }
+
+        if (intervalIndex > 0)
+        {
+            float seconds = GetAutoRandomIntervalInSeconds(intervalIndex);
+            Debug.Log($"[Dropdown_Services] 启动定时随机切换，间隔: {seconds}秒");
+            autoRandomCoroutine = StartCoroutine(AutoRandomTimer(seconds));
+        }
+        else
+        {
+            Debug.Log($"[Dropdown_Services] 定时随机切换已关闭");
+        }
+    }
+
+    // 获取自动随机切换大厅定时器的时间间隔
+    private float GetAutoRandomIntervalInSeconds(int index)
+    {
+        switch (index)
+        {
+            case 1: return 300f;    // 5min
+            case 2: return 600f;    // 10min
+            case 3: return 1800f;   // 30min
+            case 4: return 3600f;   // 1h
+            case 5: return 7200f;   // 2h
+            case 6: return 18000f;  // 5h
+            case 7: return 43200f;  // 12h
+            default: return 0f;
+        }
+    }
+
+    // 自动随机切换大厅定时器
+    private IEnumerator AutoRandomTimer(float seconds)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(seconds);
+            Debug.Log($"[Dropdown_Services] 定时器触发，执行随机切换大厅");
+            SwitchToRandomCharacter();
+        }
+    }
+    // ==自动随机切换大厅定时器相关方法结束喵==
+
     void OnDestroy()
     {
+        if (autoRandomCoroutine != null)
+        {
+            StopCoroutine(autoRandomCoroutine);
+        }
+        
         // 清理按钮事件监听器
         if (starredListButton != null)
         {
