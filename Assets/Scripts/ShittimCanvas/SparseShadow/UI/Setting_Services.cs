@@ -587,7 +587,13 @@ public class Setting_Services : MonoBehaviour
                     Title_Key = "settings_panel.about.build_date",
                     Description_Key = "settings_panel.about.build_date.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Text,
-                    Text_Value = setting_config.About.Build_Date
+                    Text_Value = setting_config.About.Build_Date,
+                    Text_Click_Callback = () => {
+                        if (Changelog_Services.Instance != null)
+                        {
+                            Changelog_Services.Instance.Show_Changelog();
+                        }
+                    }
                 },
                 new Setting_Detail_Option
                 {
