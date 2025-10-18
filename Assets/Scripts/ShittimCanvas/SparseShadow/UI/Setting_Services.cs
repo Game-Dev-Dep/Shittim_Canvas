@@ -167,7 +167,8 @@ public class Setting_Services : MonoBehaviour
                             setting_config.General.Random_Character_On_Startup = int.Parse(Setting_Contents[Setting_Option_Type.General][2].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
                             Setting_Contents[Setting_Option_Type.General][2].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][2].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
                         }
-                    }
+                    },
+                    isNew = true
                 },
                 new Setting_Detail_Option
                 {
@@ -187,7 +188,8 @@ public class Setting_Services : MonoBehaviour
                         {
                             Dropdown_Services.Instance.UpdateAutoRandomInterval(value);
                         }
-                    }
+                    },
+                    isNew = true
                 },
                 new Setting_Detail_Option
                 {
@@ -841,6 +843,9 @@ public class Setting_Services : MonoBehaviour
             Localization_Utils.Apply_Localization_To_Text(title_text, setting_detail_option.Title_Key);
             Localization_Utils.Apply_Localization_To_Text(description_text, setting_detail_option.Description_Key);
 
+            Transform newTag = new_detail_option.transform.Find("[Setting] NEW");
+            if (newTag != null) newTag.gameObject.SetActive(setting_detail_option.isNew);
+
             // 根据类型设置UI
             switch (setting_detail_option.Setting_Detail_Option_Type)
             {
@@ -1072,6 +1077,7 @@ public class Setting_Services : MonoBehaviour
         public string Description_Key;
         public Setting_Detail_Option_Type Setting_Detail_Option_Type;
         public GameObject Setting_Detail_Option_GameObject;
+        public bool isNew = false;
 
         public ToggleGroup ToggleGroup_Component;
         public Slider Slider_Component;

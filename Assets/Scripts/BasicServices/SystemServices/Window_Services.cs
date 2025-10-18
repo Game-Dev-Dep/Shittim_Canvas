@@ -477,7 +477,7 @@ public class Window_Services : MonoBehaviour
                             AudioListener.volume = 0f;
 
                             Cover_Status_Image.color = new Color32(208, 64, 56, 255);
-                            Cover_Status_Text.SetText($"{cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")} {cur_detection_result.top_window_info.className}");
+                            Cover_Status_Text.SetText($"T: {cur_detection_result.top_window_info.title} | H: {cur_detection_result.top_window_info.handle.ToString("X8")} | C: {cur_detection_result.top_window_info.className}");
                             Console_Log($"WorkerW 被覆盖，覆盖窗口是最大化窗口: {cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")}  {cur_detection_result.top_window_info.className}", Debug_Services.LogLevel.Ignore);
                             break;
 
@@ -503,7 +503,7 @@ public class Window_Services : MonoBehaviour
                             AudioListener.volume = 1f;
 
                             Cover_Status_Image.color = new Color32(245, 168, 62, 255);
-                            Cover_Status_Text.SetText($"{cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")} {cur_detection_result.top_window_info.className}");
+                            Cover_Status_Text.SetText($"T: {cur_detection_result.top_window_info.title} | H: {cur_detection_result.top_window_info.handle.ToString("X8")} | C: {cur_detection_result.top_window_info.className}");
                             Console_Log($"WorkerW 被覆盖，覆盖窗口是普通窗口: {cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")} {cur_detection_result.top_window_info.className}", Debug_Services.LogLevel.Ignore);
                             break;
 
