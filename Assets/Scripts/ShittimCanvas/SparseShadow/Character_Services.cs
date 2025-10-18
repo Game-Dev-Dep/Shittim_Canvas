@@ -74,6 +74,18 @@ public class Character_Services : MonoBehaviour
 
     public void Switch_Character(string character_name)
     {
+        StartCoroutine(Switch_Character_Coroutine(character_name));
+    }
+
+    private IEnumerator Switch_Character_Coroutine(string character_name)
+    {
+        EnsureFadeServices();
+
+        if (Fade_Services.Instance != null)
+        {
+            yield return Fade_Services.Instance.FadeOut(0.3f);
+        }
+
         if (Camera_Services.Instance != null && Character_Name != character_name && !string.IsNullOrEmpty(Character_Name))
         {
             Camera_Services.Instance.Auto_Save_Camera_Settings();
@@ -93,6 +105,20 @@ public class Character_Services : MonoBehaviour
         if (Camera_Services.Instance != null)
         {
             Camera_Services.Instance.Save_Character_Selection();
+        }
+
+        if (Fade_Services.Instance != null)
+        {
+            yield return Fade_Services.Instance.FadeIn(0.3f);
+        }
+    }
+
+    private void EnsureFadeServices()
+    {
+        if (Fade_Services.Instance == null)
+        {
+            GameObject fadeObj = new GameObject("Fade_Services");
+            fadeObj.AddComponent<Fade_Services>();
         }
     }
 
