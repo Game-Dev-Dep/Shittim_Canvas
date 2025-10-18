@@ -739,9 +739,9 @@ public class Window_Services : MonoBehaviour
 
     private bool is_Custom_Window(Window_Info window_info)
     {
-        if (Config_Services.Instance.Gloabal_WindowFilter_Config.Title_Names.Contains(window_info.title)) return true;
+        if (Config_Services.Instance.Gloabal_WindowFilter_Config.Wallpaper_Interaction_Whitelist_Title_Names.Contains(window_info.title)) return true;
 
-        if (Config_Services.Instance.Gloabal_WindowFilter_Config.Class_Names.Contains(window_info.className)) return true;
+        if (Config_Services.Instance.Gloabal_WindowFilter_Config.Wallpaper_Interaction_Whitelist_Class_Names.Contains(window_info.className)) return true;
 
         return false;
     }

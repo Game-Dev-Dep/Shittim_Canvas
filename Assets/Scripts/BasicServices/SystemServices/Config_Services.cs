@@ -181,5 +181,15 @@ public class Config_Services : MonoBehaviour
         File_Services.Save_Specific_Type_To_File<Favorite_Config>(favorite_config, file_path);
     }
 
+    public void Save_WindowFilter_Config(WindowFilter_Config windowFilter_config, string file_path)
+    {
+        Console_Log($"保存的窗口过滤设置:\n" +
+                    $"壁纸模式交互白名单 - 窗口标题个数: {windowFilter_config.Wallpaper_Interaction_Whitelist_Title_Names.Count}\n" +
+                    $"壁纸模式交互白名单 - 窗口类名个数: {windowFilter_config.Wallpaper_Interaction_Whitelist_Class_Names.Count}\n" +
+                    $"全屏检测静音白名单 - 窗口标题个数: {windowFilter_config.Fullscreen_Mute_Whitelist_Title_Names.Count}\n" +
+                    $"全屏检测静音白名单 - 窗口类名个数: {windowFilter_config.Fullscreen_Mute_Whitelist_Class_Names.Count}");
+        File_Services.Save_Specific_Type_To_File<WindowFilter_Config>(windowFilter_config, file_path);
+    }
+
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Config_Services", message, loglevel, logtype); }
 }
