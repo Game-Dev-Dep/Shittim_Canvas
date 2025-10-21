@@ -14,6 +14,8 @@ public class SystemTray_Services : MonoBehaviour
     [SerializeField]
     public Texture2D SystemTray_Icon;
 
+    private float savedVolume = 1.0f;
+
     void Awake()
     {
 #if !UNITY_EDITOR
@@ -23,6 +25,8 @@ public class SystemTray_Services : MonoBehaviour
         {
             ("进入壁纸模式", Enter_Wallpaper_Mode),
             ("返回正常模式", Quit_Wallpaper_Mode),
+            (TrayIcon.SEPARATOR, null),
+            ("静音", Toggle_Mute),
             (TrayIcon.SEPARATOR, null),
             ("收藏学生", null),
             (TrayIcon.SEPARATOR, null),
@@ -46,6 +50,12 @@ public class SystemTray_Services : MonoBehaviour
         yield return null;
         CreateFavoriteStudentsSubMenu();
         Console_Log("收藏学生子菜单创建完成");
+
+        bool isMuted = Config_Services.Instance.Global_Setting_Config.Audio.Global_Sound == 0f;
+        if (isMuted)
+        {
+            TrayIcon.SetMenuItemChecked("静音", true);
+        }
     }
 
     private void Enter_Wallpaper_Mode()
@@ -66,6 +76,29 @@ public class SystemTray_Services : MonoBehaviour
         }
     }
     
+    // 托盘静音toggle，Menu Label在Utils.cs中定义，在TrayIcon.cs中处理，别忘了Constants.cs中的静音菜单项名称（
+    private void Toggle_Mute()
+    {
+        bool isMuted = Config_Services.Instance.Global_Setting_Config.Audio.Global_Sound == 0f;
+        
+        if (isMuted)
+        {
+            Config_Services.Instance.Global_Setting_Config.Audio.Global_Sound = savedVolume;
+            Audio_Services.Instance.Global_Sound_Slider_Handler(savedVolume);
+            TrayIcon.SetMenuItemChecked("静音", false);
+            Console_Log("系统托盘触发: 取消静音");
+        }
+        else
+        {
+            savedVolume = Config_Services.Instance.Global_Setting_Config.Audio.Global_Sound;
+            if (savedVolume == 0f) savedVolume = 1.0f;
+            Config_Services.Instance.Global_Setting_Config.Audio.Global_Sound = 0f;
+            Audio_Services.Instance.Global_Sound_Slider_Handler(0f);
+            TrayIcon.SetMenuItemChecked("静音", true);
+            Console_Log("系统托盘触发: 静音");
+        }
+    }
+
     private void Quit_Program()
     {
         Console_Log("系统托盘触发: 退出");

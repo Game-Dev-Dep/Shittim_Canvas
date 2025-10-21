@@ -29,6 +29,7 @@ namespace Utils
         private const uint MF_POPUP = 0x00000010;
         private const uint MF_BYPOSITION = 0x00000400;
         private const uint MF_SEPARATOR = 0x00000800;
+        private const uint MF_CHECKED = 0x00000008;
 
         private const uint TPM_LEFTALIGN = 0x0000;
         private const uint TPM_LEFTBUTTON = 0x0000;
