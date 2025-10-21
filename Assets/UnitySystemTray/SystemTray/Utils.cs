@@ -25,6 +25,34 @@ namespace Utils
             CheckedMenuItems[menuLabel] = isChecked;
         }
 
+        public static void UpdateMenuItemText(string oldLabel, string newLabel)
+        {
+            if (MenuActions == null || ActionMappings == null) return;
+            
+            if (MenuActions.ContainsKey(oldLabel))
+            {
+                var action = MenuActions[oldLabel];
+                MenuActions.Remove(oldLabel);
+                MenuActions[newLabel] = action;
+                
+                foreach (var pair in ActionMappings)
+                {
+                    if (pair.Value == oldLabel)
+                    {
+                        ActionMappings[pair.Key] = newLabel;
+                        break;
+                    }
+                }
+                
+                if (CheckedMenuItems != null && CheckedMenuItems.ContainsKey(oldLabel))
+                {
+                    bool isChecked = CheckedMenuItems[oldLabel];
+                    CheckedMenuItems.Remove(oldLabel);
+                    CheckedMenuItems[newLabel] = isChecked;
+                }
+            }
+        }
+
         private static void ProcessMenuActions(List<(string, Action)> actions)
         {
             MenuActions = new Dictionary<string, Action>();

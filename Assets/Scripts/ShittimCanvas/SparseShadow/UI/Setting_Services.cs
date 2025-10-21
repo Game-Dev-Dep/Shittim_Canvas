@@ -173,8 +173,7 @@ public class Setting_Services : MonoBehaviour
                             setting_config.General.Random_Character_On_Startup = int.Parse(Setting_Contents[Setting_Option_Type.General][2].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
                             Setting_Contents[Setting_Option_Type.General][2].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][2].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
                         }
-                    },
-                    isNew = true
+                    }
                 },
                 new Setting_Detail_Option
                 {
@@ -194,8 +193,7 @@ public class Setting_Services : MonoBehaviour
                         {
                             Dropdown_Services.Instance.UpdateAutoRandomInterval(value);
                         }
-                    },
-                    isNew = true
+                    }
                 },
                 new Setting_Detail_Option
                 {
@@ -494,8 +492,7 @@ public class Setting_Services : MonoBehaviour
                                           .Where(s => !string.IsNullOrEmpty(s))
                                           .ToList();
                         Config_Services.Instance.Gloabal_WindowFilter_Config.Wallpaper_Interaction_Whitelist_Title_Names = titles;
-                    },
-                    isNew = true
+                    }
                 },
                 new Setting_Detail_Option
                 {
@@ -524,8 +521,7 @@ public class Setting_Services : MonoBehaviour
                                           .Where(s => !string.IsNullOrEmpty(s))
                                           .ToList();
                         Config_Services.Instance.Gloabal_WindowFilter_Config.Fullscreen_Mute_Whitelist_Title_Names = titles;
-                    },
-                    isNew = true
+                    }
                 },
                 new Setting_Detail_Option
                 {
@@ -539,8 +535,7 @@ public class Setting_Services : MonoBehaviour
                                               .Where(s => !string.IsNullOrEmpty(s))
                                               .ToList();
                         Config_Services.Instance.Gloabal_WindowFilter_Config.Fullscreen_Mute_Whitelist_Class_Names = classNames;
-                    },
-                    isNew = true
+                    }
                 }
             }
         );

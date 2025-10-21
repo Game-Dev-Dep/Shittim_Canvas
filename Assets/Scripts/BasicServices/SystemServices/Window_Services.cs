@@ -768,5 +768,16 @@ public class Window_Services : MonoBehaviour
 
 
 
+    public string Get_Current_Cover_Window_ClassName()
+    {
+        string text = Cover_Status_Text.text;
+        if (string.IsNullOrEmpty(text)) return "";
+        
+        int cIndex = text.IndexOf(" | C: ");
+        if (cIndex == -1) return "";
+        
+        return text.Substring(cIndex + 6);
+    }
+
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Window_Services", message, loglevel, logtype); }
 }
