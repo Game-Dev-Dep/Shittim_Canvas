@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Wallpaper_Mode_Handler : MonoBehaviour
@@ -27,6 +28,8 @@ public class Wallpaper_Mode_Handler : MonoBehaviour
     private Vector2 Last_Cursor_Postion = Vector2.zero;
     private Vector2 Cur_Cursor_Postion;
 
+    private IntPtr taskbarHandle = IntPtr.Zero;
+
     void Update()
     {
         if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
@@ -41,6 +44,8 @@ public class Wallpaper_Mode_Handler : MonoBehaviour
             }
 
             if (Window_Services.Instance.Cur_Cover_Window_Type != Window_Services.Cover_Window_Type.No_Window) return;
+
+            if (Is_Cursor_On_Taskbar()) return;
 
             Cur_is_Pressed = Input_Services.Instance.Mouse_Info.is_LMB_Pressed;
             Cur_Cursor_Postion = Input_Services.Instance.Mouse_Info.Position;
@@ -110,6 +115,26 @@ public class Wallpaper_Mode_Handler : MonoBehaviour
             Last_is_Pressed = Cur_is_Pressed;
             Last_Cursor_Postion = Cur_Cursor_Postion;
         }
+    }
+
+    private bool Is_Cursor_On_Taskbar()
+    {
+        if (taskbarHandle == IntPtr.Zero)
+        {
+            taskbarHandle = Win32Wrapper.FindWindow("Shell_TrayWnd", null);
+        }
+
+        if (taskbarHandle == IntPtr.Zero) return false;
+
+        Win32Wrapper.RECT taskbarRect;
+        if (Win32Wrapper.GetWindowRect(taskbarHandle, out taskbarRect))
+        {
+            Vector2 rawCursorPos = Win32InputWrapper.GetMousePosVector2();
+            return rawCursorPos.x >= taskbarRect.Left && rawCursorPos.x <= taskbarRect.Right &&
+                   rawCursorPos.y >= taskbarRect.Top && rawCursorPos.y <= taskbarRect.Bottom;
+        }
+
+        return false;
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Wallpaper_Mode_Handler", message, loglevel, logtype); }

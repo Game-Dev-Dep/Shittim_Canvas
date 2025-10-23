@@ -6,6 +6,7 @@ namespace Utils
     public static partial class TrayIcon
     {
         private static ushort _id = 0;
+        private static Dictionary<string, bool> CheckedMenuItems;
 
         private static ushort GetUniqueID()
         {
@@ -17,12 +18,48 @@ namespace Utils
             return ++_id;
         }
 
+        public static void SetMenuItemChecked(string menuLabel, bool isChecked)
+        {
+            if (CheckedMenuItems == null)
+                CheckedMenuItems = new Dictionary<string, bool>();
+            CheckedMenuItems[menuLabel] = isChecked;
+        }
+
+        public static void UpdateMenuItemText(string oldLabel, string newLabel)
+        {
+            if (MenuActions == null || ActionMappings == null) return;
+            
+            if (MenuActions.ContainsKey(oldLabel))
+            {
+                var action = MenuActions[oldLabel];
+                MenuActions.Remove(oldLabel);
+                MenuActions[newLabel] = action;
+                
+                foreach (var pair in ActionMappings)
+                {
+                    if (pair.Value == oldLabel)
+                    {
+                        ActionMappings[pair.Key] = newLabel;
+                        break;
+                    }
+                }
+                
+                if (CheckedMenuItems != null && CheckedMenuItems.ContainsKey(oldLabel))
+                {
+                    bool isChecked = CheckedMenuItems[oldLabel];
+                    CheckedMenuItems.Remove(oldLabel);
+                    CheckedMenuItems[newLabel] = isChecked;
+                }
+            }
+        }
+
         private static void ProcessMenuActions(List<(string, Action)> actions)
         {
             MenuActions = new Dictionary<string, Action>();
             ActionMappings = new Dictionary<uint, string>();
             SubMenus = new Dictionary<string, List<(string, Action)>>();
             SubMenuMappings = new Dictionary<uint, string>();
+            CheckedMenuItems = new Dictionary<string, bool>();
 
             if (actions == null)
                 return;

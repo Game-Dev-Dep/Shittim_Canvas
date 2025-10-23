@@ -71,6 +71,7 @@ public class Spine_Services : MonoBehaviour
     {
         is_IK_On = !is_IK_On;
         Update_IK_Button();
+        Config_Services.Instance.Auto_Save_Function_Config();
     }
 
     public void Update_IK_Button()
@@ -83,6 +84,7 @@ public class Spine_Services : MonoBehaviour
     {
         is_Talk_On =!is_Talk_On;
         Update_Talk_Button();
+        Config_Services.Instance.Auto_Save_Function_Config();
     }
 
     public void Update_Talk_Button()

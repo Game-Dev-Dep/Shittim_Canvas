@@ -197,7 +197,10 @@ namespace Utils
                 }
                 else
                 {
-                    WinAPI.AppendMenu(hMenu, MF_STRING, pair.Key, pair.Value);
+                    uint flags = MF_STRING;
+                    if (CheckedMenuItems != null && CheckedMenuItems.ContainsKey(pair.Value) && CheckedMenuItems[pair.Value])
+                        flags |= MF_CHECKED;
+                    WinAPI.AppendMenu(hMenu, flags, pair.Key, pair.Value);
                 }
             }
 

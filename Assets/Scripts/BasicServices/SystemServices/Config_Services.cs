@@ -151,6 +151,14 @@ public class Config_Services : MonoBehaviour
         Toast_Wrapper_Services.ShowToast("toast.save_function_settings", 3f, "success");
     }
 
+    public void Auto_Save_Function_Config()
+    {
+        Spine_Services.Instance.Set_Config();
+        Subtitle_Services.Instance.Set_Config();
+        Volume_Services.Instance.Set_Config();
+        Save_Function_Config(Global_Function_Config, Path.Combine(File_Services.Config_Files_Folder_Path, "Function Config.json"));
+    }
+
     public void Save_Function_Config(Function_Config function_config, string file_path)
     {
         Console_Log($"保存的功能设置:\n" +
@@ -171,6 +179,16 @@ public class Config_Services : MonoBehaviour
             $"收藏的内容: {JsonConvert.SerializeObject(favorite_config.Character_Names.ToArray())}\n"
         );
         File_Services.Save_Specific_Type_To_File<Favorite_Config>(favorite_config, file_path);
+    }
+
+    public void Save_WindowFilter_Config(WindowFilter_Config windowFilter_config, string file_path)
+    {
+        Console_Log($"保存的窗口过滤设置:\n" +
+                    $"壁纸模式交互白名单 - 窗口标题个数: {windowFilter_config.Wallpaper_Interaction_Whitelist_Title_Names.Count}\n" +
+                    $"壁纸模式交互白名单 - 窗口类名个数: {windowFilter_config.Wallpaper_Interaction_Whitelist_Class_Names.Count}\n" +
+                    $"全屏检测静音白名单 - 窗口标题个数: {windowFilter_config.Fullscreen_Mute_Whitelist_Title_Names.Count}\n" +
+                    $"全屏检测静音白名单 - 窗口类名个数: {windowFilter_config.Fullscreen_Mute_Whitelist_Class_Names.Count}");
+        File_Services.Save_Specific_Type_To_File<WindowFilter_Config>(windowFilter_config, file_path);
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Config_Services", message, loglevel, logtype); }

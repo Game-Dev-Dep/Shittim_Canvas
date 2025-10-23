@@ -14,6 +14,10 @@ public class SystemTray_Services : MonoBehaviour
     [SerializeField]
     public Texture2D SystemTray_Icon;
 
+    private float savedVolume = 1.0f;
+    private const string WALLPAPER_MENU_ENTER = "进入壁纸模式";
+    private const string WALLPAPER_MENU_EXIT = "返回正常模式";
+
     void Awake()
     {
 #if !UNITY_EDITOR
@@ -21,8 +25,11 @@ public class SystemTray_Services : MonoBehaviour
 
         List<(string, Action)> SystemTray_Menu = new List<(string, Action)>()
         {
-            ("进入壁纸模式", Enter_Wallpaper_Mode),
-            ("返回正常模式", Quit_Wallpaper_Mode),
+            (WALLPAPER_MENU_ENTER, Toggle_Wallpaper_Mode_From_Tray),
+            (TrayIcon.SEPARATOR, null),
+            ("静音", Toggle_Mute),
+            (TrayIcon.SEPARATOR, null),
+            ("复制覆盖窗口类名", Copy_Cover_Window_ClassName),
             (TrayIcon.SEPARATOR, null),
             ("收藏学生", null),
             (TrayIcon.SEPARATOR, null),
@@ -46,26 +53,79 @@ public class SystemTray_Services : MonoBehaviour
         yield return null;
         CreateFavoriteStudentsSubMenu();
         Console_Log("收藏学生子菜单创建完成");
-    }
 
-    private void Enter_Wallpaper_Mode()
-    {
-        Console_Log($"系统托盘触发: 进入壁纸模式");
-        if (!Wallpaper_Services.Instance.is_Wallpaper_Mode)
+        bool isMuted = Config_Services.Instance.Global_Setting_Config.Audio.Global_Sound == 0f;
+        if (isMuted)
         {
-            Wallpaper_Services.Instance.Toggle_Wallpaper_Mode();
+            TrayIcon.SetMenuItemChecked("静音", true);
         }
-    }
-    
-    private void Quit_Wallpaper_Mode()
-    {
-        Console_Log($"系统托盘触发: 返回正常模式");
+
+        while (Wallpaper_Services.Instance == null)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
         if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
         {
-            Wallpaper_Services.Instance.Toggle_Wallpaper_Mode();
+            TrayIcon.UpdateMenuItemText(WALLPAPER_MENU_ENTER, WALLPAPER_MENU_EXIT);
         }
     }
+
+    private void Toggle_Wallpaper_Mode_From_Tray()
+    {
+        bool isWallpaperMode = Wallpaper_Services.Instance.is_Wallpaper_Mode;
+        Console_Log($"系统托盘触发: {(isWallpaperMode ? "返回正常模式" : "进入壁纸模式")}");
+        
+        Wallpaper_Services.Instance.Toggle_Wallpaper_Mode();
+        
+        string oldLabel = isWallpaperMode ? WALLPAPER_MENU_EXIT : WALLPAPER_MENU_ENTER;
+        string newLabel = isWallpaperMode ? WALLPAPER_MENU_ENTER : WALLPAPER_MENU_EXIT;
+        TrayIcon.UpdateMenuItemText(oldLabel, newLabel);
+    }
     
+    // 托盘静音toggle，Menu Label在Utils.cs中定义，在TrayIcon.cs中处理，别忘了Constants.cs中的静音菜单项名称（
+    private void Toggle_Mute()
+    {
+        bool isMuted = Config_Services.Instance.Global_Setting_Config.Audio.Global_Sound == 0f;
+        
+        if (isMuted)
+        {
+            Config_Services.Instance.Global_Setting_Config.Audio.Global_Sound = savedVolume;
+            Audio_Services.Instance.Global_Sound_Slider_Handler(savedVolume);
+            TrayIcon.SetMenuItemChecked("静音", false);
+            Console_Log("系统托盘触发: 取消静音");
+        }
+        else
+        {
+            savedVolume = Config_Services.Instance.Global_Setting_Config.Audio.Global_Sound;
+            if (savedVolume == 0f) savedVolume = 1.0f;
+            Config_Services.Instance.Global_Setting_Config.Audio.Global_Sound = 0f;
+            Audio_Services.Instance.Global_Sound_Slider_Handler(0f);
+            TrayIcon.SetMenuItemChecked("静音", true);
+            Console_Log("系统托盘触发: 静音");
+        }
+    }
+
+    private void Copy_Cover_Window_ClassName()
+    {
+        Console_Log("系统托盘触发: 复制覆盖窗口类名");
+        if (Window_Services.Instance != null)
+        {
+            string className = Window_Services.Instance.Get_Current_Cover_Window_ClassName();
+            if (!string.IsNullOrEmpty(className))
+            {
+                GUIUtility.systemCopyBuffer = className;
+                Console_Log($"已复制窗口类名: {className}");
+            }
+            else
+            {
+                Console_Log("当前无覆盖窗口");
+            }
+        }
+    }
+
     private void Quit_Program()
     {
         Console_Log("系统托盘触发: 退出");

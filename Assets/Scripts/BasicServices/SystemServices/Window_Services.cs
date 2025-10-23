@@ -477,7 +477,7 @@ public class Window_Services : MonoBehaviour
                             AudioListener.volume = 0f;
 
                             Cover_Status_Image.color = new Color32(208, 64, 56, 255);
-                            Cover_Status_Text.SetText($"{cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")} {cur_detection_result.top_window_info.className}");
+                            Cover_Status_Text.SetText($"T: {cur_detection_result.top_window_info.title} | H: {cur_detection_result.top_window_info.handle.ToString("X8")} | C: {cur_detection_result.top_window_info.className}");
                             Console_Log($"WorkerW 被覆盖，覆盖窗口是最大化窗口: {cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")}  {cur_detection_result.top_window_info.className}", Debug_Services.LogLevel.Ignore);
                             break;
 
@@ -503,7 +503,7 @@ public class Window_Services : MonoBehaviour
                             AudioListener.volume = 1f;
 
                             Cover_Status_Image.color = new Color32(245, 168, 62, 255);
-                            Cover_Status_Text.SetText($"{cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")} {cur_detection_result.top_window_info.className}");
+                            Cover_Status_Text.SetText($"T: {cur_detection_result.top_window_info.title} | H: {cur_detection_result.top_window_info.handle.ToString("X8")} | C: {cur_detection_result.top_window_info.className}");
                             Console_Log($"WorkerW 被覆盖，覆盖窗口是普通窗口: {cur_detection_result.top_window_info.title} {cur_detection_result.top_window_info.handle.ToString("X8")} {cur_detection_result.top_window_info.className}", Debug_Services.LogLevel.Ignore);
                             break;
 
@@ -739,9 +739,9 @@ public class Window_Services : MonoBehaviour
 
     private bool is_Custom_Window(Window_Info window_info)
     {
-        if (Config_Services.Instance.Gloabal_WindowFilter_Config.Title_Names.Contains(window_info.title)) return true;
+        if (Config_Services.Instance.Gloabal_WindowFilter_Config.Wallpaper_Interaction_Whitelist_Title_Names.Contains(window_info.title)) return true;
 
-        if (Config_Services.Instance.Gloabal_WindowFilter_Config.Class_Names.Contains(window_info.className)) return true;
+        if (Config_Services.Instance.Gloabal_WindowFilter_Config.Wallpaper_Interaction_Whitelist_Class_Names.Contains(window_info.className)) return true;
 
         return false;
     }
@@ -767,6 +767,17 @@ public class Window_Services : MonoBehaviour
     }
 
 
+
+    public string Get_Current_Cover_Window_ClassName()
+    {
+        string text = Cover_Status_Text.text;
+        if (string.IsNullOrEmpty(text)) return "";
+        
+        int cIndex = text.IndexOf(" | C: ");
+        if (cIndex == -1) return "";
+        
+        return text.Substring(cIndex + 6);
+    }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Window_Services", message, loglevel, logtype); }
 }

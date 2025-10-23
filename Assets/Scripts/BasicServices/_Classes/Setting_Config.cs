@@ -43,6 +43,24 @@ public class Setting_Config
             "开",
             "关"
         };
+        public int Random_Character_On_Startup = 1;
+        public List<string> Random_Character_On_Startup_List = new List<string>
+        {
+            "开",
+            "关"
+        };
+        public int Auto_Random_Character_Interval = 0;
+        public List<string> Auto_Random_Character_Interval_List = new List<string>
+        {
+            "OFF",
+            "5M",
+            "10M",
+            "30M",
+            "1H",
+            "2H",
+            "5H",
+            "12H"
+        };
         public bool OOBE_Completed = false;
     }
     public class Audio_Class
