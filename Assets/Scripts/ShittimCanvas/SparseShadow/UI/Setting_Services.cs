@@ -193,7 +193,30 @@ public class Setting_Services : MonoBehaviour
                         {
                             Dropdown_Services.Instance.UpdateAutoRandomInterval(value);
                         }
+                        Update_Setting_Content_UI();
                     }
+                },
+                new Setting_Detail_Option
+                {
+                    Title_Key = "settings_panel.general.auto_random_character_range",
+                    Description_Key = "settings_panel.general.auto_random_character_range.desc",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Dropdown,
+                    Dropdown_Value = setting_config.General.Auto_Random_Character_Range,
+                    Dropdown_Options = setting_config.General.Auto_Random_Character_Range_List,
+                    Dropdown_Callback = (value) => {
+                        setting_config.General.Auto_Random_Character_Range = value;
+                        Setting_Contents[Setting_Option_Type.General][4].Dropdown_Value = value;
+                        if (Setting_Contents[Setting_Option_Type.General][4].Dropdown_Component != null)
+                        {
+                            Setting_Contents[Setting_Option_Type.General][4].Dropdown_Component.value = value;
+                        }
+                        if (Dropdown_Services.Instance != null)
+                        {
+                            Dropdown_Services.Instance.UpdateAutoRandomRange(value);
+                        }
+                    },
+                    isNew = true,
+                    IsVisible = () => setting_config.General.Auto_Random_Character_Interval > 0
                 },
                 new Setting_Detail_Option
                 {
@@ -205,8 +228,8 @@ public class Setting_Services : MonoBehaviour
                     Toggle_Callback = (value) => {
                         if (value)
                         {
-                            setting_config.General.Pseudo_Random_Mode = int.Parse(Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
-                            Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            setting_config.General.Pseudo_Random_Mode = int.Parse(Setting_Contents[Setting_Option_Type.General][5].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][5].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][5].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
                         }
                     },
                     isNew = true
@@ -221,8 +244,8 @@ public class Setting_Services : MonoBehaviour
                     Toggle_Callback = (value) => {
                         if (value)
                         {
-                            setting_config.General.Auto_Wallpaper_Mode = int.Parse(Setting_Contents[Setting_Option_Type.General][5].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
-                            Setting_Contents[Setting_Option_Type.General][5].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][5].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            setting_config.General.Auto_Wallpaper_Mode = int.Parse(Setting_Contents[Setting_Option_Type.General][6].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][6].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][6].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
                         }
                     }
                 },
@@ -236,8 +259,8 @@ public class Setting_Services : MonoBehaviour
                     Toggle_Callback = (value) => {
                         if (value)
                         {
-                            setting_config.General.Notification_Enabled = int.Parse(Setting_Contents[Setting_Option_Type.General][6].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
-                            Setting_Contents[Setting_Option_Type.General][6].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][6].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            setting_config.General.Notification_Enabled = int.Parse(Setting_Contents[Setting_Option_Type.General][7].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][7].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][7].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
 
                             // 更新通知服务的状态
                             if (Notification_Services.Instance != null)
@@ -257,8 +280,8 @@ public class Setting_Services : MonoBehaviour
                     Toggle_Callback = (value) => {
                         if (value)
                         {
-                            setting_config.General.Wallpaper_Mode_Status_Area_Enabled = int.Parse(Setting_Contents[Setting_Option_Type.General][7].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
-                            Setting_Contents[Setting_Option_Type.General][7].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][7].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            setting_config.General.Wallpaper_Mode_Status_Area_Enabled = int.Parse(Setting_Contents[Setting_Option_Type.General][8].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][8].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][8].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
                         }
                     }
                 }
@@ -949,10 +972,14 @@ public class Setting_Services : MonoBehaviour
 
     void Create_Setting_Detail_Option_UI(List<Setting_Detail_Option> setting_detail_option_list)
     {
-        Setting_Content_GameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (Setting_Detail_Option_Height + Setting_Detail_Option_Spacing) * setting_detail_option_list.Count);
+        int visibleCount = setting_detail_option_list.Count(opt => opt.IsVisible == null || opt.IsVisible());
+        Setting_Content_GameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (Setting_Detail_Option_Height + Setting_Detail_Option_Spacing) * visibleCount);
 
         foreach (Setting_Detail_Option setting_detail_option in setting_detail_option_list)
         {
+            bool isVisible = setting_detail_option.IsVisible == null || setting_detail_option.IsVisible();
+            if (!isVisible) continue;
+
             GameObject new_detail_option = Instantiate(Setting_Detail_Option_Template_GameObject, Setting_Content_GameObject.transform);
             setting_detail_option.Setting_Detail_Option_GameObject = new_detail_option;
             new_detail_option.SetActive(true);
@@ -1104,8 +1131,20 @@ public class Setting_Services : MonoBehaviour
                     setting_detail_option.Dropdown_Component = setting_detail_option.Setting_Detail_Option_GameObject.transform.Find("[Setting] Detail Option Dropdown").GetComponent<TMP_Dropdown>();
 
                     setting_detail_option.Dropdown_Component.ClearOptions();
-                    // dropdown不用key
-                    setting_detail_option.Dropdown_Component.AddOptions(setting_detail_option.Dropdown_Options);
+                    // dropdown现在狠狠的用key                    
+                    List<string> localizedOptions = new List<string>();
+                    foreach (string option in setting_detail_option.Dropdown_Options)
+                    {
+                        if (Localization_Utils.Is_Localization_Key(option))
+                        {
+                            localizedOptions.Add(Localization_Utils.Get_Localized_Text(option));
+                        }
+                        else
+                        {
+                            localizedOptions.Add(option);
+                        }
+                    }
+                    setting_detail_option.Dropdown_Component.AddOptions(localizedOptions);
 
                     // dropdown适配
                     setting_detail_option.Dropdown_Component.value = setting_detail_option.Dropdown_Value;
@@ -1225,6 +1264,7 @@ public class Setting_Services : MonoBehaviour
         public Setting_Detail_Option_Type Setting_Detail_Option_Type;
         public GameObject Setting_Detail_Option_GameObject;
         public bool isNew = false;
+        public Func<bool> IsVisible = null;
 
         public ToggleGroup ToggleGroup_Component;
         public Slider Slider_Component;
@@ -1395,6 +1435,7 @@ public class Setting_Services : MonoBehaviour
             setting_config.General.Wallpaper_Mode_Status_Area_Enabled != saved_setting_config.General.Wallpaper_Mode_Status_Area_Enabled ||
              setting_config.General.Random_Character_On_Startup != saved_setting_config.General.Random_Character_On_Startup ||
              setting_config.General.Auto_Random_Character_Interval != saved_setting_config.General.Auto_Random_Character_Interval ||
+             setting_config.General.Auto_Random_Character_Range != saved_setting_config.General.Auto_Random_Character_Range ||
              setting_config.General.Pseudo_Random_Mode != saved_setting_config.General.Pseudo_Random_Mode ||
             Mathf.Abs(setting_config.Audio.Global_Sound - saved_setting_config.Audio.Global_Sound) > 0.001f ||
             Mathf.Abs(setting_config.Audio.Talk_Sound - saved_setting_config.Audio.Talk_Sound) > 0.001f ||
@@ -1439,6 +1480,7 @@ public class Setting_Services : MonoBehaviour
          clone.General.Auto_Startup = config.General.Auto_Startup;
          clone.General.Random_Character_On_Startup = config.General.Random_Character_On_Startup;
          clone.General.Auto_Random_Character_Interval = config.General.Auto_Random_Character_Interval;
+         clone.General.Auto_Random_Character_Range = config.General.Auto_Random_Character_Range;
          clone.General.Pseudo_Random_Mode = config.General.Pseudo_Random_Mode;
          clone.General.Auto_Wallpaper_Mode = config.General.Auto_Wallpaper_Mode;
          clone.General.Notification_Enabled = config.General.Notification_Enabled;

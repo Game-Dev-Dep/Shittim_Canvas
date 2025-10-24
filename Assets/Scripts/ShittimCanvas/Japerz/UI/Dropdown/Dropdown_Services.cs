@@ -51,6 +51,7 @@ public class Dropdown_Services : MonoBehaviour
     private List<string> shuffledFavorites = new List<string>();
     private int shuffledIndex = 0;
     private int shuffledFavoriteIndex = 0;
+    private int currentAutoRandomRange = 0;
 
     [System.Serializable]
     public class CharacterData
@@ -504,9 +505,16 @@ IEnumerator SwitchToFavoriteMode()
         if (Config_Services.Instance != null)
         {
             currentAutoRandomInterval = Config_Services.Instance.Global_Setting_Config.General.Auto_Random_Character_Interval;
-            Debug.Log($"[Dropdown_Services] 读取定时随机间隔配置: {currentAutoRandomInterval}");
+            currentAutoRandomRange = Config_Services.Instance.Global_Setting_Config.General.Auto_Random_Character_Range;
+            Debug.Log($"[Dropdown_Services] 读取定时随机间隔配置: {currentAutoRandomInterval}, 范围: {currentAutoRandomRange}");
             UpdateAutoRandomInterval(currentAutoRandomInterval);
         }
+    }
+
+    public void UpdateAutoRandomRange(int rangeIndex)
+    {
+        currentAutoRandomRange = rangeIndex;
+        Debug.Log($"[Dropdown_Services] 更新随机范围: {rangeIndex}");
     }
 
     // 更新自动随机切换大厅定时器
@@ -555,8 +563,15 @@ IEnumerator SwitchToFavoriteMode()
         while (true)
         {
             yield return new WaitForSeconds(seconds);
-            Debug.Log($"[Dropdown_Services] 定时器触发，执行随机切换大厅");
-            SwitchToRandomCharacter();
+            Debug.Log($"[Dropdown_Services] 定时器触发，执行随机切换大厅，范围: {currentAutoRandomRange}");
+            if (currentAutoRandomRange == 0)
+            {
+                SwitchToRandomCharacter();
+            }
+            else
+            {
+                SwitchToRandomFavorite();
+            }
         }
     }
     // ==自动随机切换大厅定时器相关方法结束喵==

@@ -61,6 +61,12 @@ public class Setting_Config
             "5H",
             "12H"
         };
+        public int Auto_Random_Character_Range = 0;
+        public List<string> Auto_Random_Character_Range_List = new List<string>
+        {
+            "settings_panel.general.auto_random_character_range.global",
+            "settings_panel.general.auto_random_character_range.favorites"
+        };
         public int Pseudo_Random_Mode = 0;
         public List<string> Pseudo_Random_Mode_List = new List<string>
         {
