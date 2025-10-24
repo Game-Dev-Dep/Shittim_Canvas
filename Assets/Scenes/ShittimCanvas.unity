@@ -14719,8 +14719,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000030518, y: 396.6}
-  m_SizeDelta: {x: 482.3556, y: 80.9777}
+  m_AnchoredPosition: {x: 0.000045776, y: 396.4}
+  m_SizeDelta: {x: 937.27, y: 80.9777}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &873786553
 MonoBehaviour:
@@ -20819,6 +20819,7 @@ RectTransform:
   m_Children:
   - {fileID: 873786552}
   - {fileID: 1710091894}
+  - {fileID: 1370039090}
   - {fileID: 1564050492}
   m_Father: {fileID: 811329357}
   m_RootOrder: 7
@@ -22532,6 +22533,82 @@ MonoBehaviour:
   _hideOnClick: 1
   _messageScreenPosition: 1
   _timerDirection: 1
+--- !u!1 &1370039089
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1370039090}
+  - component: {fileID: 1370039092}
+  - component: {fileID: 1370039091}
+  m_Layer: 5
+  m_Name: '[Setting] Changelog Scroll BG'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1370039090
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370039089}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1241692385}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.00012203, y: 0.000020027}
+  m_SizeDelta: {x: 1392.2, y: 622.85}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1370039091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370039089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.9450981, g: 0.9450981, b: 0.94117653, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 826158260eb80e54185845bcb5008abf, type: 3}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1370039092
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370039089}
+  m_CullTransparentMesh: 1
 --- !u!1 &1399649032
 GameObject:
   m_ObjectHideFlags: 0
@@ -24954,12 +25031,12 @@ RectTransform:
   - {fileID: 1775168957}
   - {fileID: 1922607192}
   m_Father: {fileID: 1241692385}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000041246, y: 9.6973}
-  m_SizeDelta: {x: 1392.182, y: 624.61}
+  m_AnchoredPosition: {x: -1.3853, y: 4.2887}
+  m_SizeDelta: {x: 1353.8055, y: 602.2739}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1564050493
 MonoBehaviour:
@@ -25004,7 +25081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -28977,7 +29054,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc575b9364ddf364a8bb17582121a0f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  custom_Version_String: 
+  custom_Version_String: 1.2.3 (Insider Preview 1)
   custom_Build_Time_String: 
 --- !u!1 &1845389809
 GameObject:
@@ -30582,7 +30659,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -25, y: -44.888}
+  m_AnchoredPosition: {x: -7, y: -44.888}
   m_SizeDelta: {x: 20, y: -89.7751}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1922607193
