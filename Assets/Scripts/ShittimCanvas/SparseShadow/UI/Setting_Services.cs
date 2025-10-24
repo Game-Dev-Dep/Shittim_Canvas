@@ -197,6 +197,22 @@ public class Setting_Services : MonoBehaviour
                 },
                 new Setting_Detail_Option
                 {
+                    Title_Key = "settings_panel.general.pseudo_random_mode",
+                    Description_Key = "settings_panel.general.pseudo_random_mode.desc",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Toggle,
+                    ToggleGroup_Value = setting_config.General.Pseudo_Random_Mode,
+                    ToggleGroup_Options = new List<string> { "settings_panel.elements.yes_radio", "settings_panel.elements.no_radio" },
+                    Toggle_Callback = (value) => {
+                        if (value)
+                        {
+                            setting_config.General.Pseudo_Random_Mode = int.Parse(Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                        }
+                    },
+                    isNew = true
+                },
+                new Setting_Detail_Option
+                {
                     Title_Key = "settings_panel.general.auto_wallpaper",
                     Description_Key = "settings_panel.general.auto_wallpaper.desc",
                     Setting_Detail_Option_Type = Setting_Detail_Option_Type.Toggle,
@@ -205,8 +221,8 @@ public class Setting_Services : MonoBehaviour
                     Toggle_Callback = (value) => {
                         if (value)
                         {
-                            setting_config.General.Auto_Wallpaper_Mode = int.Parse(Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
-                            Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][4].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            setting_config.General.Auto_Wallpaper_Mode = int.Parse(Setting_Contents[Setting_Option_Type.General][5].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][5].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][5].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
                         }
                     }
                 },
@@ -220,8 +236,8 @@ public class Setting_Services : MonoBehaviour
                     Toggle_Callback = (value) => {
                         if (value)
                         {
-                            setting_config.General.Notification_Enabled = int.Parse(Setting_Contents[Setting_Option_Type.General][5].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
-                            Setting_Contents[Setting_Option_Type.General][5].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][5].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            setting_config.General.Notification_Enabled = int.Parse(Setting_Contents[Setting_Option_Type.General][6].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][6].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][6].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
 
                             // 更新通知服务的状态
                             if (Notification_Services.Instance != null)
@@ -241,8 +257,8 @@ public class Setting_Services : MonoBehaviour
                     Toggle_Callback = (value) => {
                         if (value)
                         {
-                            setting_config.General.Wallpaper_Mode_Status_Area_Enabled = int.Parse(Setting_Contents[Setting_Option_Type.General][6].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
-                            Setting_Contents[Setting_Option_Type.General][6].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][6].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            setting_config.General.Wallpaper_Mode_Status_Area_Enabled = int.Parse(Setting_Contents[Setting_Option_Type.General][7].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
+                            Setting_Contents[Setting_Option_Type.General][7].ToggleGroup_Value = int.Parse(Setting_Contents[Setting_Option_Type.General][7].ToggleGroup_Component.ActiveToggles().FirstOrDefault().name);
                         }
                     }
                 }
@@ -1379,6 +1395,7 @@ public class Setting_Services : MonoBehaviour
             setting_config.General.Wallpaper_Mode_Status_Area_Enabled != saved_setting_config.General.Wallpaper_Mode_Status_Area_Enabled ||
              setting_config.General.Random_Character_On_Startup != saved_setting_config.General.Random_Character_On_Startup ||
              setting_config.General.Auto_Random_Character_Interval != saved_setting_config.General.Auto_Random_Character_Interval ||
+             setting_config.General.Pseudo_Random_Mode != saved_setting_config.General.Pseudo_Random_Mode ||
             Mathf.Abs(setting_config.Audio.Global_Sound - saved_setting_config.Audio.Global_Sound) > 0.001f ||
             Mathf.Abs(setting_config.Audio.Talk_Sound - saved_setting_config.Audio.Talk_Sound) > 0.001f ||
             Mathf.Abs(setting_config.Audio.SFX_Sound - saved_setting_config.Audio.SFX_Sound) > 0.001f ||
@@ -1422,6 +1439,7 @@ public class Setting_Services : MonoBehaviour
          clone.General.Auto_Startup = config.General.Auto_Startup;
          clone.General.Random_Character_On_Startup = config.General.Random_Character_On_Startup;
          clone.General.Auto_Random_Character_Interval = config.General.Auto_Random_Character_Interval;
+         clone.General.Pseudo_Random_Mode = config.General.Pseudo_Random_Mode;
          clone.General.Auto_Wallpaper_Mode = config.General.Auto_Wallpaper_Mode;
          clone.General.Notification_Enabled = config.General.Notification_Enabled;
         clone.General.Wallpaper_Mode_Status_Area_Enabled = config.General.Wallpaper_Mode_Status_Area_Enabled;

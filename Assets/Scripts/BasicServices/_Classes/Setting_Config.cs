@@ -61,6 +61,12 @@ public class Setting_Config
             "5H",
             "12H"
         };
+        public int Pseudo_Random_Mode = 0;
+        public List<string> Pseudo_Random_Mode_List = new List<string>
+        {
+            "开",
+            "关"
+        };
         public bool OOBE_Completed = false;
     }
     public class Audio_Class
