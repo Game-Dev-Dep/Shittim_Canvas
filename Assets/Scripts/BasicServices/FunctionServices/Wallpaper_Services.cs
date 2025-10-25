@@ -140,6 +140,15 @@ public class Wallpaper_Services : MonoBehaviour
             return;
         }
 
+        // 在回忆大厅列表面板打开的时候阻止进入壁纸模式（之前忘了做了嘻嘻）
+        var characterListPanel = GameObject.Find("[Character List] Root");
+        if (characterListPanel != null && characterListPanel.activeSelf)
+        {
+            Console_Log("回忆大厅列表面板已打开，请先关闭回忆大厅列表面板再进入壁纸模式", Debug_Services.LogLevel.Debug, LogType.Warning);
+            Toast_Wrapper_Services.ShowToast("toast.close_settings_first", 3f);
+            return;
+        }
+
         // 保存当前VSync设置
         if (Framerate_Services.Instance != null)
         {
