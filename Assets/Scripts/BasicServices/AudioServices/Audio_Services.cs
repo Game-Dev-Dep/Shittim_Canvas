@@ -42,7 +42,7 @@ public class Audio_Services : MonoBehaviour
     [SerializeField]
     public AudioMixerGroup BGM_Audio_Mixer_Group;
     [SerializeField]
-    public AudioMixerGroup UI_SFX_Audio_Mixer_Group; // 新增：专门的UI音效混音器组
+    public AudioMixerGroup UI_SFX_Audio_Mixer_Group; // 专门的UI音效混音器组
 
     [SerializeField]
     public GameObject Talk_GameObject;
@@ -51,15 +51,19 @@ public class Audio_Services : MonoBehaviour
     [SerializeField]
     public GameObject BGM_GameObject;
     [SerializeField]
-    public GameObject UI_SFX_GameObject; // 新增：专门的UI音效GameObject
+    public GameObject UI_SFX_GameObject; // 专门的UI音效GameObject
 
     [Header("Core Variables")]
     public float Global_Sound = 0f;
     public float Talk_Sound = 0f;
     public float SFX_Sound = 0f;
     public float BGM_Sound = 0f;
-    public float UI_SFX_Sound = 0f; // 新增：UI音效音量
+    public float UI_SFX_Sound = 0f; // UI音效音量
     public List<BGMExcel_DB> BGMExcel_DB_list;
+    
+    // UI音效对象池优化方法
+    private Queue<AudioSource> uiSfxPool = new Queue<AudioSource>();
+    private List<AudioSource> activeUiSfxSources = new List<AudioSource>();
 
     public void Get_Config()
     {
@@ -74,6 +78,50 @@ public class Audio_Services : MonoBehaviour
     private void Start()
     {
         Get_Config();
+        InitializeUISfxPool();
+    }
+    
+    // 初始化UI音效AudioSource对象池
+    private void InitializeUISfxPool()
+    {
+        if (UI_SFX_GameObject == null) return;
+        
+        //预创建10个
+        for (int i = 0; i < 10; i++)
+        {
+            AudioSource audioSource = UI_SFX_GameObject.AddComponent<AudioSource>();
+            audioSource.outputAudioMixerGroup = UI_SFX_Audio_Mixer_Group;
+            audioSource.loop = false;
+            audioSource.playOnAwake = false;
+            uiSfxPool.Enqueue(audioSource);
+        }
+    }
+    
+    // 从对象池获取AudioSource
+    private AudioSource GetPooledAudioSource()
+    {
+        if (uiSfxPool.Count > 0)
+        {
+            return uiSfxPool.Dequeue();
+        }
+        
+        // 如果对象池为空，创建新的AudioSource
+        AudioSource audioSource = UI_SFX_GameObject.AddComponent<AudioSource>();
+        audioSource.outputAudioMixerGroup = UI_SFX_Audio_Mixer_Group;
+        audioSource.loop = false;
+        audioSource.playOnAwake = false;
+        return audioSource;
+    }
+    
+    // 将AudioSource还给对象池
+    private void ReturnToPool(AudioSource audioSource)
+    {
+        if (audioSource == null) return;
+        
+        audioSource.Stop();
+        audioSource.clip = null;
+        uiSfxPool.Enqueue(audioSource);
+        activeUiSfxSources.Remove(audioSource);
     }
 
     public void Global_Sound_Slider_Handler(float value)
@@ -258,29 +306,27 @@ public class Audio_Services : MonoBehaviour
             return;
         }
         
-        AudioSource audioSource = UI_SFX_GameObject.AddComponent<AudioSource>();
-        audioSource.outputAudioMixerGroup = UI_SFX_Audio_Mixer_Group;
+        // 从对象池获取AudioSource
+        AudioSource audioSource = GetPooledAudioSource();
         audioSource.clip = audioClip;
         audioSource.volume = volumeMultiplier;
-        audioSource.loop = false;
         
         audioSource.Play();
+        activeUiSfxSources.Add(audioSource);
         Console_Log($"播放UI音效: {audioClip.name}, 音量倍数: {volumeMultiplier}", Debug_Services.LogLevel.Debug);
         
-        StartCoroutine(DestroyAudioSourceAfterPlay(audioSource));
+        StartCoroutine(ReturnAudioSourceToPoolAfterPlay(audioSource));
     }
     
-    private IEnumerator DestroyAudioSourceAfterPlay(AudioSource audioSource)
+    private IEnumerator ReturnAudioSourceToPoolAfterPlay(AudioSource audioSource)
     {
         if (audioSource == null || audioSource.clip == null) yield break;
         
         // 等
         yield return new WaitForSeconds(audioSource.clip.length);
         
-        if (audioSource != null && audioSource.gameObject != null)
-        {
-            Destroy(audioSource);
-        }
+        // return给对象池
+        ReturnToPool(audioSource);
     }
 
     public IEnumerator Get_AudioClip_By_Path_Async(string audio_file_path, System.Action<AudioClip> onLoaded)
