@@ -28,6 +28,10 @@ public class UIClickEffects_Services : MonoBehaviour
 	[SerializeField] private float trailGlowWidthMultiplier = 2.2f;
 	[SerializeField] private float trailGlowAlphaMultiplier = 0.35f;
 
+	// 优化用参数
+	[SerializeField] private int maxTrailSegmentsPerFrame = 5;
+	[SerializeField] private float maxTrailDistance = 200f;
+
 	private RectTransform container;
 	private bool hasLastTrailPos;
 	private Vector2 lastTrailLocalPos;
@@ -82,7 +86,16 @@ public class UIClickEffects_Services : MonoBehaviour
 				float dist = Vector2.Distance(lastTrailLocalPos, localPoint);
 				if (dist >= trailDistanceStep)
 				{
+					// 限制最大拖尾距离
+					if (dist > maxTrailDistance)
+					{
+						lastTrailLocalPos = localPoint;
+						return;
+					}
+
 					int steps = Mathf.FloorToInt(dist / trailDistanceStep);
+					steps = Mathf.Min(steps, maxTrailSegmentsPerFrame);
+			
 					Vector2 prev = lastTrailLocalPos;
 					for (int i = 1; i <= steps; i++)
 					{
