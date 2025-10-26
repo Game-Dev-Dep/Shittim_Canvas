@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -66,9 +67,13 @@ public class CharacterList_Services : MonoBehaviour
     private List<GameObject> activeCharacterCards = new List<GameObject>(); // 缓存活跃的卡片对象
     private List<GameObject> cardPool = new List<GameObject>(); // 对象池
     private int maxPoolSize = 50; // 最大池大小
+    private Dictionary<GameObject, string> cardToCharacterName = new Dictionary<GameObject, string>();
 
     // 搜索服务
     private CharacterSearchService searchService = new CharacterSearchService();
+    
+    // 计时器更新协程
+    private Coroutine timerUpdateCoroutine;
 
     // 性能优化相关
     private bool isDataLoaded = false;
@@ -236,6 +241,11 @@ public class CharacterList_Services : MonoBehaviour
         }
 
         Create_Character_List_UI();
+        
+        if (timerUpdateCoroutine == null)
+        {
+            timerUpdateCoroutine = StartCoroutine(UpdateTimers());
+        }
     }
 
     private void Hide_Character_List_Panel()
@@ -243,6 +253,12 @@ public class CharacterList_Services : MonoBehaviour
         is_Character_List_On = false;
         Character_List_Root_GameObject.SetActive(is_Character_List_On);
         Destroy_Chracter_List_UI();
+        
+        if (timerUpdateCoroutine != null)
+        {
+            StopCoroutine(timerUpdateCoroutine);
+            timerUpdateCoroutine = null;
+        }
     }
 
     void OnToggleValueChanged(Toggle toggle, bool isOn)
@@ -533,6 +549,52 @@ public class CharacterList_Services : MonoBehaviour
         return Localization_Utils.Get_Localized_Text(key);
     }
 
+    private void UpdateTimerText(GameObject card, string characterName)
+    {
+        var timerObj = card.transform.Find("[Character List] Character Timer");
+        if (timerObj != null)
+        {
+            var timerText = timerObj.GetComponent<TextMeshProUGUI>();
+            if (timerText != null)
+            {
+                long totalSeconds = GetTotalTimerSeconds(characterName);
+                int hours = (int)(totalSeconds / 3600);
+                int minutes = (int)((totalSeconds % 3600) / 60);
+                int seconds = (int)(totalSeconds % 60);
+                
+                string timeStr = "";
+                if (hours > 0) timeStr += $"{hours}h ";
+                if (minutes > 0) timeStr += $"{minutes}m ";
+                if (seconds > 0 || timeStr == "") timeStr += $"{seconds}s";
+                timerText.text = timeStr.TrimEnd();
+            }
+        }
+    }
+    
+    private long GetTotalTimerSeconds(string characterName)
+    {
+        if (CharacterTimer_Services.Instance != null)
+        {
+            return CharacterTimer_Services.Instance.GetTotalTimerSeconds(characterName);
+        }
+        return 0;
+    }
+    
+    private IEnumerator UpdateTimers()
+    {
+        while (is_Character_List_On)
+        {
+            foreach (var card in activeCharacterCards)
+            {
+                if (card != null && card.activeInHierarchy && cardToCharacterName.ContainsKey(card))
+                {
+                    UpdateTimerText(card, cardToCharacterName[card]);
+                }
+            }
+            yield return new WaitForSeconds(1f);
+        }
+    }
+    
     private void OnDestroy()
     {
         LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
@@ -545,6 +607,11 @@ public class CharacterList_Services : MonoBehaviour
         if (Favorite_Characters_Toggle != null)
         {
             Favorite_Characters_Toggle.onValueChanged.RemoveAllListeners();
+        }
+        
+        if (timerUpdateCoroutine != null)
+        {
+            StopCoroutine(timerUpdateCoroutine);
         }
     }
 
@@ -826,6 +893,9 @@ public class CharacterList_Services : MonoBehaviour
             {
                 Favorite_Toggle_Handler(character.First().DevName, character_favorite_button.gameObject);
             });
+            
+            UpdateTimerText(character_card_gameobject, character.First().DevName);
+            cardToCharacterName[character_card_gameobject] = character.First().DevName;
         }
 
         // 调整内容区域大小 - 基于当前页面实际显示的数量计算
@@ -910,6 +980,7 @@ public class CharacterList_Services : MonoBehaviour
         }
 
         activeCharacterCards.Clear();
+        cardToCharacterName.Clear();
     }
 
     IEnumerator ForceLayoutUpdate()

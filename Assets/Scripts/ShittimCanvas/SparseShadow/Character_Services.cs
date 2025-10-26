@@ -21,7 +21,6 @@ public class Character_Services : MonoBehaviour
 
     public string Character_Name = "";
     public Character character;
-    
 
     private void Get_Config()
     {
@@ -101,6 +100,11 @@ public class Character_Services : MonoBehaviour
         Debug.Log($"[Character_Services] 加载角色: {character_name}");
         character = gameObject.AddComponent<Character>();
         character.Load_Charachter(character_name);
+        
+        if (CharacterTimer_Services.Instance != null)
+        {
+            CharacterTimer_Services.Instance.HandleCharacterSwitch(character_name);
+        }
         
         yield return new WaitForSeconds(0.1f);
         
