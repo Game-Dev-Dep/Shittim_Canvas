@@ -37,9 +37,13 @@ public class CharacterList_Services : MonoBehaviour
     [SerializeField]
     public TMP_Dropdown School_Dropdown;
     [SerializeField]
+    public Button First_Page_Button;
+    [SerializeField]
     public Button Previous_Page_Button;
     [SerializeField]
     public Button Next_Page_Button;
+    [SerializeField]
+    public Button Last_Page_Button;
     [SerializeField]
     public TextMeshProUGUI Page_Info_Text;
     [SerializeField]
@@ -180,6 +184,11 @@ public class CharacterList_Services : MonoBehaviour
         }
 
         // 分页按钮
+        if (First_Page_Button != null)
+        {
+            First_Page_Button.onClick.AddListener(OnFirstPage);
+        }
+
         if (Previous_Page_Button != null)
         {
             Previous_Page_Button.onClick.AddListener(OnPreviousPage);
@@ -188,6 +197,11 @@ public class CharacterList_Services : MonoBehaviour
         if (Next_Page_Button != null)
         {
             Next_Page_Button.onClick.AddListener(OnNextPage);
+        }
+
+        if (Last_Page_Button != null)
+        {
+            Last_Page_Button.onClick.AddListener(OnLastPage);
         }
 
         Get_Favorite_Config();
@@ -312,6 +326,18 @@ public class CharacterList_Services : MonoBehaviour
         Console_Log("结束创建角色列表UI");
     }
 
+    private void OnFirstPage()
+    {
+        currentPage = 0;
+        UpdateCharacterListDisplay();
+        UpdatePageInfo();
+        
+        if (Character_List_ScrollRect != null)
+        {
+            Character_List_ScrollRect.normalizedPosition = new Vector2(0, 1);
+        }
+    }
+
     private void OnPreviousPage()
     {
         if (currentPage > 0)
@@ -347,6 +373,21 @@ public class CharacterList_Services : MonoBehaviour
         }
     }
 
+    private void OnLastPage()
+    {
+        var characterListToUse = GetFilteredCharacterList();
+        int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
+        
+        currentPage = maxPage;
+        UpdateCharacterListDisplay();
+        UpdatePageInfo();
+        
+        if (Character_List_ScrollRect != null)
+        {
+            Character_List_ScrollRect.normalizedPosition = new Vector2(0, 1);
+        }
+    }
+
     private void UpdatePageInfo()
     {
         if (Page_Info_Text != null)
@@ -369,6 +410,14 @@ public class CharacterList_Services : MonoBehaviour
         }
 
         // 更新按钮状态
+        var characterListToUseForButtons = GetFilteredCharacterList();
+        int maxPageForButtons = (characterListToUseForButtons.Count - 1) / VISIBLE_ITEMS_COUNT;
+
+        if (First_Page_Button != null)
+        {
+            First_Page_Button.interactable = currentPage > 0;
+        }
+
         if (Previous_Page_Button != null)
         {
             Previous_Page_Button.interactable = currentPage > 0;
@@ -376,9 +425,12 @@ public class CharacterList_Services : MonoBehaviour
 
         if (Next_Page_Button != null)
         {
-            var characterListToUse = GetFilteredCharacterList();
-            int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
-            Next_Page_Button.interactable = currentPage < maxPage;
+            Next_Page_Button.interactable = currentPage < maxPageForButtons;
+        }
+
+        if (Last_Page_Button != null)
+        {
+            Last_Page_Button.interactable = currentPage < maxPageForButtons;
         }
     }
 
