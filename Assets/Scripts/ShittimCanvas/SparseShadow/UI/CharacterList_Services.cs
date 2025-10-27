@@ -103,7 +103,8 @@ public class CharacterList_Services : MonoBehaviour
     {
         Default,    // 默认排序（按CharacterList.json中的顺序）
         Ascending,  // A-Z升序
-        Descending  // Z-A降序
+        Descending, // Z-A降序
+        ByTime      // 按陪伴时间排序
     }
 
     private SortMode currentSortMode = SortMode.Default;
@@ -536,7 +537,8 @@ public class CharacterList_Services : MonoBehaviour
             {
                 GetLocalizedText("character_list_panel.sort_button.default_sort"),
                 GetLocalizedText("character_list_panel.sort_button.asc_sort"),
-                GetLocalizedText("character_list_panel.sort_button.desc_sort")
+                GetLocalizedText("character_list_panel.sort_button.desc_sort"),
+                GetLocalizedText("character_list_panel.sort_button.time_sort")
             };
 
             Search_Result_Sort_Dropdown.AddOptions(sortOptions);
@@ -660,6 +662,9 @@ public class CharacterList_Services : MonoBehaviour
             case 2:
                 currentSortMode = SortMode.Descending;
                 break;
+            case 3:
+                currentSortMode = SortMode.ByTime;
+                break;
         }
 
         Console_Log($"排序下拉框选择改变，当前排序模式: {currentSortMode}");
@@ -708,6 +713,11 @@ public class CharacterList_Services : MonoBehaviour
                 // Z-A降序排序
                 SortByField(characterListToSort, false);
                 break;
+                
+            case SortMode.ByTime:
+                // 按陪伴时间排序（从长到短）
+                SortByTime(characterListToSort);
+                break;
         }
     }
 
@@ -754,6 +764,33 @@ public class CharacterList_Services : MonoBehaviour
         }
 
         // 更新对应的列表
+        if (string.IsNullOrEmpty(searchKeyword))
+        {
+            Character_List = sortedDict;
+        }
+        else
+        {
+            Filtered_Character_List = sortedDict;
+        }
+    }
+    
+    private void SortByTime(Dictionary<long, List<Character>> characterListToSort)
+    {
+        var sortedList = characterListToSort.ToList();
+      
+        sortedList.Sort((a, b) =>
+        {
+            long timeA = GetTotalTimerSeconds(a.Value.First().DevName);
+            long timeB = GetTotalTimerSeconds(b.Value.First().DevName);
+            return timeB.CompareTo(timeA);
+        });
+        
+        var sortedDict = new Dictionary<long, List<Character>>();
+        foreach (var item in sortedList)
+        {
+            sortedDict.Add(item.Key, item.Value);
+        }
+        
         if (string.IsNullOrEmpty(searchKeyword))
         {
             Character_List = sortedDict;
