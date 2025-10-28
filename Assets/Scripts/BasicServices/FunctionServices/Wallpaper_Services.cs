@@ -224,6 +224,12 @@ public class Wallpaper_Services : MonoBehaviour
         Console_Log("成功进入壁纸模式");
 
         Notification_Services.Instance.Send_Notifiction("已进入壁纸模式，右键托盘图标可返回正常模式或退出软件");
+        
+        // 更新系统托盘菜单文本
+        if (SystemTray_Services.Instance != null)
+        {
+            SystemTray_Services.Instance.UpdateWallpaperMenuText(true);
+        }
     }
 
     public void Quit_Wallpaper_Mode()
@@ -256,6 +262,12 @@ public class Wallpaper_Services : MonoBehaviour
             Console_Log($"恢复VSync设置: VSync={saved_VSync_Mode}, 目标帧率={saved_Target_Framerate}");
             Framerate_Services.Instance.is_VSync_Mode = saved_VSync_Mode;
             Framerate_Services.Instance.Target_Framerate = saved_Target_Framerate;
+        }
+
+        // 更新系统托盘菜单文本
+        if (SystemTray_Services.Instance != null)
+        {
+            SystemTray_Services.Instance.UpdateWallpaperMenuText(false);
         }
 
         Console_Log("成功退回编辑模式");
