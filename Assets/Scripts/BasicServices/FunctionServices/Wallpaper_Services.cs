@@ -244,6 +244,12 @@ public class Wallpaper_Services : MonoBehaviour
         Console_Log($"编辑模式最终屏幕分辨率: {Screen.width} × {Screen.height}");
         Console_Log($"编辑模式最终屏幕模式: {Screen.fullScreenMode}");
 
+        // 从壁纸模式回正常模式时，恢复任务栏图标显示
+        if (Window_Services.Instance != null)
+        {
+            Window_Services.Instance.Show_In_Taskbar();
+        }
+
         // 从壁纸模式回正常模式恢复VSync设置
         if (Framerate_Services.Instance != null)
         {

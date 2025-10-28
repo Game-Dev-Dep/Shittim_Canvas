@@ -151,6 +151,9 @@ public class Window_Services : MonoBehaviour
             Get_WorkW_Handle();
         }
         Get_Unity_Handle();
+        
+        // 如果启用了自动壁纸模式，立即隐藏窗口以从任务栏中移除
+        Check_And_Hide_From_Taskbar_If_Needed();
 
         Cover_Status_Image.gameObject.SetActive(false);
         Cover_Status_Text.SetText("");
@@ -778,6 +781,106 @@ public class Window_Services : MonoBehaviour
         
         return text.Substring(cIndex + 6);
     }
+
+    /// <summary>
+    /// 检查是否启用了自动壁纸模式，如果是则进行二次检查
+    /// </summary>
+    private void Check_And_Hide_From_Taskbar_If_Needed()
+    {
+        bool autoWallpaperModeOn = Config_Services.Instance.Global_Setting_Config.General.Auto_Wallpaper_Mode == 0;
+        
+        if (autoWallpaperModeOn)
+        {
+            Console_Log("检测到启用了自动壁纸模式，准备隐藏窗口");
+            
+            // 等待窗口句柄获取完成
+            if (Unity_Handle != IntPtr.Zero)
+            {
+                Hide_From_Taskbar();
+            }
+            else
+            {
+                // 如果句柄还未准备好，等！
+                StartCoroutine(Hide_From_Taskbar_Delayed());
+            }
+        }
+    }
+    
+    /// <summary>
+    /// 保险I：延迟隐藏窗口
+    /// </summary>
+    private System.Collections.IEnumerator Hide_From_Taskbar_Delayed()
+    {
+        yield return new WaitForSeconds(0.1f);
+        
+        int retryCount = 0;
+        while (Unity_Handle == IntPtr.Zero && retryCount < 10)
+        {
+            yield return new WaitForSeconds(0.1f);
+            retryCount++;
+        }
+        
+        if (Unity_Handle != IntPtr.Zero)
+        {
+            Hide_From_Taskbar();
+        }
+        else
+        {
+            Console_Log("未能获取Unity窗口句柄，无法隐藏任务栏", Debug_Services.LogLevel.Debug, LogType.Warning);
+        }
+    }
+    
+    /// <summary>
+    /// 保险II: 从任务栏中隐藏窗口（仅在自动壁纸模式下使用）
+    /// </summary>
+    public void Hide_From_Taskbar()
+    {
+        if (Unity_Handle == IntPtr.Zero)
+        {
+            Console_Log("Unity窗口句柄无效", Debug_Services.LogLevel.Debug, LogType.Warning);
+            return;
+        }
+        
+        Console_Log("正在从任务栏隐藏窗口");
+        
+        // 获取当前窗口的扩展样式
+        int exStyle = (int)Win32Wrapper.GetWindowLong(Unity_Handle, (int)Win32Wrapper.WindowLongFlags.GWL_EXSTYLE);
+        
+        // 添加 WS_EX_TOOLWINDOW并移出WS_EX_APPWINDOW 样式
+        int newExStyle = exStyle | (int)Win32Wrapper.WindowStylesEx.WS_EX_TOOLWINDOW;
+        newExStyle &= ~(int)Win32Wrapper.WindowStylesEx.WS_EX_APPWINDOW;
+        
+        // 设置新窗口样式
+        Win32Wrapper.SetWindowLong(Unity_Handle, Win32Wrapper.WindowLongFlags.GWL_EXSTYLE, newExStyle);
+        
+        Console_Log("已从任务栏隐藏窗口");
+    }
+    
+    /// <summary>
+    /// 保险III: 恢复窗口在任务栏中的显示
+    /// </summary>
+    public void Show_In_Taskbar()
+    {
+        if (Unity_Handle == IntPtr.Zero)
+        {
+            Console_Log("Unity窗口句柄无效", Debug_Services.LogLevel.Debug, LogType.Warning);
+            return;
+        }
+        
+        Console_Log("正在恢复窗口在任务栏中的显示");
+        
+        int exStyle = (int)Win32Wrapper.GetWindowLong(Unity_Handle, (int)Win32Wrapper.WindowLongFlags.GWL_EXSTYLE);
+        
+        // 移除 WS_EX_TOOLWINDOW 然后添加 WS_EX_APPWINDOW 样式
+        int newExStyle = exStyle & ~(int)Win32Wrapper.WindowStylesEx.WS_EX_TOOLWINDOW;
+        newExStyle |= (int)Win32Wrapper.WindowStylesEx.WS_EX_APPWINDOW;
+        
+        // 设置新的窗口样式
+        Win32Wrapper.SetWindowLong(Unity_Handle, Win32Wrapper.WindowLongFlags.GWL_EXSTYLE, newExStyle);
+        
+        Console_Log("已恢复窗口在任务栏中的显示");
+    }
+
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Window_Services", message, loglevel, logtype); }
 }

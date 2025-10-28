@@ -60,19 +60,19 @@ Material:
     - _GlowOffset: 0
     - _GlowOuter: 0.05
     - _GlowPower: 0.75
-    - _GradientScale: 10
+    - _GradientScale: 19
     - _LightAngle: 3.1416
     - _MaskSoftnessX: 0
     - _MaskSoftnessY: 0
     - _OutlineSoftness: 0
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
-    - _OutlineWidth: 0.434
+    - _OutlineWidth: 0.238
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
-    - _ScaleRatioA: 0.9
-    - _ScaleRatioB: 0.66824996
-    - _ScaleRatioC: 0.66824996
+    - _ScaleRatioA: 0.94736844
+    - _ScaleRatioB: 0.70342106
+    - _ScaleRatioC: 0.70342106
     - _ScaleX: 1
     - _ScaleY: 1
     - _ShaderFlags: 0
