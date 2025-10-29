@@ -161,7 +161,8 @@ public class Camera_Services : MonoBehaviour
     public void Set_MemoryLobby_Camera(Camera camera)
     {
         MemoryLobby_Camera = camera;
-        Load_Camera_Config(MemoryLobby_Camera, Config_Services.Instance.MemoryLobby_Camera_Config);
+        string currentCharacterName = Index_Services.Instance?.Character_Name ?? Config_Services.Instance.MemoryLobby_Camera_Config.Defalut_Character_Name;
+        Load_Character_Camera_Config(MemoryLobby_Camera, currentCharacterName);
         Console_Log("已初始化记忆大厅摄像机");
         MemoryLobby_Camera.GetUniversalAdditionalCameraData().renderPostProcessing = true;
         Console_Log("已启用摄像机的 Post Processing 选项");
@@ -230,9 +231,56 @@ public class Camera_Services : MonoBehaviour
         camera.orthographicSize = camera_config.Camera_Size;
     }
 
+    // 加载指定角色的相机参数
+    public void Load_Character_Camera_Config(Camera camera, string characterName)
+    {
+        var config = Config_Services.Instance.MemoryLobby_Camera_Config;
+        if (config.Character_Camera_Settings.ContainsKey(characterName))
+        {
+            var characterCameraData = config.Character_Camera_Settings[characterName];
+            camera.transform.position = new Vector2(characterCameraData.Camera_Position_X, characterCameraData.Camera_Position_Y);
+            camera.transform.rotation = Quaternion.Euler(0f, 0f, characterCameraData.Camera_Rotation_Z);
+            if (!camera.orthographic) camera.orthographic = true;
+            camera.orthographicSize = characterCameraData.Camera_Size;
+            Console_Log($"已加载角色 {characterName} 的相机设置");
+        }
+        else
+        {
+            // 使用默认相机设置
+            camera.transform.position = new Vector2(0, 0);
+            camera.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            if (!camera.orthographic) camera.orthographic = true;
+            camera.orthographicSize = 1.0f;
+            Console_Log($"角色 {characterName} 使用默认相机设置");
+        }
+    }
+
+    // 保存指定角色的相机参数
+    public void Save_Character_Camera_Config(Camera camera, string characterName)
+    {
+        var config = Config_Services.Instance.MemoryLobby_Camera_Config;
+        var characterCameraData = new CharacterCameraData
+        {
+            Camera_Position_X = camera.transform.position.x,
+            Camera_Position_Y = camera.transform.position.y,
+            Camera_Rotation_Z = camera.transform.eulerAngles.z,
+            Camera_Size = camera.orthographicSize
+        };
+        
+        config.Character_Camera_Settings[characterName] = characterCameraData;
+        Config_Services.Instance.Save_Camera_Config(config, Path.Combine(File_Services.Config_Files_Folder_Path, "MemoryLobby Camera Config.json"));
+        Console_Log($"已保存角色 {characterName} 的相机设置");
+    }
+
     public void Save_Camera_Settings(Camera camera, Camera_Config camera_config)
     {
-        camera_config.Defalut_Character_Name = Index_Services.Instance.Character_Name;
+        string currentCharacterName = Index_Services.Instance.Character_Name;
+        camera_config.Defalut_Character_Name = currentCharacterName;
+        
+        // 保存到角色特定的设置
+        Save_Character_Camera_Config(camera, currentCharacterName);
+        
+        // 保存全局设置（保持兼容性）
         camera_config.Camera_Position_X = camera.transform.position.x;
         camera_config.Camera_Position_Y = camera.transform.position.y;
         camera_config.Camera_Rotation_Z = camera.transform.eulerAngles.z;
@@ -269,6 +317,28 @@ public class Camera_Services : MonoBehaviour
         saved_camera_config.Defalut_Character_Name = camera_config.Defalut_Character_Name;
         if (Unsaved_Icon != null) Unsaved_Icon.SetActive(false);
         Console_Log($"已保存角色选择: {camera_config.Defalut_Character_Name}");
+    }
+
+    // 角色切换时的相机处理
+    public void Handle_Character_Switch(string oldCharacterName, string newCharacterName)
+    {
+        if (MemoryLobby_Camera == null) return;
+        
+        // 保存旧角色的相机设置
+        if (!string.IsNullOrEmpty(oldCharacterName))
+        {
+            Save_Character_Camera_Config(MemoryLobby_Camera, oldCharacterName);
+        }
+        
+        // 加载新角色的相机设置
+        Load_Character_Camera_Config(MemoryLobby_Camera, newCharacterName);
+        
+        // 更新默认角色名
+        var camera_config = Config_Services.Instance.MemoryLobby_Camera_Config;
+        camera_config.Defalut_Character_Name = newCharacterName;
+        Config_Services.Instance.Save_Camera_Config(camera_config, Path.Combine(File_Services.Config_Files_Folder_Path, "MemoryLobby Camera Config.json"));
+        
+        Console_Log($"已切换相机设置：{oldCharacterName} -> {newCharacterName}");
     }
 
     public void Reset_Camera_Settings(Camera camera)
