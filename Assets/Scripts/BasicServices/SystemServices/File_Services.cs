@@ -150,6 +150,11 @@ public class File_Services : MonoBehaviour
             Save_Default_Type_To_File<Favorite_Config>(Path.Combine(Config_Files_Folder_Path, "Favorite Config.json"));
         }
 
+        if (!File.Exists(Path.Combine(Config_Files_Folder_Path, "CharacterTimer Config.json")))
+        {
+            Save_Default_Type_To_File<CharacterTimer_Config>(Path.Combine(Config_Files_Folder_Path, "CharacterTimer Config.json"));
+        }
+
         Console_Log($"结束创建默认文件");
     }
 

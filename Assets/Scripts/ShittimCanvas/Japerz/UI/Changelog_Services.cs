@@ -83,17 +83,17 @@ public class Changelog_Services : MonoBehaviour
                     }
                     else
                     {
-                        Display_Error("Failed to parse changelog data");
+                        Display_Error("Failed to parse changelog data", apiUrl);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Display_Error($"Error: {ex.Message}");
+                    Display_Error($"Error: {ex.Message}", apiUrl);
                 }
             }
             else
             {
-                Display_Error($"Failed to fetch changelog\n{request.error}");
+                Display_Error($"Failed to fetch changelog\n{request.error}", apiUrl);
             }
         }
     }
@@ -116,14 +116,20 @@ public class Changelog_Services : MonoBehaviour
         }
     }
 
-    private void Display_Error(string error)
+    private void Display_Error(string error, string apiUrl = null)
     {
+        string errorMessage = error;
+        if (!string.IsNullOrEmpty(apiUrl))
+        {
+            errorMessage += $"\n\nAPI URL: {apiUrl}";
+        }
+        
         if (Changelog_Title_Text != null) Changelog_Title_Text.text = "Error";
-        if (Changelog_Content_Text != null) Changelog_Content_Text.text = error;
+        if (Changelog_Content_Text != null) Changelog_Content_Text.text = errorMessage;
         
         if (Changelog_Panel == null)
         {
-            Toast_Wrapper_Services.ShowToast(error, 5f);
+            Toast_Wrapper_Services.ShowToast(errorMessage, 5f);
         }
     }
 

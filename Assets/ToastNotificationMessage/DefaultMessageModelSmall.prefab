@@ -650,8 +650,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: TEST MEOW!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 45e20b598bec6cb43b6a057f29adc3a2, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: bd497dadda5139046a53452a1688910b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4487f185cd62d0a4c96c02bfd92f027d, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 3742df17271d6ed49888cde88f9a921c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -675,7 +675,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 26
+  m_fontSize: 25.85
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1

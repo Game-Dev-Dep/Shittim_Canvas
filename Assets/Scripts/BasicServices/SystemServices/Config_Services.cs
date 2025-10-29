@@ -28,6 +28,7 @@ public class Config_Services : MonoBehaviour
     public WindowFilter_Config Gloabal_WindowFilter_Config = new WindowFilter_Config();
     public Setting_Config Global_Setting_Config = new Setting_Config();
     public Favorite_Config Global_Favorite_Config = new Favorite_Config();
+    public CharacterTimer_Config Global_CharacterTimer_Config = new CharacterTimer_Config();
 
 
     // Fix for CS0120 and CS0572 errors
@@ -97,6 +98,8 @@ public class Config_Services : MonoBehaviour
             $"收藏的个数: {Global_Favorite_Config.Character_Names.Count}\n" +
             $"收藏的内容: {JsonConvert.SerializeObject(Global_Favorite_Config.Character_Names.ToArray())}\n"
         );
+
+        Global_CharacterTimer_Config = File_Services.Load_Specific_Type_From_File<CharacterTimer_Config>(Path.Combine(File_Services.Config_Files_Folder_Path, "CharacterTimer Config.json"));
 
         Console_Log($"结束初始化 Config Services");
     }
@@ -189,6 +192,11 @@ public class Config_Services : MonoBehaviour
                     $"全屏检测静音白名单 - 窗口标题个数: {windowFilter_config.Fullscreen_Mute_Whitelist_Title_Names.Count}\n" +
                     $"全屏检测静音白名单 - 窗口类名个数: {windowFilter_config.Fullscreen_Mute_Whitelist_Class_Names.Count}");
         File_Services.Save_Specific_Type_To_File<WindowFilter_Config>(windowFilter_config, file_path);
+    }
+
+    public void Save_CharacterTimer_Config(CharacterTimer_Config timer_config, string file_path)
+    {
+        File_Services.Save_Specific_Type_To_File<CharacterTimer_Config>(timer_config, file_path);
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Config_Services", message, loglevel, logtype); }

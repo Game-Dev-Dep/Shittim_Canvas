@@ -46,6 +46,12 @@ public class Dropdown_Services : MonoBehaviour
     private Coroutine autoRandomCoroutine;
     private int currentAutoRandomInterval = 0;
     private bool isSwitchingCharacter = false;
+    
+    private List<string> shuffledCharacters = new List<string>();
+    private List<string> shuffledFavorites = new List<string>();
+    private int shuffledIndex = 0;
+    private int shuffledFavoriteIndex = 0;
+    private int currentAutoRandomRange = 0;
 
     [System.Serializable]
     public class CharacterData
@@ -388,14 +394,46 @@ IEnumerator SwitchToFavoriteMode()
         OnOptionSelected(starredCharacterNames[nextIndex]);
     }
 
+    //伪随机洗牌算法
+    private void ShuffleList(List<string> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            string temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
+        }
+    }
+
+    private bool IsPseudoRandomEnabled()
+    {
+        return Config_Services.Instance?.Global_Setting_Config?.General?.Pseudo_Random_Mode == 0;
+    }
+
     // 在收藏夹中随机切换大厅
     public void SwitchToRandomFavorite()
     {
         LoadStarredCharacters();
         if (starredCharacterNames.Count < 1) return;
         
-        int randomIndex = Random.Range(0, starredCharacterNames.Count);
-        OnOptionSelected(starredCharacterNames[randomIndex]);
+        //如果伪随机模式启用，则使用伪随机洗牌算法，否则真随机
+        if (IsPseudoRandomEnabled())
+        {
+            if (shuffledFavoriteIndex >= shuffledFavorites.Count || shuffledFavorites.Count != starredCharacterNames.Count)
+            {
+                shuffledFavorites = new List<string>(starredCharacterNames);
+                ShuffleList(shuffledFavorites);
+                shuffledFavoriteIndex = 0;
+            }
+            OnOptionSelected(shuffledFavorites[shuffledFavoriteIndex]);
+            shuffledFavoriteIndex++;
+        }
+        else
+        {
+            int randomIndex = Random.Range(0, starredCharacterNames.Count);
+            OnOptionSelected(starredCharacterNames[randomIndex]);
+        }
     }
 
     // 在所有大厅中随机切换
@@ -407,8 +445,23 @@ IEnumerator SwitchToFavoriteMode()
         var allCharacters = characterList.Values.SelectMany(list => list.Select(c => c.DevName)).ToList();
         if (allCharacters.Count == 0) return;
         
-        int randomIndex = Random.Range(0, allCharacters.Count);
-        OnOptionSelected(allCharacters[randomIndex]);
+        //伪随机同样应用到所有大厅的随机切换
+        if (IsPseudoRandomEnabled())
+        {
+            if (shuffledIndex >= shuffledCharacters.Count || shuffledCharacters.Count != allCharacters.Count)
+            {
+                shuffledCharacters = new List<string>(allCharacters);
+                ShuffleList(shuffledCharacters);
+                shuffledIndex = 0;
+            }
+            OnOptionSelected(shuffledCharacters[shuffledIndex]);
+            shuffledIndex++;
+        }
+        else
+        {
+            int randomIndex = Random.Range(0, allCharacters.Count);
+            OnOptionSelected(allCharacters[randomIndex]);
+        }
     }
 
     void UpdateNavigationButtonsVisibility()
@@ -452,9 +505,16 @@ IEnumerator SwitchToFavoriteMode()
         if (Config_Services.Instance != null)
         {
             currentAutoRandomInterval = Config_Services.Instance.Global_Setting_Config.General.Auto_Random_Character_Interval;
-            Debug.Log($"[Dropdown_Services] 读取定时随机间隔配置: {currentAutoRandomInterval}");
+            currentAutoRandomRange = Config_Services.Instance.Global_Setting_Config.General.Auto_Random_Character_Range;
+            Debug.Log($"[Dropdown_Services] 读取定时随机间隔配置: {currentAutoRandomInterval}, 范围: {currentAutoRandomRange}");
             UpdateAutoRandomInterval(currentAutoRandomInterval);
         }
+    }
+
+    public void UpdateAutoRandomRange(int rangeIndex)
+    {
+        currentAutoRandomRange = rangeIndex;
+        Debug.Log($"[Dropdown_Services] 更新随机范围: {rangeIndex}");
     }
 
     // 更新自动随机切换大厅定时器
@@ -503,8 +563,15 @@ IEnumerator SwitchToFavoriteMode()
         while (true)
         {
             yield return new WaitForSeconds(seconds);
-            Debug.Log($"[Dropdown_Services] 定时器触发，执行随机切换大厅");
-            SwitchToRandomCharacter();
+            Debug.Log($"[Dropdown_Services] 定时器触发，执行随机切换大厅，范围: {currentAutoRandomRange}");
+            if (currentAutoRandomRange == 0)
+            {
+                SwitchToRandomCharacter();
+            }
+            else
+            {
+                SwitchToRandomFavorite();
+            }
         }
     }
     // ==自动随机切换大厅定时器相关方法结束喵==

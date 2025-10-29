@@ -11,6 +11,8 @@ using System.Linq;
 
 public class SystemTray_Services : MonoBehaviour
 {
+    public static SystemTray_Services Instance { get; set; }
+    
     [SerializeField]
     public Texture2D SystemTray_Icon;
 
@@ -20,6 +22,14 @@ public class SystemTray_Services : MonoBehaviour
 
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 #if !UNITY_EDITOR
         Debug.Log($"开始初始化系统托盘");
 
@@ -83,6 +93,24 @@ public class SystemTray_Services : MonoBehaviour
         string oldLabel = isWallpaperMode ? WALLPAPER_MENU_EXIT : WALLPAPER_MENU_ENTER;
         string newLabel = isWallpaperMode ? WALLPAPER_MENU_ENTER : WALLPAPER_MENU_EXIT;
         TrayIcon.UpdateMenuItemText(oldLabel, newLabel);
+    }
+    
+    /// <summary>
+    /// 更新壁纸模式菜单文本（供外部调用）
+    /// </summary>
+    /// <param name="isEnteringWallpaperMode">true表示进入壁纸模式，false表示退出壁纸模式</param>
+    public void UpdateWallpaperMenuText(bool isEnteringWallpaperMode)
+    {
+    #if !UNITY_EDITOR
+            if (isEnteringWallpaperMode)
+            {
+                TrayIcon.UpdateMenuItemText(WALLPAPER_MENU_ENTER, WALLPAPER_MENU_EXIT);
+            }
+            else
+            {
+                TrayIcon.UpdateMenuItemText(WALLPAPER_MENU_EXIT, WALLPAPER_MENU_ENTER);
+            }
+    #endif
     }
     
     // 托盘静音toggle，Menu Label在Utils.cs中定义，在TrayIcon.cs中处理，别忘了Constants.cs中的静音菜单项名称（

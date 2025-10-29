@@ -21,7 +21,6 @@ public class Character_Services : MonoBehaviour
 
     public string Character_Name = "";
     public Character character;
-    
 
     private void Get_Config()
     {
@@ -80,6 +79,7 @@ public class Character_Services : MonoBehaviour
     private IEnumerator Switch_Character_Coroutine(string character_name)
     {
         Debug.Log($"[Character_Services] 开始切换角色到: {character_name}");
+        string oldCharacterName = Character_Name;
         
         EnsureFadeServices();
 
@@ -89,10 +89,12 @@ public class Character_Services : MonoBehaviour
             yield return StartCoroutine(Fade_Services.Instance.FadeOut(0.2f));
         }
 
-        if (Camera_Services.Instance != null && Character_Name != character_name && !string.IsNullOrEmpty(Character_Name))
+        if (Camera_Services.Instance != null)
         {
-            Camera_Services.Instance.Auto_Save_Camera_Settings();
+            Camera_Services.Instance.Handle_Character_Switch(oldCharacterName, character_name);
         }
+        
+        Character_Name = character_name;
         
         if(character != null) character.Unload_Character();
         
@@ -102,17 +104,17 @@ public class Character_Services : MonoBehaviour
         character = gameObject.AddComponent<Character>();
         character.Load_Charachter(character_name);
         
+        if (CharacterTimer_Services.Instance != null)
+        {
+            CharacterTimer_Services.Instance.HandleCharacterSwitch(character_name);
+        }
+        
         yield return new WaitForSeconds(0.1f);
         
         //通知Dropdown_Services更新当前选择的lobby
         if (Dropdown_Services.Instance != null)
         {
             Dropdown_Services.Instance.SetCurrentSelectedCharacter(character_name);
-        }
-
-        if (Camera_Services.Instance != null)
-        {
-            Camera_Services.Instance.Save_Character_Selection();
         }
 
         if (Fade_Services.Instance != null)

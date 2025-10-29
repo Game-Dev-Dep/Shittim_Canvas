@@ -70,7 +70,7 @@ public static class Localization_Utils
     // 检查是否是本地化键值
     public static bool Is_Localization_Key(string text)
     {
-        return !string.IsNullOrEmpty(text) && (text.StartsWith("settings_panel.") || text.StartsWith("toast.") || text.StartsWith("function_area."));
+        return !string.IsNullOrEmpty(text) && (text.StartsWith("settings_panel.") || text.StartsWith("toast.") || text.StartsWith("function_area.") || text.StartsWith("character_list."));
     }
 
     /// <summary>

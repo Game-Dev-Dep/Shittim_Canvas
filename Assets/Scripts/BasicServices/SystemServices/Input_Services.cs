@@ -21,6 +21,11 @@ public class Input_Services : MonoBehaviour
     public Mouse_Info_Class Mouse_Info = new Mouse_Info_Class();
     void Update()
     {
+        // 强制解除鼠标锁定，防止方向键导致鼠标被拉回中心
+        // 这个是UICamera.cs的Unity默认行为，就不改那边了。
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        
         if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
         {
             Get_Mouse_Info();

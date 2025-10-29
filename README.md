@@ -1,25 +1,31 @@
 <div align="center">
-  
-# Shittim Canvas - 什亭画布
+
+<div align="center">
+  <img src="Assets/Resources/Pictures/logo_landscape.png" alt="Shittim Canvas logo" width="300">
+</div>  
 
 </div>
 
 <div align="center">
-  <a href="https://qm.qq.com/q/ZJwgEAu92g">加入QQ群：961293316</a>
+  <a href="https://qm.qq.com/q/ZJwgEAu92g">加入QQ群：961293316</a></br>
+  <a href="https://sc.japerz.com">[前往官网下载]</a>
   <br /><br />
   <p>一个专为老师们打造的回忆大厅壁纸工具，让你重温与学生们的美好时光~</p>
 </div>
 
 <div align="center">
-  <img src="Assets/Resources/Pictures/Preview.png" alt="Shittim Canvas Preview" width="600"/>
+  <img src="Assets/Resources/Pictures/Preview_1.png" alt="Shittim Canvas Preview" width="600"/>
 </div>
 
 ## 当前状态
 
-**Shittim Canvas 目前处于 v1.2 Insider Preview 测试阶段**
+**Shittim Canvas 目前处于 v1.2.x 版本的稳定（蒸蒸日上）开发阶段(跑**
+
+喜报，Shittim Canvas NEXT开发决定！更稳定的内核+更干净高效的代码组成！敬请期待！
+
 
 > [!IMPORTANT]
-> **重要提示**：请在群文件内获取最新补丁包，并仔细阅读压缩包内的详细说明。
+> **重要提示**：请使用补丁包时，请仔细阅读压缩包内的详细说明。并且不要忘记验证SHA-256以确保下载的压缩包的可靠性。
 
 ## 主要功能
 
@@ -40,24 +46,25 @@
 ### 全量包用户
 - 解压即可使用，包含所有必要资源文件
 - 如果打开软件出现黑屏，说明缺少资源文件，请重新下载全量包
+- 如果缺失 Core Files 文件夹，则会有一个界面专门提示你Core Files文件夹不见了
 
 ### 补丁包升级
 1. 删除除 `Core Files` 文件夹外的所有文件
 2. 解压补丁包所有文件到什亭之匣目录
-3. **重要**：v1.2 补丁包不能直接打在 v1.0 版本上！请先升级到 v1.1 再使用 v1.2 补丁包
+> [!IMPORTANT]
+> **重要**：v1.2 补丁包不能直接打在 v1.0 版本上！请先升级到 v1.1 再使用 v1.2 补丁包。详细的版本要求请阅读补丁包内的使用说明！
 
 ## 已知问题
 
 ### 角色加载问题
-- **CH0188 (泳装白子)**：暂时无法加载（因修复其他问题而产生的新问题，正在修复中）
-- **Mashiro_Swimsuit (泳装真白)**：暂时无法加载
+- 部分角色的某些l2d元素会出现紫色方块，这些都是已知问题，并预计在Shittim Canvas NEXT中修复，敬请期待。
+- 目前所有角色共用一个摄像机设置，如果切换到其他角色显示的样子不正常，还请手动重置一下相机、或自行调整一下。调整方法请参阅上面的"基础操作"部分。
 
 ### 显示效果问题
-- **CH0139 (妃咲)**：开幕动画的烟雾存在一些问题
-- **Nodoka (和香)**：背景流星材质过淡
+- 部分角色的某些l2d元素会有显示色彩较淡的问题
 
 ### 系统兼容性
-- 多显示器指定功能暂不支持
+- 多显示器部分支持，但是如果你的第二显示器在主显示器的左侧或上侧，则会出现无法正常沉底的问题。该问题预计在NEXT中修复。
 
 ## 问题反馈
 

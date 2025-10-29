@@ -140,6 +140,15 @@ public class Wallpaper_Services : MonoBehaviour
             return;
         }
 
+        // 在回忆大厅列表面板打开的时候阻止进入壁纸模式（之前忘了做了嘻嘻）
+        var characterListPanel = GameObject.Find("[Character List] Root");
+        if (characterListPanel != null && characterListPanel.activeSelf)
+        {
+            Console_Log("回忆大厅列表面板已打开，请先关闭回忆大厅列表面板再进入壁纸模式", Debug_Services.LogLevel.Debug, LogType.Warning);
+            Toast_Wrapper_Services.ShowToast("toast.close_settings_first", 3f);
+            return;
+        }
+
         // 保存当前VSync设置
         if (Framerate_Services.Instance != null)
         {
@@ -215,6 +224,12 @@ public class Wallpaper_Services : MonoBehaviour
         Console_Log("成功进入壁纸模式");
 
         Notification_Services.Instance.Send_Notifiction("已进入壁纸模式，右键托盘图标可返回正常模式或退出软件");
+        
+        // 更新系统托盘菜单文本
+        if (SystemTray_Services.Instance != null)
+        {
+            SystemTray_Services.Instance.UpdateWallpaperMenuText(true);
+        }
     }
 
     public void Quit_Wallpaper_Mode()
@@ -235,12 +250,24 @@ public class Wallpaper_Services : MonoBehaviour
         Console_Log($"编辑模式最终屏幕分辨率: {Screen.width} × {Screen.height}");
         Console_Log($"编辑模式最终屏幕模式: {Screen.fullScreenMode}");
 
+        // 从壁纸模式回正常模式时，恢复任务栏图标显示
+        if (Window_Services.Instance != null)
+        {
+            Window_Services.Instance.Show_In_Taskbar();
+        }
+
         // 从壁纸模式回正常模式恢复VSync设置
         if (Framerate_Services.Instance != null)
         {
             Console_Log($"恢复VSync设置: VSync={saved_VSync_Mode}, 目标帧率={saved_Target_Framerate}");
             Framerate_Services.Instance.is_VSync_Mode = saved_VSync_Mode;
             Framerate_Services.Instance.Target_Framerate = saved_Target_Framerate;
+        }
+
+        // 更新系统托盘菜单文本
+        if (SystemTray_Services.Instance != null)
+        {
+            SystemTray_Services.Instance.UpdateWallpaperMenuText(false);
         }
 
         Console_Log("成功退回编辑模式");

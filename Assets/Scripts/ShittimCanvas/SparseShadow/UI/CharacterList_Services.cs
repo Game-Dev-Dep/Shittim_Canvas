@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -36,9 +37,13 @@ public class CharacterList_Services : MonoBehaviour
     [SerializeField]
     public TMP_Dropdown School_Dropdown;
     [SerializeField]
+    public Button First_Page_Button;
+    [SerializeField]
     public Button Previous_Page_Button;
     [SerializeField]
     public Button Next_Page_Button;
+    [SerializeField]
+    public Button Last_Page_Button;
     [SerializeField]
     public TextMeshProUGUI Page_Info_Text;
     [SerializeField]
@@ -66,9 +71,13 @@ public class CharacterList_Services : MonoBehaviour
     private List<GameObject> activeCharacterCards = new List<GameObject>(); // 缓存活跃的卡片对象
     private List<GameObject> cardPool = new List<GameObject>(); // 对象池
     private int maxPoolSize = 50; // 最大池大小
+    private Dictionary<GameObject, string> cardToCharacterName = new Dictionary<GameObject, string>();
 
     // 搜索服务
     private CharacterSearchService searchService = new CharacterSearchService();
+    
+    // 计时器更新协程
+    private Coroutine timerUpdateCoroutine;
 
     // 性能优化相关
     private bool isDataLoaded = false;
@@ -98,7 +107,8 @@ public class CharacterList_Services : MonoBehaviour
     {
         Default,    // 默认排序（按CharacterList.json中的顺序）
         Ascending,  // A-Z升序
-        Descending  // Z-A降序
+        Descending, // Z-A降序
+        ByTime      // 按陪伴时间排序
     }
 
     private SortMode currentSortMode = SortMode.Default;
@@ -174,6 +184,11 @@ public class CharacterList_Services : MonoBehaviour
         }
 
         // 分页按钮
+        if (First_Page_Button != null)
+        {
+            First_Page_Button.onClick.AddListener(OnFirstPage);
+        }
+
         if (Previous_Page_Button != null)
         {
             Previous_Page_Button.onClick.AddListener(OnPreviousPage);
@@ -182,6 +197,11 @@ public class CharacterList_Services : MonoBehaviour
         if (Next_Page_Button != null)
         {
             Next_Page_Button.onClick.AddListener(OnNextPage);
+        }
+
+        if (Last_Page_Button != null)
+        {
+            Last_Page_Button.onClick.AddListener(OnLastPage);
         }
 
         Get_Favorite_Config();
@@ -236,6 +256,11 @@ public class CharacterList_Services : MonoBehaviour
         }
 
         Create_Character_List_UI();
+        
+        if (timerUpdateCoroutine == null)
+        {
+            timerUpdateCoroutine = StartCoroutine(UpdateTimers());
+        }
     }
 
     private void Hide_Character_List_Panel()
@@ -243,6 +268,12 @@ public class CharacterList_Services : MonoBehaviour
         is_Character_List_On = false;
         Character_List_Root_GameObject.SetActive(is_Character_List_On);
         Destroy_Chracter_List_UI();
+        
+        if (timerUpdateCoroutine != null)
+        {
+            StopCoroutine(timerUpdateCoroutine);
+            timerUpdateCoroutine = null;
+        }
     }
 
     void OnToggleValueChanged(Toggle toggle, bool isOn)
@@ -295,6 +326,18 @@ public class CharacterList_Services : MonoBehaviour
         Console_Log("结束创建角色列表UI");
     }
 
+    private void OnFirstPage()
+    {
+        currentPage = 0;
+        UpdateCharacterListDisplay();
+        UpdatePageInfo();
+        
+        if (Character_List_ScrollRect != null)
+        {
+            Character_List_ScrollRect.normalizedPosition = new Vector2(0, 1);
+        }
+    }
+
     private void OnPreviousPage()
     {
         if (currentPage > 0)
@@ -330,6 +373,21 @@ public class CharacterList_Services : MonoBehaviour
         }
     }
 
+    private void OnLastPage()
+    {
+        var characterListToUse = GetFilteredCharacterList();
+        int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
+        
+        currentPage = maxPage;
+        UpdateCharacterListDisplay();
+        UpdatePageInfo();
+        
+        if (Character_List_ScrollRect != null)
+        {
+            Character_List_ScrollRect.normalizedPosition = new Vector2(0, 1);
+        }
+    }
+
     private void UpdatePageInfo()
     {
         if (Page_Info_Text != null)
@@ -352,6 +410,14 @@ public class CharacterList_Services : MonoBehaviour
         }
 
         // 更新按钮状态
+        var characterListToUseForButtons = GetFilteredCharacterList();
+        int maxPageForButtons = (characterListToUseForButtons.Count - 1) / VISIBLE_ITEMS_COUNT;
+
+        if (First_Page_Button != null)
+        {
+            First_Page_Button.interactable = currentPage > 0;
+        }
+
         if (Previous_Page_Button != null)
         {
             Previous_Page_Button.interactable = currentPage > 0;
@@ -359,9 +425,12 @@ public class CharacterList_Services : MonoBehaviour
 
         if (Next_Page_Button != null)
         {
-            var characterListToUse = GetFilteredCharacterList();
-            int maxPage = (characterListToUse.Count - 1) / VISIBLE_ITEMS_COUNT;
-            Next_Page_Button.interactable = currentPage < maxPage;
+            Next_Page_Button.interactable = currentPage < maxPageForButtons;
+        }
+
+        if (Last_Page_Button != null)
+        {
+            Last_Page_Button.interactable = currentPage < maxPageForButtons;
         }
     }
 
@@ -520,7 +589,8 @@ public class CharacterList_Services : MonoBehaviour
             {
                 GetLocalizedText("character_list_panel.sort_button.default_sort"),
                 GetLocalizedText("character_list_panel.sort_button.asc_sort"),
-                GetLocalizedText("character_list_panel.sort_button.desc_sort")
+                GetLocalizedText("character_list_panel.sort_button.desc_sort"),
+                GetLocalizedText("character_list_panel.sort_button.time_sort")
             };
 
             Search_Result_Sort_Dropdown.AddOptions(sortOptions);
@@ -533,6 +603,52 @@ public class CharacterList_Services : MonoBehaviour
         return Localization_Utils.Get_Localized_Text(key);
     }
 
+    private void UpdateTimerText(GameObject card, string characterName)
+    {
+        var timerObj = card.transform.Find("[Character List] Character Timer");
+        if (timerObj != null)
+        {
+            var timerText = timerObj.GetComponent<TextMeshProUGUI>();
+            if (timerText != null)
+            {
+                long totalSeconds = GetTotalTimerSeconds(characterName);
+                int hours = (int)(totalSeconds / 3600);
+                int minutes = (int)((totalSeconds % 3600) / 60);
+                int seconds = (int)(totalSeconds % 60);
+                
+                string timeStr = "";
+                if (hours > 0) timeStr += $"{hours}h ";
+                if (minutes > 0) timeStr += $"{minutes}m ";
+                if (seconds > 0 || timeStr == "") timeStr += $"{seconds}s";
+                timerText.text = timeStr.TrimEnd();
+            }
+        }
+    }
+    
+    private long GetTotalTimerSeconds(string characterName)
+    {
+        if (CharacterTimer_Services.Instance != null)
+        {
+            return CharacterTimer_Services.Instance.GetTotalTimerSeconds(characterName);
+        }
+        return 0;
+    }
+    
+    private IEnumerator UpdateTimers()
+    {
+        while (is_Character_List_On)
+        {
+            foreach (var card in activeCharacterCards)
+            {
+                if (card != null && card.activeInHierarchy && cardToCharacterName.ContainsKey(card))
+                {
+                    UpdateTimerText(card, cardToCharacterName[card]);
+                }
+            }
+            yield return new WaitForSeconds(1f);
+        }
+    }
+    
     private void OnDestroy()
     {
         LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
@@ -545,6 +661,11 @@ public class CharacterList_Services : MonoBehaviour
         if (Favorite_Characters_Toggle != null)
         {
             Favorite_Characters_Toggle.onValueChanged.RemoveAllListeners();
+        }
+        
+        if (timerUpdateCoroutine != null)
+        {
+            StopCoroutine(timerUpdateCoroutine);
         }
     }
 
@@ -592,6 +713,9 @@ public class CharacterList_Services : MonoBehaviour
                 break;
             case 2:
                 currentSortMode = SortMode.Descending;
+                break;
+            case 3:
+                currentSortMode = SortMode.ByTime;
                 break;
         }
 
@@ -641,6 +765,11 @@ public class CharacterList_Services : MonoBehaviour
                 // Z-A降序排序
                 SortByField(characterListToSort, false);
                 break;
+                
+            case SortMode.ByTime:
+                // 按陪伴时间排序（从长到短）
+                SortByTime(characterListToSort);
+                break;
         }
     }
 
@@ -687,6 +816,33 @@ public class CharacterList_Services : MonoBehaviour
         }
 
         // 更新对应的列表
+        if (string.IsNullOrEmpty(searchKeyword))
+        {
+            Character_List = sortedDict;
+        }
+        else
+        {
+            Filtered_Character_List = sortedDict;
+        }
+    }
+    
+    private void SortByTime(Dictionary<long, List<Character>> characterListToSort)
+    {
+        var sortedList = characterListToSort.ToList();
+      
+        sortedList.Sort((a, b) =>
+        {
+            long timeA = GetTotalTimerSeconds(a.Value.First().DevName);
+            long timeB = GetTotalTimerSeconds(b.Value.First().DevName);
+            return timeB.CompareTo(timeA);
+        });
+        
+        var sortedDict = new Dictionary<long, List<Character>>();
+        foreach (var item in sortedList)
+        {
+            sortedDict.Add(item.Key, item.Value);
+        }
+        
         if (string.IsNullOrEmpty(searchKeyword))
         {
             Character_List = sortedDict;
@@ -826,6 +982,9 @@ public class CharacterList_Services : MonoBehaviour
             {
                 Favorite_Toggle_Handler(character.First().DevName, character_favorite_button.gameObject);
             });
+            
+            UpdateTimerText(character_card_gameobject, character.First().DevName);
+            cardToCharacterName[character_card_gameobject] = character.First().DevName;
         }
 
         // 调整内容区域大小 - 基于当前页面实际显示的数量计算
@@ -910,6 +1069,7 @@ public class CharacterList_Services : MonoBehaviour
         }
 
         activeCharacterCards.Clear();
+        cardToCharacterName.Clear();
     }
 
     IEnumerator ForceLayoutUpdate()
