@@ -166,8 +166,19 @@ public class Character : MonoBehaviour
         Init_TimelineAsset();
         Disable_ChatDialog_GameObject();
 
-        Shader_Services.Instance.Replace_Render_Shader(lobby_gameobject_instantiated);
-        Shader_Services.Instance.Replace_All_Spine_Shader();
+        if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Direct3D11)
+        {
+
+            Shader_Services.Instance.Replace_Render_Shader(lobby_gameobject_instantiated);
+            Shader_Services.Instance.Replace_All_Spine_Shader();
+        }
+
+        if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Vulkan)
+        {
+
+            Shader_Services.Instance.Replace_Textures(lobby_gameobject_instantiated);
+
+        }
 
         player_director.RebindPlayableGraphOutputs();
         player_director.Play();
