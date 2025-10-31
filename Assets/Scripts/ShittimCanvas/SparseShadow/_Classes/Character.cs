@@ -173,13 +173,6 @@ public class Character : MonoBehaviour
             Shader_Services.Instance.Replace_All_Spine_Shader();
         }
 
-        if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Vulkan)
-        {
-
-            Shader_Services.Instance.Replace_Textures(lobby_gameobject_instantiated);
-
-        }
-
         player_director.RebindPlayableGraphOutputs();
         player_director.Play();
 
