@@ -51,10 +51,48 @@ public class CharacterTimer_Services : MonoBehaviour
                 }
                 
                 var timerData = timerConfig.Character_Timers[characterName];
-                timerData.Last_Start_Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                //TODO: 这个是群友反馈的计时器异常问题修复，待检查
+                
+                long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                
+                // 检查之前的状态：如果 Is_Active = true，说明上次关闭时没有正确停止计时器
+                // 先停止计时器，将时间累加到 Accumulated_Seconds
+                if (timerData.Is_Active && timerData.Last_Start_Timestamp > 0)
+                {
+                    long elapsed = currentTimestamp - timerData.Last_Start_Timestamp;
+                    
+                    // 如果时间差过大，可能是系统时间异常或windows导致的时间戳问题
+                    // 不累加时间，只重置时间戳
+                    long maxReasonableInterval = 24 * 60 * 60; //最多允许的时间差：24小时
+                    if (elapsed > 0 && elapsed < maxReasonableInterval)
+                    {
+                        timerData.Accumulated_Seconds += elapsed;
+                        Console_Log($"[CharacterTimer_Services] 恢复计时器时发现异常激活状态，已累加时间: {elapsed}秒 (总计: {timerData.Accumulated_Seconds}秒)");
+                    }
+                    else
+                    {
+                        Console_Log($"[CharacterTimer_Services] 恢复计时器时发现异常激活状态，时间差过大({elapsed}秒)，忽略此次累加。可能是时间戳异常！(Is_Active = true)");
+                    }
+                }
+
+                // 如果 Is_Active = false 但 Last_Start_Timestamp 存在但看起来不对劲
+                // 检查并重置时间戳
+                else if (!timerData.Is_Active && timerData.Last_Start_Timestamp > 0)
+                {
+                    long timeSinceLastTimestamp = currentTimestamp - timerData.Last_Start_Timestamp;
+                    long maxReasonableInterval = 24 * 60 * 60; //最多允许的时间差：24小时
+                    if (timeSinceLastTimestamp > maxReasonableInterval || timeSinceLastTimestamp < 0)
+                    {
+                        Console_Log($"[CharacterTimer_Services] 恢复计时器时发现时间戳异常（距离上次: {timeSinceLastTimestamp}秒），已重置时间戳。可能是快速启动导致的问题。(Is_Active = false)");
+                    }
+                }
+                
+                // 重新启动计时器：无论之前状态如何，都重置为当前时间
+                // 让SC启动时开始计算，而不是从上次关闭时的时间戳开始
+                timerData.Last_Start_Timestamp = currentTimestamp;
                 timerData.Is_Active = true;
                 
-                Console_Log($"恢复计时器: {characterName}");
+                Console_Log($"[CharacterTimer_Services] 恢复计时器: {characterName}, 已累计时间: {timerData.Accumulated_Seconds}秒, 时间戳已重置为当前时间");
             }
         }
     }
