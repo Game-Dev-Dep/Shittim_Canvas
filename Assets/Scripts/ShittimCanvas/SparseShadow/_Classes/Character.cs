@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using MX.Audio;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Timeline;
@@ -168,10 +169,13 @@ public class Character : MonoBehaviour
 
         if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Direct3D11)
         {
-
             Shader_Services.Instance.Replace_Render_Shader(lobby_gameobject_instantiated);
             Shader_Services.Instance.Replace_All_Spine_Shader();
         }
+
+        SpineCharacter spine_character = lobby_gameobject_instantiated.GetComponent<UILobbyContainer>().SpineCharacter;
+        AmbientAudioEvent ambient_audio_event = spine_character.ambientEvent;
+        StartCoroutine(Audio_Services.Instance.Play_AudioClip(Audio_Services.AudioClip_Type.SFX, "", null, ambient_audio_event.Clip, true));
 
         player_director.RebindPlayableGraphOutputs();
         player_director.Play();
@@ -262,7 +266,7 @@ public class Character : MonoBehaviour
                 Console_Log($"背景音乐: {BGM_Path} 循环起始: {bgm_excel_db.LoopStartTime} 循环结束: {bgm_excel_db.LoopEndTime}");
             }
         }
-        StartCoroutine(Audio_Services.Instance.Play_AudioClip(Audio_Services.AudioClip_Type.BGM, Path.Combine(File_Services.MX_Files_MediaResources_Folder_Path, $"{BGM_Path}.ogg"), null, true, loop_start_time, loop_end_time)); // 播放背景音乐
+        StartCoroutine(Audio_Services.Instance.Play_AudioClip(Audio_Services.AudioClip_Type.BGM, Path.Combine(File_Services.MX_Files_MediaResources_Folder_Path, $"{BGM_Path}.ogg"), null, null, true, loop_start_time, loop_end_time)); // 播放背景音乐
 
         Console_Log($"台词音频数: {memory_lobby_info.Audio_Files.Count} 开场语音: {has_Start_Idle_Audio} 台词文本数: {memory_lobby_info.Subtitles.Count} Talk动画数: {Talk_Animaiton_Num}");
     }

@@ -60,7 +60,7 @@ public class Audio_Services : MonoBehaviour
     public float BGM_Sound = 0f;
     public float UI_SFX_Sound = 0f; // UI音效音量
     public List<BGMExcel_DB> BGMExcel_DB_list;
-    
+
     // UI音效对象池优化方法
     private Queue<AudioSource> uiSfxPool = new Queue<AudioSource>();
     private List<AudioSource> activeUiSfxSources = new List<AudioSource>();
@@ -80,12 +80,12 @@ public class Audio_Services : MonoBehaviour
         Get_Config();
         InitializeUISfxPool();
     }
-    
+
     // 初始化UI音效AudioSource对象池
     private void InitializeUISfxPool()
     {
         if (UI_SFX_GameObject == null) return;
-        
+
         //预创建10个
         for (int i = 0; i < 10; i++)
         {
@@ -96,7 +96,7 @@ public class Audio_Services : MonoBehaviour
             uiSfxPool.Enqueue(audioSource);
         }
     }
-    
+
     // 从对象池获取AudioSource
     private AudioSource GetPooledAudioSource()
     {
@@ -104,7 +104,7 @@ public class Audio_Services : MonoBehaviour
         {
             return uiSfxPool.Dequeue();
         }
-        
+
         // 如果对象池为空，创建新的AudioSource
         AudioSource audioSource = UI_SFX_GameObject.AddComponent<AudioSource>();
         audioSource.outputAudioMixerGroup = UI_SFX_Audio_Mixer_Group;
@@ -112,12 +112,12 @@ public class Audio_Services : MonoBehaviour
         audioSource.playOnAwake = false;
         return audioSource;
     }
-    
+
     // 将AudioSource还给对象池
     private void ReturnToPool(AudioSource audioSource)
     {
         if (audioSource == null) return;
-        
+
         audioSource.Stop();
         audioSource.clip = null;
         uiSfxPool.Enqueue(audioSource);
@@ -178,13 +178,13 @@ public class Audio_Services : MonoBehaviour
     public IEnumerator Play_AudioClip(
         AudioClip_Type audioclip_type,
         string audio_file_path,
+        AudioSource audio_source = null,
         AudioClip audio_clip = null,
         bool is_loop = false,
         float loop_start_time = 0f,
         float loop_end_time = 0f
     )
     {
-        AudioSource audio_source = null;
 
         if (audio_clip == null)
         {
@@ -209,6 +209,11 @@ public class Audio_Services : MonoBehaviour
                 break;
 
             case AudioClip_Type.SFX:
+                audio_source = SFX_GameObject.AddComponent<AudioSource>();
+                audio_source.outputAudioMixerGroup = SFX_Audio_Mixer_Group;
+                audio_source.clip = audio_clip;
+                audio_source.volume = 0.5f;
+                audio_source.loop = is_loop;
                 break;
 
             case AudioClip_Type.BGM:
@@ -293,38 +298,38 @@ public class Audio_Services : MonoBehaviour
             Console_Log("UI音效播放失败：AudioClip为空", Debug_Services.LogLevel.Info);
             return;
         }
-        
+
         if (UI_SFX_GameObject == null)
         {
             Console_Log("UI音效播放失败：UI_SFX_GameObject未设置", Debug_Services.LogLevel.Info);
             return;
         }
-        
+
         if (UI_SFX_Audio_Mixer_Group == null)
         {
             Console_Log("UI音效播放失败：UI_SFX_Audio_Mixer_Group未设置", Debug_Services.LogLevel.Info);
             return;
         }
-        
+
         // 从对象池获取AudioSource
         AudioSource audioSource = GetPooledAudioSource();
         audioSource.clip = audioClip;
         audioSource.volume = volumeMultiplier;
-        
+
         audioSource.Play();
         activeUiSfxSources.Add(audioSource);
         Console_Log($"播放UI音效: {audioClip.name}, 音量倍数: {volumeMultiplier}", Debug_Services.LogLevel.Debug);
-        
+
         StartCoroutine(ReturnAudioSourceToPoolAfterPlay(audioSource));
     }
-    
+
     private IEnumerator ReturnAudioSourceToPoolAfterPlay(AudioSource audioSource)
     {
         if (audioSource == null || audioSource.clip == null) yield break;
-        
+
         // 等
         yield return new WaitForSeconds(audioSource.clip.length);
-        
+
         // return给对象池
         ReturnToPool(audioSource);
     }
