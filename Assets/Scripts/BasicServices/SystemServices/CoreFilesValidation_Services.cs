@@ -1,13 +1,34 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization;
 
 public class CoreFilesValidation_Services : MonoBehaviour
-{
+{ 
+    public static CoreFilesValidation_Services Instance { get; set; }
+    
     [Header("UI Elements")]
     [SerializeField] private GameObject fileCheckBackground;
     [SerializeField] private Button openRootFolderButton;
     [SerializeField] private Button restartButton;
+    
+    private bool isCharacterErrorShown = false;
+    private string currentCharacterName = "";
+    private string currentErrorMessage = "";
+    
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    } 
     
     private void Start()
     {
@@ -22,13 +43,68 @@ public class CoreFilesValidation_Services : MonoBehaviour
         {
             restartButton.onClick.AddListener(RestartApplication);
         }
+        
+        LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
+    }
+    
+    private void OnDestroy()
+    {
+        LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
+    }
+    
+    private void OnLanguageChanged(Locale locale)
+    {
+        if (isCharacterErrorShown && !string.IsNullOrEmpty(currentCharacterName))
+        {
+            UpdateCharacterErrorText();
+        }
+    }
+    
+    // 用于更新角色加载错误界面的文本
+    private void UpdateCharacterErrorText()
+    {
+        Transform descriptionText = fileCheckBackground.transform.Find("[File Check] Description Text");
+        if (descriptionText != null)
+        {
+            TextMeshProUGUI tmp = descriptionText.GetComponent<TextMeshProUGUI>();
+            if (tmp != null)
+            {
+                string localizedError = Localization_Utils.Get_Localized_Text("file_check_panel.character_load_error");
+                string localizedCharacter = Localization_Utils.Get_Localized_Text("file_check_panel.character_name");
+                string localizedSupplementalInformation = Localization_Utils.Get_Localized_Text("file_check_panel.supplemental_information");
+                string localizedErrorMsg = Localization_Utils.Get_Localized_Text("file_check_panel.null_reference_error");
+                string displayCharacterName = !string.IsNullOrEmpty(currentCharacterName) ? currentCharacterName : Localization_Utils.Get_Localized_Text("file_check_panel.unknown_character");
+                string errorText = $"{localizedError}\n\n{localizedCharacter}: {displayCharacterName}\n{localizedErrorMsg}: {currentErrorMessage}\n\n{localizedSupplementalInformation}";
+                
+                MonoBehaviour[] components = descriptionText.GetComponents<MonoBehaviour>();
+                bool foundLocalizationScript = false;
+                foreach (MonoBehaviour comp in components)
+                {
+                    if (comp != null && comp.GetType().Name == "Localization_To_TMP")
+                    {
+                        System.Reflection.MethodInfo setManualTextMethod = comp.GetType().GetMethod("Set_Manual_Text", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                        if (setManualTextMethod != null)
+                        {
+                            setManualTextMethod.Invoke(comp, new object[] { errorText });
+                            foundLocalizationScript = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!foundLocalizationScript)
+                {
+                    tmp.text = errorText;
+                }
+            }
+        }
     }
     
     private System.Collections.IEnumerator CheckCoreFilesCoroutine()
     {
         yield return new WaitForSeconds(0.1f);
         
-        if (!ValidateCoreFiles())
+        if (!isCharacterErrorShown && !ValidateCoreFiles())
         {
             ShowCoreFilesMissingUI();
         }
@@ -79,15 +155,39 @@ public class CoreFilesValidation_Services : MonoBehaviour
     
     private void ShowCoreFilesMissingUI()
     {
-        if (fileCheckBackground != null)
+        if (fileCheckBackground == null) return;
+        
+        fileCheckBackground.SetActive(true);
+        
+        if (!isCharacterErrorShown)
         {
-            fileCheckBackground.SetActive(true);
-            Debug.LogWarning("[CoreFilesValidation_Services]显示Core Files缺失提示UI");
+            Transform descriptionText = fileCheckBackground.transform.Find("[File Check] Description Text");
+            if (descriptionText != null)
+            {
+                TextMeshProUGUI tmp = descriptionText.GetComponent<TextMeshProUGUI>();
+                if (tmp != null)
+                {
+                    string localizedError = Localization_Utils.Get_Localized_Text("file_check_panel.core_files_missing");
+                    tmp.text = localizedError;
+                }
+            }
         }
-        else
-        {
-            Debug.LogError("[CoreFilesValidation_Services]File Check Background UI未设置");
-        }
+        
+        Debug.LogWarning("[CoreFilesValidation_Services]显示Core Files缺失提示UI");
+    }
+    
+    public void ShowCharacterErrorUI(string characterName, string errorMessage)
+    {
+        if (fileCheckBackground == null) return;
+        
+        isCharacterErrorShown = true;
+        currentCharacterName = characterName;
+        currentErrorMessage = errorMessage;
+        fileCheckBackground.SetActive(true);
+        
+        UpdateCharacterErrorText();
+        
+        Debug.LogError($"[CoreFilesValidation_Services]显示角色加载错误UI: {characterName} - {errorMessage}");
     }
     
     public void OpenRootFolder()
