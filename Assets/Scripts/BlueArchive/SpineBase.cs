@@ -34,7 +34,7 @@ public class SpineBase : MonoBehaviour // TypeDefIndex: 3197
     //[SerializeField]
     //private AudioPlayer audioPlayer; // 0x80
     [SerializeField]
-    private AmbientAudioEvent ambientEvent; // 0x88
+    public AmbientAudioEvent ambientEvent; // 0x88
 
     // Properties
     protected Action OnetimeActionOnEnable { get; set; }
