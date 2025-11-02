@@ -212,7 +212,7 @@ public class Audio_Services : MonoBehaviour
                 audio_source = SFX_GameObject.AddComponent<AudioSource>();
                 audio_source.outputAudioMixerGroup = SFX_Audio_Mixer_Group;
                 audio_source.clip = audio_clip;
-                audio_source.volume = 0.5f;
+                audio_source.volume = 0.3f;
                 audio_source.loop = is_loop;
                 break;
 

@@ -185,9 +185,18 @@ public class Character : MonoBehaviour
             Shader_Services.Instance.Replace_All_Spine_Shader();
         }
 
+        if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Vulkan)
+        {
+            Shader_Services.Instance.Replace_Textures(lobby_gameobject_instantiated);
+        }
+
         SpineCharacter spine_character = lobby_gameobject_instantiated.GetComponent<UILobbyContainer>().SpineCharacter;
         AmbientAudioEvent ambient_audio_event = spine_character.ambientEvent;
-        StartCoroutine(Audio_Services.Instance.Play_AudioClip(Audio_Services.AudioClip_Type.SFX, "", null, ambient_audio_event.Clip, true));
+        if (ambient_audio_event != null)
+        {
+            StartCoroutine(Audio_Services.Instance.Play_AudioClip(Audio_Services.AudioClip_Type.SFX, "", null, ambient_audio_event.Clip, true));
+        }
+
 
         player_director.RebindPlayableGraphOutputs();
         player_director.Play();
