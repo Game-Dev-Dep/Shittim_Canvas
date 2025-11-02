@@ -63,86 +63,98 @@ public class Character : MonoBehaviour
     /// </summary>
     private void Update()
     {
-
+        try
+        {
 #if UNITY_EDITOR
 
-        // ===== 编辑模式下，如果正在录制，则调整摄像机位置和缩放 ===== \\
-        if (Recorder_Services.Instance.is_Record && Camera_Services.Instance.MemoryLobby_Camera != null && !is_StoryMode_Camera_Fixed)
-        {
-            Camera_Services.Instance.MemoryLobby_Camera.transform.position = new Vector3(0f, 0f, 0f);
-            Camera_Services.Instance.MemoryLobby_Camera.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-            Camera_Services.Instance.MemoryLobby_Camera.orthographicSize = Recorder_Services.Instance.Recorder_Camera_Size;
-            is_StoryMode_Camera_Fixed = true;
-            Recorder_Services.Console_Log($"已调整摄像机缩放: {Recorder_Services.Instance.Recorder_Camera_Size}");
-        }
+            // ===== 编辑模式下，如果正在录制，则调整摄像机位置和缩放 ===== \\
+            if (Recorder_Services.Instance.is_Record && Camera_Services.Instance.MemoryLobby_Camera != null && !is_StoryMode_Camera_Fixed)
+            {
+                Camera_Services.Instance.MemoryLobby_Camera.transform.position = new Vector3(0f, 0f, 0f);
+                Camera_Services.Instance.MemoryLobby_Camera.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                Camera_Services.Instance.MemoryLobby_Camera.orthographicSize = Recorder_Services.Instance.Recorder_Camera_Size;
+                is_StoryMode_Camera_Fixed = true;
+                Recorder_Services.Console_Log($"已调整摄像机缩放: {Recorder_Services.Instance.Recorder_Camera_Size}");
+            }
 
 #endif
 
-        // ===== 根据摄像机缩放调整眼动追踪的触发范围 EyeIK ===== \\
-        if (EyeIK_GameObject != null)
-        {
-            if (Camera_Services.Instance.MemoryLobby_Camera.orthographicSize > 1)
+            // ===== 根据摄像机缩放调整眼动追踪的触发范围 EyeIK ===== \\
+            if (EyeIK_GameObject != null)
             {
-                EyeIK_GameObject.transform.localScale = new Vector3(Camera_Services.Instance.MemoryLobby_Camera.orthographicSize, Camera_Services.Instance.MemoryLobby_Camera.orthographicSize, 1);
+                if (Camera_Services.Instance.MemoryLobby_Camera.orthographicSize > 1)
+                {
+                    EyeIK_GameObject.transform.localScale = new Vector3(Camera_Services.Instance.MemoryLobby_Camera.orthographicSize, Camera_Services.Instance.MemoryLobby_Camera.orthographicSize, 1);
+                }
+                else
+                {
+                    if (EyeIK_GameObject.transform.localScale != new Vector3(1, 1, 1))
+                    {
+                        EyeIK_GameObject.transform.localScale = new Vector3(1, 1, 1);
+                    }
+                }
+            }
+
+            // ===== 处理 Idle_01 动画的同步播放动画 ===== \\
+            if (!is_Idle_Sync_SpineClip_Inited)
+            {
+                for (int i = 0; i < Idle_SpineClip.SyncPlayClipObjects.Count(); i++)
+                {
+                    if (Idle_SpineClip.SyncPlayClipObjects[i] != null)
+                    {
+                        Idle_Sync_SpineClip_Track_List.Add(timeline_asset.CreateTrack<SpineAnimationStateTrack>(null, $"Idle_Sync_Clip_0{i}"));
+                        Idle_Sync_SpineClip_Track_List[i].trackIndex = i + 1;
+                        player_director.SetGenericBinding(Idle_Sync_SpineClip_Track_List[i], skeleton_animation);
+                        skeleton_animation.AnimationState.SetAnimation(Idle_Sync_SpineClip_Track_List[i].trackIndex, ((SpineClip)Idle_SpineClip.SyncPlayClipObjects[i]).ClipName, ((SpineClip)Idle_SpineClip.SyncPlayClipObjects[i]).Loop);
+                        Console_Log($"轨道 {Idle_Sync_SpineClip_Track_List[i].trackIndex} 上播放同步动画 {((SpineClip)Idle_SpineClip.SyncPlayClipObjects[i]).ClipName}", Debug_Services.LogLevel.Core);
+                    }
+                }
+                is_Idle_Sync_SpineClip_Inited = true;
+            }
+
+            // ===== 判断是否处于播放待机动画状态 ===== \\
+            if (!is_Character_Idle_Mode)
+            {
+                if (skeleton_animation.AnimationState.GetCurrent(0)?.Animation.Name == "Idle_01") is_Character_Idle_Mode = true;
+                else is_Character_Idle_Mode = false;
+                Index_Services.Instance.is_Idle_Mode = is_Character_Idle_Mode;
             }
             else
             {
-                if (EyeIK_GameObject.transform.localScale != new Vector3(1, 1, 1))
-                {
-                    EyeIK_GameObject.transform.localScale = new Vector3(1, 1, 1);
-                }
-            }
-        }
-
-        // ===== 处理 Idle_01 动画的同步播放动画 ===== \\
-        if (!is_Idle_Sync_SpineClip_Inited)
-        {
-            for (int i = 0; i < Idle_SpineClip.SyncPlayClipObjects.Count(); i++)
-            {
-                if (Idle_SpineClip.SyncPlayClipObjects[i] != null)
-                {
-                    Idle_Sync_SpineClip_Track_List.Add(timeline_asset.CreateTrack<SpineAnimationStateTrack>(null, $"Idle_Sync_Clip_0{i}"));
-                    Idle_Sync_SpineClip_Track_List[i].trackIndex = i + 1;
-                    player_director.SetGenericBinding(Idle_Sync_SpineClip_Track_List[i], skeleton_animation);
-                    skeleton_animation.AnimationState.SetAnimation(Idle_Sync_SpineClip_Track_List[i].trackIndex, ((SpineClip)Idle_SpineClip.SyncPlayClipObjects[i]).ClipName, ((SpineClip)Idle_SpineClip.SyncPlayClipObjects[i]).Loop);
-                    Console_Log($"轨道 {Idle_Sync_SpineClip_Track_List[i].trackIndex} 上播放同步动画 {((SpineClip)Idle_SpineClip.SyncPlayClipObjects[i]).ClipName}", Debug_Services.LogLevel.Core);
-                }
-            }
-            is_Idle_Sync_SpineClip_Inited = true;
-        }
-
-        // ===== 判断是否处于播放待机动画状态 ===== \\
-        if (!is_Character_Idle_Mode)
-        {
-            if (skeleton_animation.AnimationState.GetCurrent(0)?.Animation.Name == "Idle_01") is_Character_Idle_Mode = true;
-            else is_Character_Idle_Mode = false;
-            Index_Services.Instance.is_Idle_Mode = is_Character_Idle_Mode;
-        }
-        else
-        {
 
 #if UNITY_EDITOR
 
-            // ===== 编辑模式下，录制故事模式视频 ===== \\
-            if (Recorder_Services.Instance.is_Record && !is_StoryMode_Started)
-            {
-                StartCoroutine(Recorder_Services.Instance.Play_Talk_Clips_StoryMode(skeleton_animation));
-                is_StoryMode_Started = true;
-                Recorder_Services.Console_Log("开始录制故事模式");
-            }
-
-            // ===== 编辑模式下，获取截图 ===== \\
-            if (Screenshot_Services.Instance.is_Screenshot)
-            {
-                if (!is_Screenshot_Took)
+                // ===== 编辑模式下，录制故事模式视频 ===== \\
+                if (Recorder_Services.Instance.is_Record && !is_StoryMode_Started)
                 {
-                    Screenshot_Services.Instance.Take_Screenshot(Character_Name);
-                    is_Screenshot_Took = true;
+                    StartCoroutine(Recorder_Services.Instance.Play_Talk_Clips_StoryMode(skeleton_animation));
+                    is_StoryMode_Started = true;
+                    Recorder_Services.Console_Log("开始录制故事模式");
                 }
-            }
+
+                // ===== 编辑模式下，获取截图 ===== \\
+                if (Screenshot_Services.Instance.is_Screenshot)
+                {
+                    if (!is_Screenshot_Took)
+                    {
+                        Screenshot_Services.Instance.Take_Screenshot(Character_Name);
+                        is_Screenshot_Took = true;
+                    }
+                }
 
 #endif
 
+            }
+        }
+        // 当catch到NullReferenceException时，显示角色加载错误界面
+        catch (System.NullReferenceException ex)
+        {
+            if (CoreFilesValidation_Services.Instance != null)
+            {
+                string characterName = !string.IsNullOrEmpty(Character_Name) ? Character_Name : "";
+                CoreFilesValidation_Services.Instance.ShowCharacterErrorUI(characterName, ex.Message);
+            }
+            enabled = false;
         }
     }
 

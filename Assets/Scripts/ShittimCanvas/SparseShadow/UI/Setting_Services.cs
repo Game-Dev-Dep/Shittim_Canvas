@@ -59,6 +59,27 @@ public class Setting_Services : MonoBehaviour
     private LocalizedString localizedString = new LocalizedString();
     private int buildVersionClickCount = 0; // 构建版本点击计数器
 
+    private string GetGraphicsAPIString()
+    {
+        UnityEngine.Rendering.GraphicsDeviceType deviceType = SystemInfo.graphicsDeviceType;
+        switch (deviceType)
+        {
+            case UnityEngine.Rendering.GraphicsDeviceType.Direct3D11:
+            case UnityEngine.Rendering.GraphicsDeviceType.Direct3D12:
+                return "DirectX";
+            case UnityEngine.Rendering.GraphicsDeviceType.Vulkan:
+                return "Vulkan";
+            case UnityEngine.Rendering.GraphicsDeviceType.OpenGLCore:
+            case UnityEngine.Rendering.GraphicsDeviceType.OpenGLES2:
+            case UnityEngine.Rendering.GraphicsDeviceType.OpenGLES3:
+                return "OpenGL";
+            case UnityEngine.Rendering.GraphicsDeviceType.Metal:
+                return "Metal";
+            default:
+                return deviceType.ToString();
+        }
+    }
+
     private void Get_Setting_Config()
     {
         setting_config = Config_Services.Instance.Global_Setting_Config;
@@ -628,6 +649,14 @@ public class Setting_Services : MonoBehaviour
                             Changelog_Services.Instance.Show_Changelog();
                         }
                     }
+                },
+                new Setting_Detail_Option
+                {
+                    Title_Key = "settings_panel.about.graphics_api",
+                    Description_Key = "settings_panel.about.graphics_api.desc",
+                    Setting_Detail_Option_Type = Setting_Detail_Option_Type.Text,
+                    Text_Value = GetGraphicsAPIString(),
+                    Text_Click_Callback = null
                 },
                 new Setting_Detail_Option
                 {
