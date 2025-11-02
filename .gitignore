@@ -26,9 +26,6 @@
 /[Aa]ssets/Addressables_Temp*
 /[Aa]ssets/StreamingAssets/aa*
 
-# 忽略 Unity 字体文件夹
-/[Aa]ssets/Resources/Fonts/Original_Font
-
 # 忽略 Shittim Canvs 自定义文件夹
 RecordVideos/
 Screenshots/
