@@ -303,33 +303,64 @@ public class Shader_Services : MonoBehaviour
                         {
                             string shader_property_name = ab_material.shader.GetPropertyName(j) ?? "";
                             ShaderPropertyType propertyType = ab_material.shader.GetPropertyType(j);
-                            if (propertyType == ShaderPropertyType.Texture && ab_material.GetTexture(shader_property_name) != null)
+                            if (propertyType == ShaderPropertyType.Texture)
                             {
-                                string ab_texture2d_name = ab_material.GetTexture(shader_property_name).name;
-                                TextureWrapMode ab_texture_wrapmode = ab_material.GetTexture(shader_property_name).wrapMode;
-
-                                Console_Log($"   └字段 {shader_property_name} 为 {ab_texture_wrapmode} 模式的 Texture: {ab_texture2d_name} ", Debug_Services.LogLevel.Core);
-                                bool is_spine_texture = (
-                                    ab_material.shader.name == "Spine/Skeleton MX Standard" ||
-                                    ab_material.shader.name == "Spine/Skeleton" ||
-                                    ab_material.shader.name == "Spine/Blend Modes/Skeleton PMA Multiply" ||
-                                    ab_material.shader.name == "Spine/Skeleton MX Portrait"
-                                )
-                                    ? true
-                                    : false;
-
-                                if(!File.Exists(Path.Combine(is_spine_texture ? File_Services.Student_Textures_Folder_Path : File_Services.MX_Files_Textures_Folder_Path, ab_texture2d_name + ".png")))
+                                Texture original_texture = ab_material.GetTexture(shader_property_name);
+                                if (propertyType == ShaderPropertyType.Texture && ab_material.GetTexture(shader_property_name) != null)
                                 {
-                                    continue;
-                                }
+                                    string ab_texture2d_name = ab_material.GetTexture(shader_property_name).name;
+                                    TextureWrapMode ab_texture_wrapmode = ab_material.GetTexture(shader_property_name).wrapMode;
 
-                                ab_material.SetTexture(shader_property_name, Texture_Services.Get_Texture_By_Path(Path.Combine(is_spine_texture ? File_Services.Student_Textures_Folder_Path : File_Services.MX_Files_Textures_Folder_Path, ab_texture2d_name + ".png")));
-                                ab_material.GetTexture(shader_property_name).wrapMode = ab_texture_wrapmode;
+                                    Console_Log($"   └字段 {shader_property_name} 为 {ab_texture_wrapmode} 模式的 Texture: {ab_texture2d_name} ", Debug_Services.LogLevel.Core);
+
+                                    Texture2D new_texture;
+
+                                    if (!File.Exists(Path.Combine(File_Services.MX_Files_Textures_Folder_Path, ab_texture2d_name + ".png")))
+                                    {
+                                        if(File.Exists(Path.Combine(File_Services.Student_Textures_Folder_Path, ab_texture2d_name + ".png")))
+                                        {
+                                            new_texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.Student_Textures_Folder_Path, ab_texture2d_name + ".png"));
+                                        }
+                                        else
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        new_texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.MX_Files_Textures_Folder_Path, ab_texture2d_name + ".png"));
+                                    }
+
+                                    CopyTextureSettings(original_texture, new_texture);
+
+                                    ab_material.SetTexture(shader_property_name, new_texture);
+                                }
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    private void CopyTextureSettings(Texture source, Texture target)
+    {
+        if (source == null || target == null)
+        {
+            return;
+        }
+
+        target.wrapMode = source.wrapMode;
+        target.wrapModeU = source.wrapModeU;
+        target.wrapModeV = source.wrapModeV;
+        target.wrapModeW = source.wrapModeW;
+        target.filterMode = source.filterMode;
+        target.anisoLevel = source.anisoLevel;
+        target.mipMapBias = source.mipMapBias;
+
+        if (source is Texture2D sourceTexture2D && target is Texture2D targetTexture2D)
+        {
+            Console_Log($"    └已复制纹理设置: WrapMode={target.wrapMode}, FilterMode={target.filterMode}, AnisoLevel={target.anisoLevel}", Debug_Services.LogLevel.Core);
         }
     }
 
