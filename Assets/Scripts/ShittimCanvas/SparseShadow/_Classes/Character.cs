@@ -187,7 +187,8 @@ public class Character : MonoBehaviour
 
         if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Vulkan)
         {
-            Shader_Services.Instance.Replace_Textures(lobby_gameobject_instantiated);
+            Shader_Services.Instance.Replace_Sprites(lobby_gameobject_instantiated);
+            Shader_Services.Instance.Replace_Textures();
         }
 
         SpineCharacter spine_character = lobby_gameobject_instantiated.GetComponent<UILobbyContainer>().SpineCharacter;

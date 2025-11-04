@@ -265,7 +265,57 @@ public class Shader_Services : MonoBehaviour
         }
     }
 
-    public void Replace_Textures(GameObject gameobject)
+    public void Replace_Textures()
+    {
+        Material[] materials = Resources.FindObjectsOfTypeAll<Material>();
+
+        foreach (Material material in materials)
+        {
+            int shader_property_count = material.shader.GetPropertyCount();
+            Console_Log($"  └Material: {material.name} 的 Shader: {material.shader.name} 有 {shader_property_count} 个字段", Debug_Services.LogLevel.Core);
+
+            for (int j = 0; j < shader_property_count; j++)
+            {
+                string shader_property_name = material.shader.GetPropertyName(j) ?? "";
+                ShaderPropertyType propertyType = material.shader.GetPropertyType(j);
+                if (propertyType == ShaderPropertyType.Texture)
+                {
+                    Texture original_texture = material.GetTexture(shader_property_name);
+                    if (propertyType == ShaderPropertyType.Texture && material.GetTexture(shader_property_name) != null)
+                    {
+                        string ab_texture2d_name = material.GetTexture(shader_property_name).name;
+                        TextureWrapMode ab_texture_wrapmode = material.GetTexture(shader_property_name).wrapMode;
+
+                        Console_Log($"   └字段 {shader_property_name} 为 {ab_texture_wrapmode} 模式的 Texture: {ab_texture2d_name} ", Debug_Services.LogLevel.Core);
+
+                        Texture2D new_texture;
+
+                        if (!File.Exists(Path.Combine(File_Services.MX_Files_Textures_Folder_Path, ab_texture2d_name + ".png")))
+                        {
+                            if (File.Exists(Path.Combine(File_Services.Student_Textures_Folder_Path, ab_texture2d_name + ".png")))
+                            {
+                                new_texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.Student_Textures_Folder_Path, ab_texture2d_name + ".png"));
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            new_texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.MX_Files_Textures_Folder_Path, ab_texture2d_name + ".png"));
+                        }
+
+                        CopyTextureSettings(original_texture, new_texture);
+
+                        material.SetTexture(shader_property_name, new_texture);
+                    }
+                }
+            }
+        }
+    }
+
+    public void Replace_Sprites(GameObject gameobject)
     {
         Renderer[] renderers = gameobject.GetComponentsInChildren<Renderer>(true);
         foreach (Renderer renderer in renderers)
@@ -286,59 +336,59 @@ public class Shader_Services : MonoBehaviour
                         renderer.gameObject.GetComponent<SpriteRenderer>().sprite = local_sprite;
                     }
 
-                    continue;
+                    // continue;
                 }
-
-                Console_Log($" └Renderer 组件下含有 {renderer.sharedMaterials.Length} 个 Material 组件", Debug_Services.LogLevel.Core);
-
-                for (int i = 0; i < renderer.sharedMaterials.Length; i++)
-                {
-                    Material ab_material = renderer.sharedMaterials[i];
-                    if (ab_material != null)
-                    {
-                        int shader_property_count = ab_material.shader.GetPropertyCount();
-                        Console_Log($"  └Material: {ab_material.name} 的 Shader: {ab_material.shader.name} 有 {shader_property_count} 个字段", Debug_Services.LogLevel.Core);
-
-                        for (int j = 0; j < shader_property_count; j++)
-                        {
-                            string shader_property_name = ab_material.shader.GetPropertyName(j) ?? "";
-                            ShaderPropertyType propertyType = ab_material.shader.GetPropertyType(j);
-                            if (propertyType == ShaderPropertyType.Texture)
-                            {
-                                Texture original_texture = ab_material.GetTexture(shader_property_name);
-                                if (propertyType == ShaderPropertyType.Texture && ab_material.GetTexture(shader_property_name) != null)
-                                {
-                                    string ab_texture2d_name = ab_material.GetTexture(shader_property_name).name;
-                                    TextureWrapMode ab_texture_wrapmode = ab_material.GetTexture(shader_property_name).wrapMode;
-
-                                    Console_Log($"   └字段 {shader_property_name} 为 {ab_texture_wrapmode} 模式的 Texture: {ab_texture2d_name} ", Debug_Services.LogLevel.Core);
-
-                                    Texture2D new_texture;
-
-                                    if (!File.Exists(Path.Combine(File_Services.MX_Files_Textures_Folder_Path, ab_texture2d_name + ".png")))
-                                    {
-                                        if(File.Exists(Path.Combine(File_Services.Student_Textures_Folder_Path, ab_texture2d_name + ".png")))
-                                        {
-                                            new_texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.Student_Textures_Folder_Path, ab_texture2d_name + ".png"));
-                                        }
-                                        else
-                                        {
-                                            continue;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        new_texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.MX_Files_Textures_Folder_Path, ab_texture2d_name + ".png"));
-                                    }
-
-                                    CopyTextureSettings(original_texture, new_texture);
-
-                                    ab_material.SetTexture(shader_property_name, new_texture);
-                                }
-                            }
-                        }
-                    }
-                }
+                //
+                // Console_Log($" └Renderer 组件下含有 {renderer.sharedMaterials.Length} 个 Material 组件", Debug_Services.LogLevel.Core);
+                //
+                // for (int i = 0; i < renderer.sharedMaterials.Length; i++)
+                // {
+                //     Material ab_material = renderer.sharedMaterials[i];
+                //     if (ab_material != null)
+                //     {
+                //         int shader_property_count = ab_material.shader.GetPropertyCount();
+                //         Console_Log($"  └Material: {ab_material.name} 的 Shader: {ab_material.shader.name} 有 {shader_property_count} 个字段", Debug_Services.LogLevel.Core);
+                //
+                //         for (int j = 0; j < shader_property_count; j++)
+                //         {
+                //             string shader_property_name = ab_material.shader.GetPropertyName(j) ?? "";
+                //             ShaderPropertyType propertyType = ab_material.shader.GetPropertyType(j);
+                //             if (propertyType == ShaderPropertyType.Texture)
+                //             {
+                //                 Texture original_texture = ab_material.GetTexture(shader_property_name);
+                //                 if (propertyType == ShaderPropertyType.Texture && ab_material.GetTexture(shader_property_name) != null)
+                //                 {
+                //                     string ab_texture2d_name = ab_material.GetTexture(shader_property_name).name;
+                //                     TextureWrapMode ab_texture_wrapmode = ab_material.GetTexture(shader_property_name).wrapMode;
+                //
+                //                     Console_Log($"   └字段 {shader_property_name} 为 {ab_texture_wrapmode} 模式的 Texture: {ab_texture2d_name} ", Debug_Services.LogLevel.Core);
+                //
+                //                     Texture2D new_texture;
+                //
+                //                     if (!File.Exists(Path.Combine(File_Services.MX_Files_Textures_Folder_Path, ab_texture2d_name + ".png")))
+                //                     {
+                //                         if(File.Exists(Path.Combine(File_Services.Student_Textures_Folder_Path, ab_texture2d_name + ".png")))
+                //                         {
+                //                             new_texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.Student_Textures_Folder_Path, ab_texture2d_name + ".png"));
+                //                         }
+                //                         else
+                //                         {
+                //                             continue;
+                //                         }
+                //                     }
+                //                     else
+                //                     {
+                //                         new_texture = Texture_Services.Get_Texture_By_Path(Path.Combine(File_Services.MX_Files_Textures_Folder_Path, ab_texture2d_name + ".png"));
+                //                     }
+                //
+                //                     CopyTextureSettings(original_texture, new_texture);
+                //
+                //                     ab_material.SetTexture(shader_property_name, new_texture);
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
             }
         }
     }
