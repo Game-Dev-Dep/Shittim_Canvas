@@ -13,10 +13,23 @@ using UnityEngine.Rendering.Universal;
 using Spine;
 using Spine.Unity;
 using Spine.Unity.Playables;
+using Newtonsoft.Json;
 
 #if UNITY_EDITOR
 using UnityEditor.Recorder;
 #endif
+
+[System.Serializable]
+public class SpecialSpineBoneConfig
+{
+    public string BreastName;
+}
+
+[System.Serializable]
+public class SpecialSpineConfig
+{
+    public Dictionary<string, List<SpecialSpineBoneConfig>> Characters;
+}
 
 public class Character : MonoBehaviour
 {
@@ -198,6 +211,7 @@ public class Character : MonoBehaviour
             StartCoroutine(Audio_Services.Instance.Play_AudioClip(Audio_Services.AudioClip_Type.SFX, "", null, ambient_audio_event.Clip, true));
         }
 
+        Init_Dynamic_Bone_IK();
 
         player_director.RebindPlayableGraphOutputs();
         player_director.Play();
@@ -414,6 +428,13 @@ public class Character : MonoBehaviour
             if(EyeIK_GameObject != null)
             {
                 Console_Log("成功获取到 EyeIK 的 GameObject");
+                Console_Log($"EyeIK localPosition: {EyeIK_GameObject.transform.localPosition}, position: {EyeIK_GameObject.transform.position}");
+                
+                Transform hairPatIK = lobby_gameobject_instantiated.GetComponent<UILobbyContainer>().SpineCharacter.gameObject.transform.Find("HairPatIK");
+                if (hairPatIK != null)
+                {
+                    Console_Log($"HairPatIK localPosition: {hairPatIK.localPosition}, position: {hairPatIK.position}");
+                }
             }
             else
             {
@@ -610,6 +631,13 @@ public class Character : MonoBehaviour
         Audio_Services.Remove_All_AudioSources(Audio_Services.Instance.SFX_GameObject);
         Destroy(Audio_Services.Instance.BGM_GameObject.GetComponent<Audio_Loop_Controller>());
         Audio_Services.Remove_All_AudioSources(Audio_Services.Instance.BGM_GameObject);
+        
+        foreach (GameObject ik_obj in dynamic_IK_GameObjects)
+        {
+            if (ik_obj != null) Destroy(ik_obj);
+        }
+        dynamic_IK_GameObjects.Clear();
+        
         Destroy(GameObject.Find("UI Root"));
         Destroy(GetComponent<Volume>());
         Destroy(GetComponent<Character>());
@@ -670,6 +698,160 @@ public class Character : MonoBehaviour
         foreach (AssetBundle asset_bundle in Dependencies_Bundles.Values) asset_bundle.Unload(false);
         foreach (AssetBundle asset_bundle in Character_Bundles.Values) asset_bundle.Unload(false);
         Resources.UnloadUnusedAssets();
+    }
+
+    private List<GameObject> dynamic_IK_GameObjects = new List<GameObject>();
+
+    private void Init_Dynamic_Bone_IK()
+    {
+        if (skeleton_animation == null) return;
+        StartCoroutine(CoInit_Dynamic_Bone_IK());
+    }
+
+    private IEnumerator CoInit_Dynamic_Bone_IK()
+    {
+        while (Camera_Services.Instance == null || Camera_Services.Instance.MemoryLobby_Camera == null)
+        {
+            yield return null;
+        }
+
+        Console_Log("等待角色进入Idle状态...");
+        while (!is_Character_Idle_Mode)
+        {
+            yield return null;
+        }
+        
+        yield return new WaitForSeconds(0.5f);
+        Console_Log("角色已进入Idle状态，开始创建动态IK");
+
+        List<string> dynamic_bone_names = new List<string>();
+        
+        string specialSpineConfigPath = Path.Combine(File_Services.Student_Lists_Folder_Path, "SpecialSpine.json");
+        if (File.Exists(specialSpineConfigPath))
+        {
+            try
+            {
+                string jsonText = File.ReadAllText(specialSpineConfigPath);
+                Dictionary<string, List<SpecialSpineBoneConfig>> config = JsonConvert.DeserializeObject<Dictionary<string, List<SpecialSpineBoneConfig>>>(jsonText);
+                
+                if (config != null && config.ContainsKey(Character_Name))
+                {
+                    List<SpecialSpineBoneConfig> boneConfigs = config[Character_Name];
+                    foreach (var boneConfig in boneConfigs)
+                    {
+                        if (!string.IsNullOrEmpty(boneConfig.BreastName))
+                        {
+                            dynamic_bone_names.Add(boneConfig.BreastName);
+                        }
+                    }
+                    Console_Log($"从配置文件读取到 {dynamic_bone_names.Count} 个动态Bone配置");
+                }
+                else
+                {
+                    Console_Log($"角色 {Character_Name} 没有特殊Bone配置", Debug_Services.LogLevel.Debug);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console_Log($"读取SpecialSpine.json失败: {ex.Message}", Debug_Services.LogLevel.Debug, LogType.Error);
+            }
+        }
+        else
+        {
+            Console_Log($"SpecialSpine.json 不存在: {specialSpineConfigPath}", Debug_Services.LogLevel.Debug);
+        }
+
+        if (dynamic_bone_names.Count == 0)
+        {
+            Console_Log("没有需要创建的动态Bone IK");
+            yield break;
+        }
+
+        foreach (string bone_name in dynamic_bone_names)
+        {
+            Bone bone = skeleton_animation.skeleton.FindBone(bone_name);
+            if (bone == null)
+            {
+                Console_Log($"未找到Bone: {bone_name}", Debug_Services.LogLevel.Debug, LogType.Warning);
+                continue;
+            }
+
+            Transform bone_transform = FindBoneTransformRecursive(skeleton_animation.transform, bone_name);
+            if (bone_transform == null)
+            {
+                bone_transform = skeleton_animation.transform.Find(bone_name);
+                if (bone_transform == null)
+                {
+                    bone_transform = skeleton_animation.transform.Find($"root/{bone_name}");
+                }
+            }
+
+            if (bone_transform == null)
+            {
+                Console_Log($"未找到Bone Transform: {bone_name}", Debug_Services.LogLevel.Debug, LogType.Warning);
+                continue;
+            }
+
+            SpineCharacter spine_character = lobby_gameobject_instantiated.GetComponent<UILobbyContainer>().SpineCharacter;
+
+            GameObject ik_gameobject = new GameObject($"{bone_name}_IK");
+            ik_gameobject.transform.SetParent(spine_character.gameObject.transform);
+            ik_gameobject.transform.position = bone_transform.position;
+            ik_gameobject.transform.rotation = bone_transform.rotation;
+            ik_gameobject.transform.localScale = Vector3.one;
+            
+            Console_Log($"IK位置 - Bone世界坐标: {bone_transform.position}, IK本地坐标: {ik_gameobject.transform.localPosition}");
+
+            UIWidget widget = ik_gameobject.AddComponent<UIWidget>();
+            widget.width = 400;
+            widget.height = 500;
+
+            BoxCollider box_collider = ik_gameobject.AddComponent<BoxCollider>();
+            box_collider.size = new Vector3(400, 500, 0);
+
+            SpineDragIK spine_drag_ik = ik_gameobject.AddComponent<SpineDragIK>();
+            spine_drag_ik.SpineController = spine_character;
+            spine_drag_ik.Bone = bone_transform;
+            spine_drag_ik.OrigLocalPos = bone_transform.localPosition;
+            spine_drag_ik.BoneCenterOffset = Vector3.zero;
+            spine_drag_ik.MinLocalPos = new Vector3(-0.3f, -0.3f, 0);
+            spine_drag_ik.MaxLocalPos = new Vector3(0.3f, 0.3f, 0);
+            spine_drag_ik.FollowDragSpeed01 = 0.8f;
+            spine_drag_ik.FollowReleaseSpeed01 = 0.9f;
+            spine_drag_ik.TriggerDelay = 0.1f;
+            spine_drag_ik.screenZDistance = CachedCamera.WorldToScreenPoint(bone_transform.position).z;
+            spine_drag_ik.smoothTime = 0.08f;
+
+            dynamic_IK_GameObjects.Add(ik_gameobject);
+            Console_Log($"已创建动态IK: {bone_name}");
+        }
+    }
+
+    private Transform FindBoneTransformRecursive(Transform parent, string bone_name)
+    {
+        if (parent.name == bone_name)
+        {
+            return parent;
+        }
+
+        foreach (Transform child in parent)
+        {
+            if (child.name == bone_name)
+            {
+                return child;
+            }
+            Transform found = FindBoneTransformRecursive(child, bone_name);
+            if (found != null) return found;
+        }
+        return null;
+    }
+
+    private Camera CachedCamera
+    {
+        get
+        {
+            return Camera_Services.Instance.MemoryLobby_Camera;
+        }
     }
 
     private static void Console_Log(string message, Debug_Services.LogLevel loglevel = Debug_Services.LogLevel.Info, LogType logtype = LogType.Log) { Debug_Services.Instance.Console_Log("Character_Services", message, loglevel, logtype); }

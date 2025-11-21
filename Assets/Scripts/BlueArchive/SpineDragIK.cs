@@ -2,6 +2,8 @@ using Spine;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using System.Reflection;
+using System;
 
 public class SpineDragIK : MonoBehaviour
 {
@@ -32,6 +34,10 @@ public class SpineDragIK : MonoBehaviour
     public float maxSpeed = Mathf.Infinity;   // 新增：最大速度
     private Vector3 currentVelocity;          // 新增：当前速度
 
+    private Component boneFollowerComponent;
+    private bool originalFollowMode = true;
+    private Vector3 pressStartLocalPos;
+
     private Camera CachedCamera
     {
         get
@@ -50,6 +56,15 @@ public class SpineDragIK : MonoBehaviour
         initialIngClip = IngClip;
         destLocalPos = OrigLocalPos;
 
+        if (Bone != null)
+        {
+            boneFollowerComponent = FindBoneFollowerComponent(Bone.gameObject);
+            if (boneFollowerComponent != null)
+            {
+                originalFollowMode = GetBoneMode(boneFollowerComponent);
+            }
+        }
+
         if (Debug_Services.Instance.is_Debug)
         {
             Bone.gameObject.AddComponent<SpriteRenderer>();
@@ -67,6 +82,7 @@ public class SpineDragIK : MonoBehaviour
             Bone.localPosition = OrigLocalPos;
 
         destLocalPos = OrigLocalPos;
+        SetBoneMode(originalFollowMode);
         StopAllCoroutines();
     }
 
@@ -183,6 +199,16 @@ public class SpineDragIK : MonoBehaviour
         {
             Console_Log($"{gameObject.name} OnPress 按下");
 
+            if (boneFollowerComponent == null && Bone != null)
+            {
+                boneFollowerComponent = FindBoneFollowerComponent(Bone.gameObject);
+                if (boneFollowerComponent != null)
+                {
+                    originalFollowMode = GetBoneMode(boneFollowerComponent);
+                }
+            }
+            SetBoneMode(false);
+
             if (Wallpaper_Services.Instance.is_Wallpaper_Mode)
             {
                 screenPos = Input_Services.Instance.Mouse_Info.Position;
@@ -195,6 +221,8 @@ public class SpineDragIK : MonoBehaviour
             screenPos.z = CachedCamera.WorldToScreenPoint(Bone.position).z;
 
             //UpdateDestLocalPos();
+            pressStartLocalPos = Bone.parent.InverseTransformPoint(CachedCamera.ScreenToWorldPoint(screenPos));
+            destLocalPos = Bone.localPosition;
 
             IngClip = initialIngClip;
 
@@ -212,22 +240,19 @@ public class SpineDragIK : MonoBehaviour
         {
             Console_Log($"{gameObject.name} OnPress 松开");
 
-
-
-            Console_Log($"{gameObject.name} 播放结束动画 01: {EndClip.ClipName}");
-            //SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.M_Track_Num, 0f);
-            TrackEntry track_entry_01 = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, EndClip.ClipName, false, 0f);
-            SpineController.SkeletonAnimation.AnimationState.AddEmptyAnimation(Index_Services.Instance.M_Track_Num, 0f, 0f);
-            //track_entry_01.MixDuration = 1f;
-
-            if (EndClip.SyncPlayClipObjects.Count() != 0 && EndClip.SyncPlayClipObjects.First() != null)
+            if (EndClip != null)
             {
-                SpineClip sync_clip = EndClip.SyncPlayClipObjects[0] as SpineClip;
-                Console_Log($"{gameObject.name} 播放结束动画 02: {sync_clip.ClipName}");
-                //SpineController.SkeletonAnimation.AnimationState.SetEmptyAnimation(Index_Services.Instance.A_Track_Num, 0f);
-                TrackEntry track_entry_02 = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, false, 0f);
-                SpineController.SkeletonAnimation.AnimationState.AddEmptyAnimation(Index_Services.Instance.A_Track_Num, 0f, 0f);
-                //track_entry_02.MixDuration = 1f;
+                Console_Log($"{gameObject.name} 播放结束动画 01: {EndClip.ClipName}");
+                TrackEntry track_entry_01 = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.M_Track_Num, EndClip.ClipName, false, 0f);
+                SpineController.SkeletonAnimation.AnimationState.AddEmptyAnimation(Index_Services.Instance.M_Track_Num, 0f, 0f);
+
+                if (EndClip.SyncPlayClipObjects.Count() != 0 && EndClip.SyncPlayClipObjects.First() != null)
+                {
+                    SpineClip sync_clip = EndClip.SyncPlayClipObjects[0] as SpineClip;
+                    Console_Log($"{gameObject.name} 播放结束动画 02: {sync_clip.ClipName}");
+                    TrackEntry track_entry_02 = SpineController.SkeletonAnimation.AnimationState.AddAnimation(Index_Services.Instance.A_Track_Num, sync_clip.ClipName, false, 0f);
+                    SpineController.SkeletonAnimation.AnimationState.AddEmptyAnimation(Index_Services.Instance.A_Track_Num, 0f, 0f);
+                }
             }
 
             screenPos = new Vector3(0, 0, 0);
@@ -280,14 +305,14 @@ public class SpineDragIK : MonoBehaviour
         // 坐标转换流程保持不变
         Vector3 worldPos = CachedCamera.ScreenToWorldPoint(screenPos);
         Transform parent = Bone.parent;
-        Vector3 localPos = parent.InverseTransformPoint(worldPos);
-
-        // 修正基准点偏移计算
-        Vector3 baseOffset = parent.InverseTransformPoint(Bone.parent.TransformPoint(OrigLocalPos));
+        Vector3 currentLocalPos = parent.InverseTransformPoint(worldPos);
+        
+        Vector3 offset = currentLocalPos - pressStartLocalPos;
+        Vector3 targetLocalPos = OrigLocalPos + offset + BoneCenterOffset;
 
         destLocalPos = new Vector3(
-            Mathf.Clamp(localPos.x + BoneCenterOffset.x - baseOffset.x, MinLocalPos.x, MaxLocalPos.x),
-            Mathf.Clamp(localPos.y + BoneCenterOffset.y - baseOffset.y, MinLocalPos.y, MaxLocalPos.y),
+            Mathf.Clamp(targetLocalPos.x, OrigLocalPos.x + MinLocalPos.x, OrigLocalPos.x + MaxLocalPos.x),
+            Mathf.Clamp(targetLocalPos.y, OrigLocalPos.y + MinLocalPos.y, OrigLocalPos.y + MaxLocalPos.y),
             OrigLocalPos.z  // 保持原始Z值
         );
     }
@@ -295,7 +320,7 @@ public class SpineDragIK : MonoBehaviour
     private IEnumerator CoTrigger()
     {
         yield return new WaitForSeconds(TriggerDelay);
-        if (isPressing)
+        if (isPressing && IngClip != null)
         {
             if (IngClip.Loop)
             {
@@ -386,11 +411,12 @@ public class SpineDragIK : MonoBehaviour
             }
 
             Vector3 targetPos = isPressing ? destLocalPos : OrigLocalPos;
+            float currentSmoothTime = isPressing ? smoothTime : smoothTime * 0.3f;
             Bone.localPosition = Vector3.SmoothDamp(
                 Bone.localPosition,
                 targetPos,
                 ref currentVelocity,
-                smoothTime,
+                currentSmoothTime,
                 maxSpeed,
                 Time.deltaTime
             );
@@ -399,12 +425,206 @@ public class SpineDragIK : MonoBehaviour
             {
                 Bone.localPosition = OrigLocalPos;
                 isUpdating = false;
-                //Console_Log($"{gameObject.name} 的 isUpdating 被置为 {isUpdating}");
-                Console_Log($"{gameObject.name} 协程 CoMoveBone 终止 {isUpdating}");
+                SetBoneMode(originalFollowMode);
                 yield break;
             }
 
             yield return null;
+        }
+    }
+
+    private Component FindBoneFollowerComponent(GameObject boneObject)
+    {
+        Component[] components = boneObject.GetComponents<Component>();
+        foreach (Component comp in components)
+        {
+            Type compType = comp.GetType();
+            if (compType.Name == "SkeletonUtilityBone")
+            {
+                return comp;
+            }
+            if (compType.Name.Contains("BoneFollower") || compType.Name.Contains("Follower"))
+            {
+                return comp;
+            }
+            FieldInfo followField = compType.GetField("followBoneRotation") ?? compType.GetField("followBonePosition");
+            PropertyInfo followProp = compType.GetProperty("followBoneRotation") ?? compType.GetProperty("followBonePosition");
+            if (followField != null || followProp != null)
+            {
+                return comp;
+            }
+            FieldInfo modeField = compType.GetField("overrideMode") ?? compType.GetField("mode");
+            PropertyInfo modeProp = compType.GetProperty("overrideMode") ?? compType.GetProperty("mode");
+            if (modeField != null || modeProp != null)
+            {
+                return comp;
+            }
+        }
+        return null;
+    }
+
+    private bool GetBoneMode(Component follower)
+    {
+        if (follower == null) return true;
+
+        Type compType = follower.GetType();
+        
+        if (compType.Name == "SkeletonUtilityBone")
+        {
+            PropertyInfo skelModeProp = compType.GetProperty("mode");
+            if (skelModeProp != null)
+            {
+                object modeValue = skelModeProp.GetValue(follower);
+                if (modeValue != null)
+                {
+                    int modeInt = Convert.ToInt32(modeValue);
+                    return modeInt == 0;
+                }
+            }
+            FieldInfo skelModeField = compType.GetField("mode");
+            if (skelModeField != null)
+            {
+                object modeValue = skelModeField.GetValue(follower);
+                if (modeValue != null)
+                {
+                    int modeInt = Convert.ToInt32(modeValue);
+                    return modeInt == 0;
+                }
+            }
+            return true;
+        }
+
+        FieldInfo followRotField = compType.GetField("followBoneRotation");
+        if (followRotField != null && followRotField.FieldType == typeof(bool))
+        {
+            return (bool)followRotField.GetValue(follower);
+        }
+
+        PropertyInfo followRotProp = compType.GetProperty("followBoneRotation");
+        if (followRotProp != null && followRotProp.PropertyType == typeof(bool))
+        {
+            return (bool)followRotProp.GetValue(follower);
+        }
+
+        FieldInfo modeField = compType.GetField("overrideMode") ?? compType.GetField("mode");
+        if (modeField != null)
+        {
+            object modeValue = modeField.GetValue(follower);
+            if (modeValue != null)
+            {
+                int modeInt = Convert.ToInt32(modeValue);
+                return modeInt == 0;
+            }
+        }
+
+        PropertyInfo modeProp = compType.GetProperty("overrideMode") ?? compType.GetProperty("mode");
+        if (modeProp != null)
+        {
+            object modeValue = modeProp.GetValue(follower);
+            if (modeValue != null)
+            {
+                int modeInt = Convert.ToInt32(modeValue);
+                return modeInt == 0;
+            }
+        }
+
+        return true;
+    }
+
+    private void SetBoneMode(bool followMode)
+    {
+        if (boneFollowerComponent == null) return;
+
+        Type compType = boneFollowerComponent.GetType();
+        
+        if (compType.Name == "SkeletonUtilityBone")
+        {
+            PropertyInfo skelModeProp = compType.GetProperty("mode");
+            if (skelModeProp != null && skelModeProp.CanWrite)
+            {
+                Type propType = skelModeProp.PropertyType;
+                object modeValue;
+                
+                if (propType.IsEnum)
+                {
+                    Array enumValues = Enum.GetValues(propType);
+                    int targetIndex = followMode ? 0 : 1;
+                    if (targetIndex < enumValues.Length)
+                    {
+                        modeValue = enumValues.GetValue(targetIndex);
+                    }
+                    else
+                    {
+                        modeValue = followMode ? 0 : 1;
+                    }
+                }
+                else
+                {
+                    modeValue = followMode ? 0 : 1;
+                }
+                
+                skelModeProp.SetValue(boneFollowerComponent, modeValue);
+                return;
+            }
+            
+            FieldInfo skelModeField = compType.GetField("mode");
+            if (skelModeField != null)
+            {
+                Type fieldType = skelModeField.FieldType;
+                object modeValue;
+                
+                if (fieldType.IsEnum)
+                {
+                    Array enumValues = Enum.GetValues(fieldType);
+                    int targetIndex = followMode ? 0 : 1;
+                    if (targetIndex < enumValues.Length)
+                    {
+                        modeValue = enumValues.GetValue(targetIndex);
+                    }
+                    else
+                    {
+                        modeValue = followMode ? 0 : 1;
+                    }
+                }
+                else
+                {
+                    modeValue = followMode ? 0 : 1;
+                }
+                
+                skelModeField.SetValue(boneFollowerComponent, modeValue);
+                return;
+            }
+            
+            return;
+        }
+        
+        int modeValueInt = followMode ? 0 : 1;
+
+        FieldInfo followRotField = compType.GetField("followBoneRotation");
+        if (followRotField != null && followRotField.FieldType == typeof(bool))
+        {
+            followRotField.SetValue(boneFollowerComponent, followMode);
+            return;
+        }
+
+        PropertyInfo followRotProp = compType.GetProperty("followBoneRotation");
+        if (followRotProp != null && followRotProp.PropertyType == typeof(bool) && followRotProp.CanWrite)
+        {
+            followRotProp.SetValue(boneFollowerComponent, followMode);
+            return;
+        }
+
+        FieldInfo modeField = compType.GetField("overrideMode") ?? compType.GetField("mode");
+        if (modeField != null)
+        {
+            modeField.SetValue(boneFollowerComponent, modeValueInt);
+            return;
+        }
+
+        PropertyInfo modeProp = compType.GetProperty("overrideMode") ?? compType.GetProperty("mode");
+        if (modeProp != null && modeProp.CanWrite)
+        {
+            modeProp.SetValue(boneFollowerComponent, modeValueInt);
         }
     }
 
